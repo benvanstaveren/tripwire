@@ -10,6 +10,8 @@ if (!isset($_REQUEST['system']) || empty($_REQUEST['system'])) {
 
 $startTime = microtime(true);
 
+$server = explode('.', $_SERVER['SERVER_NAME'])[0];
+
 // Caching
 header('Cache-Control: public, max-age=300');
 header('Expires: '.gmdate('r', time() + 300));
@@ -58,7 +60,7 @@ if ($row = $stmt->fetchObject()) {
 	<div id="topbar">
 		<span class="align-left">
 			<h1 id="logo" class="pointer">
-			<?php if (explode('.', $_SERVER['SERVER_NAME'])[0] == 'tripwire') { ?>
+			<?php if ($server == 'tripwire') { ?>
 				<a href=".">Tripwire</a><span id="beta">Beta</span>
 			<?php } else { ?>
 				<a href=".">Galileo</a><span id="dev">Dev</span>
