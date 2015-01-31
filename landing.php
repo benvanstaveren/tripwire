@@ -56,7 +56,7 @@
 			<!-- Start Navigation -->
 			<nav>
 				<ul>
-					<li><a href="#home">Home_19</a></li>
+					<li><a href="#home">Home_1911</a></li>
 					<li><a href="#login">Login</a></li>
 					<li><a href="#register">Register</a></li>
 					<li><a href="#team">Team</a></li>
