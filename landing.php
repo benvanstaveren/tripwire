@@ -1,3 +1,8 @@
+<?php
+
+$server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 'static';
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,20 +14,20 @@
 	<meta property="og:type" content="article"/>
 	<meta property="og:url" content="https://tripwire.eve-apps.com/"/>
 	<meta property="og:title" content="The greatest wormhole mapper ever."/>
-	<meta property="og:image" content="//static.eve-apps.com/images/landing/thumbnail.jpg" />
+	<meta property="og:image" content="//<?= $server ?>.eve-apps.com/images/landing/thumbnail.jpg" />
 	<meta property="og:locale" content="en_US"/>
 	<meta property="og:site_name" content=""/>
 
 	<!-- Stylesheets -->
-	<link rel="stylesheet" type="text/css" href="//static.eve-apps.com/css/landing/base.css" />
-	<link rel="stylesheet" type="text/css" href="//static.eve-apps.com/css/landing/dark.css" />
-	<link rel="stylesheet" type="text/css" href="//static.eve-apps.com/css/landing/media.queries.css" />
-	<link rel="stylesheet" type="text/css" href="//static.eve-apps.com/css/landing/tipsy.css" />
-	<link rel="stylesheet" type="text/css" href="//static.eve-apps.com/js/landing/fancybox/jquery.fancybox-1.3.4.css" />
+	<link rel="stylesheet" type="text/css" href="//<?= $server ?>.eve-apps.com/css/landing/base.css" />
+	<link rel="stylesheet" type="text/css" href="//<?= $server ?>.eve-apps.com/css/landing/dark.css" />
+	<link rel="stylesheet" type="text/css" href="//<?= $server ?>.eve-apps.com/css/landing/media.queries.css" />
+	<link rel="stylesheet" type="text/css" href="//<?= $server ?>.eve-apps.com/css/landing/tipsy.css" />
+	<link rel="stylesheet" type="text/css" href="//<?= $server ?>.eve-apps.com/js/landing/fancybox/jquery.fancybox-1.3.4.css" />
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Nothing+You+Could+Do|Quicksand:400,700,300">
 
 	<!-- Favicons -->
-	<link rel="shortcut icon" href="//static.eve-apps.com/favicon.png" />
+	<link rel="shortcut icon" href="//<?= $server ?>.eve-apps.com/favicon.png" />
 	<!--
 	<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
@@ -56,7 +61,7 @@
 			<!-- Start Navigation -->
 			<nav>
 				<ul>
-					<li><a href="#home">Home_1911</a></li>
+					<li><a href="#home">Home</a></li>
 					<li><a href="#login">Login</a></li>
 					<li><a href="#register">Register</a></li>
 					<li><a href="#team">Team</a></li>
@@ -78,7 +83,7 @@
 		<div id="app_info">
 			<!-- Start Logo -->
 			
-			<h1 style="font-size: 4.3em;"><img src="//static.eve-apps.com/images/landing/tripwire-logo.png" alt="Tripwire" style="vertical-align: text-top;" /> Tripwire</h1>
+			<h1 style="font-size: 4.3em;"><img src="//<?= $server ?>.eve-apps.com/images/landing/tripwire-logo.png" alt="Tripwire" style="vertical-align: text-top;" /> Tripwire</h1>
 			<!-- End Logo -->
 			<span class="tagline">The greatest wormhole mapper ever.</span>
 			<p>
@@ -117,25 +122,25 @@
 				<div id="slider">
 					<div class="slide" data-effect-out="slide">
 						<div class="background screenshot">
-							<img src="//static.eve-apps.com/images/landing/devices/igb.jpg" alt="" width="100%" />
+							<img src="//<?= $server ?>.eve-apps.com/images/landing/devices/igb.jpg" alt="" width="100%" />
 						</div>
 					</div>
 					<div class="slide" data-effect-in="slide">
 						<div class="background screenshot">
-							<img src="//static.eve-apps.com/images/landing/devices/chrome.jpg" alt="" width="100%" />
+							<img src="//<?= $server ?>.eve-apps.com/images/landing/devices/chrome.jpg" alt="" width="100%" />
 						</div>
 					</div>
 					<div class="slide">
 						<div class="background android">
-							<img src="//static.eve-apps.com/images/landing/devices/droid.jpg" alt="" />
+							<img src="//<?= $server ?>.eve-apps.com/images/landing/devices/droid.jpg" alt="" />
 						</div>
 						<div class="foreground android">
-							<img src="//static.eve-apps.com/images/landing/devices/droid.jpg" alt="" />
+							<img src="//<?= $server ?>.eve-apps.com/images/landing/devices/droid.jpg" alt="" />
 						</div>
 					</div>
 					<div class="slide">
 						<div class="background ipad-black">
-							<img src="//static.eve-apps.com/images/landing/devices/ipad.jpg" alt="" />
+							<img src="//<?= $server ?>.eve-apps.com/images/landing/devices/ipad.jpg" alt="" />
 						</div>
 					</div>
 				</div>
@@ -430,13 +435,13 @@
 					</div>
 
 					<div class="one_half column_last">
-						<img src="//static.eve-apps.com/images/landing/about-main.png" alt="" />
+						<img src="//<?= $server ?>.eve-apps.com/images/landing/about-main.png" alt="" />
 					</div>
 				</div>
 				
 				<div class="team_members">
 					<div class="person one_half">
-						<img src="//static.eve-apps.com/images/landing/daimian.jpg" alt="" />
+						<img src="//<?= $server ?>.eve-apps.com/images/landing/daimian.jpg" alt="" />
 						<h3>Daimian Mercer</h3>
 						<span>Designer/Developer</span>
 						<!--<a href="#">http://website.com</a>-->
@@ -447,13 +452,13 @@
 						</ul>
 					</div>
 					<div class="person one_half column_last">
-						<img src="//static.eve-apps.com/images/landing/pcnate.jpg" alt="" />
+						<img src="//<?= $server ?>.eve-apps.com/images/landing/pcnate.jpg" alt="" />
 						<h3>PCNate</h3>
 						<span>Server Admin</span>
 						<!--<a href="#">http://website.com</a>-->
 					</div>
 					<div class="person one_half">
-						<img src="//static.eve-apps.com/images/landing/natasha.jpg" alt="" />
+						<img src="//<?= $server ?>.eve-apps.com/images/landing/natasha.jpg" alt="" />
 						<h3>Natasha Donnan</h3>
 						<span>Developer</span>
 						<!--<a href="#">http://website.com</a>-->
@@ -512,20 +517,20 @@
 				<h1>Screenshots</h1>
 				<div class="screenshot_grid content_box">
 					<div class="one_third">
-						<a href="//static.eve-apps.com/images/landing/screenshots/ss1.jpg" class="fancybox" rel="group" title="Screenshot 1"><img src="//static.eve-apps.com/images/landing/screenshots/ss1thumb.jpg" alt="" /></a>
+						<a href="//<?= $server ?>.eve-apps.com/images/landing/screenshots/ss1.jpg" class="fancybox" rel="group" title="Screenshot 1"><img src="//<?= $server ?>.eve-apps.com/images/landing/screenshots/ss1thumb.jpg" alt="" /></a>
 					</div>
 					<div class="one_third">
-						<a href="//static.eve-apps.com/images/landing/screenshots/ss2.jpg" class="fancybox" rel="group" title="Screenshot 2"><img src="//static.eve-apps.com/images/landing/screenshots/ss2thumb.jpg" alt="" /></a>
+						<a href="//<?= $server ?>.eve-apps.com/images/landing/screenshots/ss2.jpg" class="fancybox" rel="group" title="Screenshot 2"><img src="//<?= $server ?>.eve-apps.com/images/landing/screenshots/ss2thumb.jpg" alt="" /></a>
 					</div>
 					<div class="one_third column_last">
-						<a href="//static.eve-apps.com/images/landing/screenshots/ss3.jpg" class="fancybox" rel="group" title="Screenshot 3"><img src="//static.eve-apps.com/images/landing/screenshots/ss3thumb.jpg" alt="" /></a>
+						<a href="//<?= $server ?>.eve-apps.com/images/landing/screenshots/ss3.jpg" class="fancybox" rel="group" title="Screenshot 3"><img src="//<?= $server ?>.eve-apps.com/images/landing/screenshots/ss3thumb.jpg" alt="" /></a>
 					</div>
 					
 					<div class="one_third">
-						<a href="//static.eve-apps.com/images/landing/screenshots/ss4.jpg" class="fancybox" rel="group" title="Screenshot 4"><img src="//static.eve-apps.com/images/landing/screenshots/ss4thumb.jpg" alt="" /></a>
+						<a href="//<?= $server ?>.eve-apps.com/images/landing/screenshots/ss4.jpg" class="fancybox" rel="group" title="Screenshot 4"><img src="//<?= $server ?>.eve-apps.com/images/landing/screenshots/ss4thumb.jpg" alt="" /></a>
 					</div>
 					<div class="one_third">
-						<a href="//static.eve-apps.com/images/landing/screenshots/ss5.jpg" class="fancybox" rel="group" title="Screenshot 5"><img src="//static.eve-apps.com/images/landing/screenshots/ss5thumb.jpg" alt="" /></a>
+						<a href="//<?= $server ?>.eve-apps.com/images/landing/screenshots/ss5.jpg" class="fancybox" rel="group" title="Screenshot 5"><img src="//<?= $server ?>.eve-apps.com/images/landing/screenshots/ss5thumb.jpg" alt="" /></a>
 					</div>
 					<div class="one_third column_last">
 						<a href="" class="fancybox" rel="group" title="Screenshot 6"><img src="" alt="" /></a>
@@ -703,16 +708,16 @@
 	<!-- End Wrapper -->
 
 	<!-- Javascripts -->
-	<script type="text/javascript" src="//static.eve-apps.com/js/landing/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="//static.eve-apps.com/js/landing/html5shiv.js"></script>
-	<script type="text/javascript" src="//static.eve-apps.com/js/landing/jquery.tipsy.js"></script>
-	<script type="text/javascript" src="//static.eve-apps.com/js/landing/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
-	<script type="text/javascript" src="//static.eve-apps.com/js/landing/fancybox/jquery.easing-1.3.pack.js"></script>
-	<script type="text/javascript" src="//static.eve-apps.com/js/landing/jquery.touchSwipe.js"></script>
-	<script type="text/javascript" src="//static.eve-apps.com/js/landing/jquery.mobilemenu.js"></script>
-	<script type="text/javascript" src="//static.eve-apps.com/js/landing/jquery.infieldlabel.js"></script>
-	<script type="text/javascript" src="//static.eve-apps.com/js/landing/jquery.echoslider.js"></script>
-	<script type="text/javascript" src="//static.eve-apps.com/js/landing/landing.js"></script>
+	<script type="text/javascript" src="//<?= $server ?>.eve-apps.com/js/landing/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="//<?= $server ?>.eve-apps.com/js/landing/html5shiv.js"></script>
+	<script type="text/javascript" src="//<?= $server ?>.eve-apps.com/js/landing/jquery.tipsy.js"></script>
+	<script type="text/javascript" src="//<?= $server ?>.eve-apps.com/js/landing/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+	<script type="text/javascript" src="//<?= $server ?>.eve-apps.com/js/landing/fancybox/jquery.easing-1.3.pack.js"></script>
+	<script type="text/javascript" src="//<?= $server ?>.eve-apps.com/js/landing/jquery.touchSwipe.js"></script>
+	<script type="text/javascript" src="//<?= $server ?>.eve-apps.com/js/landing/jquery.mobilemenu.js"></script>
+	<script type="text/javascript" src="//<?= $server ?>.eve-apps.com/js/landing/jquery.infieldlabel.js"></script>
+	<script type="text/javascript" src="//<?= $server ?>.eve-apps.com/js/landing/jquery.echoslider.js"></script>
+	<script type="text/javascript" src="//<?= $server ?>.eve-apps.com/js/landing/landing.js"></script>
 
 </body>
 </html>
