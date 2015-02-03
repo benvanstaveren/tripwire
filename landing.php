@@ -61,7 +61,7 @@ $server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 's
 			<!-- Start Navigation -->
 			<nav>
 				<ul>
-					<li><a href="#home">Home 21</a></li>
+					<li><a href="#home">Home 2</a></li>
 					<li><a href="#login">Login</a></li>
 					<li><a href="#register">Register</a></li>
 					<li><a href="#team">Team</a></li>
