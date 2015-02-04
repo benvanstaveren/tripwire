@@ -175,11 +175,11 @@ $server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 's
 						</li>
 					</ul>
 					<div id="reg" class="pane">
-						<form>
+						<form method="POST">
 							<input type="hidden" name="mode" value="login" />
 							<!-- fake fields are a workaround for chrome autofill -->
-							<input class="hidden" type="text" name="fakeusernameremembered"/>
-							<input class="hidden" type="password" name="fakepasswordremembered"/>
+							<input class="hidden" type="text" name="fakeusernameremembered" />
+							<input class="hidden" type="password" name="fakepasswordremembered" autocomplete="off" />
 							<p>
 								This login method requires that you first create a Tripwire account via <a href="#register#user">User Registration</a>.
 							</p>
@@ -197,7 +197,7 @@ $server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 's
 							<div class="row">
 								<p class="left">
 									<label for="password" class="infield">Password</label>
-									<input type="password" name="password" id="password" />
+									<input type="password" name="password" id="password" autocomplete="off" />
 								</p>
 							</div>
 							<p id="passError" class="error hidden"></p>
@@ -287,11 +287,11 @@ $server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 's
 						</li>
 					</ul>
 					<div id="user" class="pane">
-						<form>
+						<form method="POST">
 							<input type="hidden" name="mode" value="user" />
 							<!-- fake fields are a workaround for chrome autofill -->
-							<input class="hidden" type="text" name="fakeusernameremembered"/>
-							<input class="hidden" type="password" name="fakepasswordremembered"/>
+							<input class="hidden" type="text" name="fakeusernameremembered" />
+							<input class="hidden" type="password" name="fakepasswordremembered" autocomplete="off" />
 							<p>
 								A Tripwire account requires an EVE character to be associated with it. This character is used to determine who's signature data you can see. <a href="https://support.eveonline.com/api" target="_blank" tabindex="-1">View your EVE API keys</a>
 							</p>
@@ -311,11 +311,11 @@ $server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 's
 							<div class="row">
 								<p class="left">
 									<label for="password" class="infield">Password</label>
-									<input type="password" name="password" id="password" />
+									<input type="password" name="password" id="password" autocomplete="off" />
 								</p>
 								<p class="right">
 									<label for="confirm" class="infield">Confirm</label>
-									<input type="password" name="confirm" id="confirm" />
+									<input type="password" name="confirm" id="confirm" autocomplete="off" />
 								</p>
 							</div>
 							<p id="passError" class="error hidden"></p>
