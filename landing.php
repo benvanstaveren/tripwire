@@ -223,7 +223,7 @@ $server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 's
 						</form>
 					</div>
 					<div id="api" class="pane">
-						<form>
+						<form method="POST">
 							<input type="hidden" name="mode" value="api" />
 							<p>This login method requires that you first create a Tripwire account via <a href="#register#user">User Registration</a>.</p>
 							<br/>
@@ -364,11 +364,8 @@ $server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 's
 						</div>
 					</div>
 					<div id="corp" class="pane">
-						<form>
+						<form method="POST">
 							<input type="hidden" name="mode" value="corp" />
-							<!-- fake fields are a workaround for chrome autofill -->
-							<input class="hidden" type="text" name="fakeusernameremembered"/>
-							<input class="hidden" type="password" name="fakepasswordremembered"/>
 							<p>
 								This simply enables corporate Tripwire administration for your character. You must first complete <a href="#register#user">User Registration</a>.
 							</p>

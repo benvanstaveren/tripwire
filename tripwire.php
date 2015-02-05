@@ -60,7 +60,7 @@ if ($row = $stmt->fetchObject()) {
 	<div id="topbar">
 		<span class="align-left">
 			<h1 id="logo" class="pointer">
-			<?php if ($server == 'statc') { ?>
+			<?php if ($server == 'static') { ?>
 				<a href=".">Tripwire</a><span id="beta">Beta</span>
 			<?php } else { ?>
 				<a href=".">Galileo</a><span id="dev">Dev</span>
