@@ -27,7 +27,7 @@ $server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 's
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Nothing+You+Could+Do|Quicksand:400,700,300">
 
 	<!-- Favicons -->
-	<link rel="shortcut icon" href="//<?= $server ?>.eve-apps.com/favicon.png" />
+	<link rel="shortcut icon" href="//<?= $server ?>.eve-apps.com/images/favicon.png" />
 	<!--
 	<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
@@ -175,11 +175,11 @@ $server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 's
 						</li>
 					</ul>
 					<div id="reg" class="pane">
-						<form>
+						<form method="POST">
 							<input type="hidden" name="mode" value="login" />
 							<!-- fake fields are a workaround for chrome autofill -->
-							<input class="hidden" type="text" name="fakeusernameremembered"/>
-							<input class="hidden" type="password" name="fakepasswordremembered"/>
+							<input class="hidden" type="text" name="fakeusernameremembered" />
+							<input class="hidden" type="password" name="fakepasswordremembered" autocomplete="off" />
 							<p>
 								This login method requires that you first create a Tripwire account via <a href="#register#user">User Registration</a>.
 							</p>
@@ -197,7 +197,7 @@ $server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 's
 							<div class="row">
 								<p class="left">
 									<label for="password" class="infield">Password</label>
-									<input type="password" name="password" id="password" />
+									<input type="password" name="password" id="password" autocomplete="off" />
 								</p>
 							</div>
 							<p id="passError" class="error hidden"></p>
@@ -223,7 +223,7 @@ $server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 's
 						</form>
 					</div>
 					<div id="api" class="pane">
-						<form>
+						<form method="POST">
 							<input type="hidden" name="mode" value="api" />
 							<p>This login method requires that you first create a Tripwire account via <a href="#register#user">User Registration</a>.</p>
 							<br/>
@@ -287,11 +287,11 @@ $server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 's
 						</li>
 					</ul>
 					<div id="user" class="pane">
-						<form>
+						<form method="POST">
 							<input type="hidden" name="mode" value="user" />
 							<!-- fake fields are a workaround for chrome autofill -->
-							<input class="hidden" type="text" name="fakeusernameremembered"/>
-							<input class="hidden" type="password" name="fakepasswordremembered"/>
+							<input class="hidden" type="text" name="fakeusernameremembered" />
+							<input class="hidden" type="password" name="fakepasswordremembered" autocomplete="off" />
 							<p>
 								A Tripwire account requires an EVE character to be associated with it. This character is used to determine who's signature data you can see. <a href="https://support.eveonline.com/api" target="_blank" tabindex="-1">View your EVE API keys</a>
 							</p>
@@ -311,11 +311,11 @@ $server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 's
 							<div class="row">
 								<p class="left">
 									<label for="password" class="infield">Password</label>
-									<input type="password" name="password" id="password" />
+									<input type="password" name="password" id="password" autocomplete="off" />
 								</p>
 								<p class="right">
 									<label for="confirm" class="infield">Confirm</label>
-									<input type="password" name="confirm" id="confirm" />
+									<input type="password" name="confirm" id="confirm" autocomplete="off" />
 								</p>
 							</div>
 							<p id="passError" class="error hidden"></p>
@@ -364,11 +364,8 @@ $server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 's
 						</div>
 					</div>
 					<div id="corp" class="pane">
-						<form>
+						<form method="POST">
 							<input type="hidden" name="mode" value="corp" />
-							<!-- fake fields are a workaround for chrome autofill -->
-							<input class="hidden" type="text" name="fakeusernameremembered"/>
-							<input class="hidden" type="password" name="fakepasswordremembered"/>
 							<p>
 								This simply enables corporate Tripwire administration for your character. You must first complete <a href="#register#user">User Registration</a>.
 							</p>
