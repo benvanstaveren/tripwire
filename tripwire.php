@@ -46,7 +46,7 @@ if ($row = $stmt->fetchObject()) {
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="system" content="<?= $system ?>">
 	<meta name="systemID" content="<?= $systemID ?>">
-	<link rel="shortcut icon" href="//<?= $server ?>.eve-apps.com/favicon.png" />
+	<link rel="shortcut icon" href="//<?= $server ?>.eve-apps.com/images/favicon.png" />
 	
 	<link rel="stylesheet" type="text/css" href="//<?= $server ?>.eve-apps.com/css/combine.css">
 	<link rel="stylesheet" type="text/css" href="//<?= $server ?>.eve-apps.com/css/style.css">

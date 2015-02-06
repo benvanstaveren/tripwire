@@ -27,7 +27,7 @@ $server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 's
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Nothing+You+Could+Do|Quicksand:400,700,300">
 
 	<!-- Favicons -->
-	<link rel="shortcut icon" href="//<?= $server ?>.eve-apps.com/favicon.png" />
+	<link rel="shortcut icon" href="//<?= $server ?>.eve-apps.com/images/favicon.png" />
 	<!--
 	<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
