@@ -253,7 +253,7 @@ if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'init') {
 	$stmt = $mysql->prepare($query);
 	$stmt->bindValue(':mask', $maskID, PDO::PARAM_STR);
 	$stmt->execute();
-	$output['chain']['last_modified'] = $stmt->fetchColumn() ? $stmt->fetchColumn() : date('Y-m-d H:i:s', time());
+	$output['chain']['last_modified'] = $stmt->rowCount() ? $stmt->fetchColumn() : date('Y-m-d H:i:s', time());
 
 	// Get occupied systems
 	$query = 'SELECT DISTINCT systemID FROM active WHERE maskID = :maskID AND systemID IS NOT NULL';
