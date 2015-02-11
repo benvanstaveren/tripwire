@@ -1248,7 +1248,7 @@ var chain = new function() {
 						usedLinks.push(node.id);
 						//usedLinks[system[2]].push(node.id);
 						
-						if ($("#show-viewing").hasClass("active") && tripwire.systems[node.child.systemID] && tripwire.regions[tripwire.systems[viewingSystemID].regionID].name != "Unknown" && tripwire.regions[tripwire.systems[node.child.systemID].regionID].name != "Unknown") {
+						if ($("#show-viewing").hasClass("active") && tripwire.systems[node.child.systemID] && tripwire.systems[viewingSystemID].regionID >= 11000000 && tripwire.systems[node.child.systemID].regionID >= 11000000) {
 							var jumps = guidance.findShortestPath(tripwire.map.shortest, [viewingSystemID - 30000000, node.child.systemID - 30000000]).length - 1;
 
 							var calcNode = {};
@@ -1273,7 +1273,7 @@ var chain = new function() {
 						
 						if ($("#show-favorite").hasClass("active") && tripwire.systems[node.child.systemID]) {
 							for (x in options.favorites) {
-								if (tripwire.regions[tripwire.systems[options.favorites[x]].regionID].name == "Unknown" || tripwire.regions[tripwire.systems[node.child.systemID].regionID].name == "Unknown")
+								if (tripwire.systems[options.favorites[x]].regionID >= 11000000 || tripwire.systems[node.child.systemID].regionID >= 11000000)
 									continue;
 
 								var jumps = guidance.findShortestPath(tripwire.map.shortest, [options.favorites[x] - 30000000, node.child.systemID - 30000000]).length - 1;
@@ -1328,7 +1328,7 @@ var chain = new function() {
 						usedLinks.push(node.id);
 						//usedLinks[system[2]].push(node.id);
 						
-						if ($("#show-viewing").hasClass("active") && tripwire.systems[node.child.systemID] && tripwire.regions[tripwire.systems[viewingSystemID].regionID].name != "Unknown" && tripwire.regions[tripwire.systems[node.child.systemID].regionID].name != "Unknown") {
+						if ($("#show-viewing").hasClass("active") && tripwire.systems[node.child.systemID] && tripwire.systems[viewingSystemID].regionID >= 11000000 && tripwire.systems[node.child.systemID].regionID >= 11000000) {
 							var jumps = guidance.findShortestPath(tripwire.map.shortest, [viewingSystemID - 30000000, node.child.systemID - 30000000]).length - 1;
 
 							var calcNode = {};
@@ -1353,7 +1353,7 @@ var chain = new function() {
 
 						if ($("#show-favorite").hasClass("active") && tripwire.systems[node.child.systemID]) {
 							for (x in options.favorites) {
-								if (tripwire.regions[tripwire.systems[options.favorites[x]].regionID].name == "Unknown" || tripwire.regions[tripwire.systems[node.child.systemID].regionID].name == "Unknown")
+								if (tripwire.systems[options.favorites[x]].regionID >= 11000000 || tripwire.systems[node.child.systemID].regionID >= 11000000)
 									continue;
 
 								var jumps = guidance.findShortestPath(tripwire.map.shortest, [options.favorites[x] - 30000000, node.child.systemID - 30000000]).length - 1;
@@ -3996,7 +3996,7 @@ $("#chainMap").contextmenu({
 			$(this).contextmenu("replaceMenu", "#igbChainMenu");
 			
 			// Add check for k-space (disable EVECCP functions)
-			if (tripwire.regions[tripwire.systems[id].regionID].name == "Unknown") {
+			if (tripwire.systems[id].regionID >= 11000000) {
 				$(this).contextmenu("enableEntry", "setDest", false);
 				$(this).contextmenu("enableEntry", "addWay", false);
 				$(this).contextmenu("enableEntry", "showMap", false);
