@@ -68,7 +68,7 @@ $server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 's
 					<li><a href="#features">Features</a></li>
 					<li><a href="#screenshots">Screenshots</a></li>
 					<li><a href="#updates">Updates</a></li>
-					<li><a href="https://tripwire.cloud-things.com/forums" target="_blank">Forums</a></li>
+					<li><a href="http://forums.eve-apps.com" target="_blank">Forums</a></li>
 				</ul>
 				<span class="arrow"></span>
 			</nav>
@@ -502,7 +502,7 @@ $server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 's
 
 					<div class="one_half column_last">
 						<h2 class="icon help">Help &amp; Support</h2>
-						<p>Help is just around the corner via the "Tripwire Public" EVE channel. Tutorials and FAQ are located on the <a href="https://tripwire.cloud-things.com/forums/" target="_blank">Tripwire Forums</a> including a way to instantly send a notice to a developer via the help section</p>
+						<p>Help is just around the corner via the "Tripwire Public" EVE channel. Tutorials and FAQ are located on the <a href="http://forums.eve-apps.com" target="_blank">Tripwire Forums</a> including a way to instantly send a notice to a developer via the help section</p>
 					</div>
 				</div>
 				
