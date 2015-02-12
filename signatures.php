@@ -251,7 +251,7 @@ class signatures {
 
 					if ($class && $class != $old->class) {
 						//$query = 'SELECT classBM FROM signatures WHERE (systemID = :systemID AND class = :class AND mask = :mask) OR (connectionID = :systemID AND class2 = :class AND mask = :mask)';
-						$query = 'SELECT classBM FROM signatures WHERE systemID = :systemID AND class = :class AND mask = :mask UNION SELECT class2BM AS classBM FROM signatures WHERE connectionID = :systemID AND class2 = :class2 AND mask = :mask';
+						$query = 'SELECT classBM FROM signatures WHERE systemID = :systemID AND class = :class AND mask = :mask UNION SELECT class2BM AS classBM FROM signatures WHERE connectionID = :systemID AND class2 = :class AND mask = :mask';
 						$stmt = $mysql->prepare($query);
 						$stmt->bindValue(':systemID', $systemID, PDO::PARAM_INT);
 						$stmt->bindValue(':class', $class, PDO::PARAM_STR);
@@ -324,7 +324,7 @@ class signatures {
 
 					if ($class2 && $class2 != $old->class) {
 						//$query = 'SELECT classBM FROM signatures WHERE (systemID = :systemID AND class = :class AND mask = :mask) OR (connectionID = :systemID AND class2 = :class AND mask = :mask)';
-						$query = 'SELECT classBM FROM signatures WHERE systemID = :systemID AND class = :class AND mask = :mask UNION SELECT class2BM AS classBM FROM signatures WHERE connectionID = :systemID AND class2 = :class2 AND mask = :mask';
+						$query = 'SELECT classBM FROM signatures WHERE systemID = :systemID AND class = :class AND mask = :mask UNION SELECT class2BM AS classBM FROM signatures WHERE connectionID = :systemID AND class2 = :class AND mask = :mask';
 						$stmt = $mysql->prepare($query);
 						$stmt->bindValue(':systemID', $systemID, PDO::PARAM_INT);
 						$stmt->bindValue(':class', $class2, PDO::PARAM_STR);
