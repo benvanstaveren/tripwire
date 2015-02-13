@@ -116,6 +116,8 @@ if (isset($_SERVER['HTTP_EVE_TRUSTED']) && $_SERVER['HTTP_EVE_TRUSTED'] == 'Yes'
 		$output['EVE'] = $row;
 }
 
+session_write_close();
+
 /**
 // *********************
 // Core variables

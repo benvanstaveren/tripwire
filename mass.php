@@ -1,6 +1,7 @@
 <?php
 
 if (!session_id()) session_start();
+session_write_close();
 
 if(!isset($_SESSION['username'])) {
 	exit();
