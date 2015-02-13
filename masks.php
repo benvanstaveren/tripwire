@@ -10,6 +10,7 @@
 //	ToDo:
 //***********************************************************
 if (!session_id()) session_start();
+session_write_close();
 
 // Check for login - else kick
 if(!isset($_SESSION['userID'])){
