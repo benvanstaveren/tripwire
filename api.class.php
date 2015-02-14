@@ -145,7 +145,7 @@ class API {
 		$url = '/account/APIKeyInfo.xml.aspx';
 		$params = array('keyId' => $keyID, 'vCode' => $vCode);
 
-		$xpath = "//key";
+		$xpath = "/key";
 
 		if ($xmlFile = @simplexml_load_string($this->getAPI($url, $params))) {
 			$result = $xmlFile->xpath($xpath);
