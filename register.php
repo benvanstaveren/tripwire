@@ -75,7 +75,7 @@ if ($mode == 'user') {
 			$output['error'] = "API requires 'Account Status' permission";
 		} else if ($API->checkMask($keyID, $vCode, $mask) == 0) {
 			$output['field'] = 'api';
-			$output['error'] = "API requires <b><u>ONLY</u></b> 'Account Status' permission";
+			$output['error'] = "API requires ONLY 'Account Status' permission";
 		} else {
 			$characters = $API->getCharacters($keyID, $vCode);
 
