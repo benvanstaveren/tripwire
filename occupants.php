@@ -11,6 +11,7 @@
 //
 //***********************************************************
 if (!session_id()) session_start();
+session_write_close();
 
 if(!isset($_SESSION['username'])) {
 	exit();
@@ -36,4 +37,5 @@ $output['occupants'] = $stmt->fetchAll(PDO::FETCH_CLASS);
 $output['proccessTime'] = sprintf('%.4f', microtime(true) - $startTime);
 
 echo json_encode($output);
+
 ?>

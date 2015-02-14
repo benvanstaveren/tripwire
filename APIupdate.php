@@ -5,9 +5,6 @@
 //	
 //	======================================================
 
-// Verify access via Tripwire signon
-if (!session_id()) session_start();
-
 require('db.inc.php');
 
 if (isset($_REQUEST['init'])) {
@@ -33,7 +30,7 @@ if (isset($_REQUEST['init'])) {
 		$cache = $time < time() ? 10 : ($time - time()) - 30;
 
 		$output['indicator'] = $time;
-
+		/* Session[authorization] not used anymore?
 		if (isset($_SESSION['authorization'])) {
 			// System activity indicators
 			$query = 'SELECT DISTINCT api.systemID, shipJumps, podKills, shipKills, npcKills FROM signatures sigs INNER JOIN masks ON mask = maskID AND accessID = :access INNER JOIN eve_api.recentActivity api ON connectionID = api.systemID OR sigs.systemID = api.systemID WHERE life IS NOT NULL';
@@ -43,6 +40,7 @@ if (isset($_REQUEST['init'])) {
 
 			$output['chain']['activity'] = $stmt->fetchAll(PDO::FETCH_CLASS);
 		}
+		*/
 	} else {
 		$cache = 0;
 		$output['result'] = false;
@@ -55,4 +53,5 @@ header('Pragma: cache');
 header('Content-Type: application/json');
 
 echo json_encode($output);
+
 ?>

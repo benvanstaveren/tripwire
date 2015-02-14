@@ -13,7 +13,6 @@
 //***********************************************************
 
 $startTime = microtime(true);
-ob_start("ob_gzhandler");
 
 require('db.inc.php');
 
@@ -70,6 +69,5 @@ for ($x = 0; $x <= $length; $x++) {
 $output['proccessTime'] = sprintf('%.4f', microtime(true) - $startTime);
 
 echo json_encode($output);
-ob_flush();
 
 ?>

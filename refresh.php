@@ -10,13 +10,10 @@ if (!session_id()) session_start();
 
 if(!isset($_SESSION['userID'])) {
 	exit();
-	//$_SESSION['userID'] = 1;
-	//$_SESSION['mask'] = '1.0';
 }
 
 header('Content-Type: application/json');
 $startTime = microtime(true);
-ob_start("ob_gzhandler");
 
 require('db.inc.php');
 
@@ -115,6 +112,8 @@ if (isset($_SERVER['HTTP_EVE_TRUSTED']) && $_SERVER['HTTP_EVE_TRUSTED'] == 'Yes'
 	if ($row = $stmt->fetchObject())
 		$output['EVE'] = $row;
 }
+
+session_write_close();
 
 /**
 // *********************
@@ -253,7 +252,7 @@ if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'init') {
 	$stmt = $mysql->prepare($query);
 	$stmt->bindValue(':mask', $maskID, PDO::PARAM_STR);
 	$stmt->execute();
-	$output['chain']['last_modified'] = $stmt->fetchColumn() ? $stmt->fetchColumn() : date('Y-m-d H:i:s', time());
+	$output['chain']['last_modified'] = $stmt->rowCount() ? $stmt->fetchColumn() : date('Y-m-d H:i:s', time());
 
 	// Get occupied systems
 	$query = 'SELECT DISTINCT systemID FROM active WHERE maskID = :maskID AND systemID IS NOT NULL';
@@ -407,7 +406,6 @@ if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'init') {
 $output['proccessTime'] = sprintf('%.4f', microtime(true) - $startTime);
 
 echo json_encode($output);
-ob_flush();
 
 ?>
 
