@@ -13,6 +13,7 @@ $keyID = 		isset($_REQUEST['api_key'])?$_REQUEST['api_key']:null;
 $vCode = 		isset($_REQUEST['api_code'])?$_REQUEST['api_code']:null;
 $selected = 	isset($_REQUEST['selected'])?$_REQUEST['selected']:null;
 $mode = 		isset($_REQUEST['mode'])?$_REQUEST['mode']:null;
+$mask = 		33554432;
 $verified = 	false;
 $output = 		null;
 
@@ -69,7 +70,13 @@ if ($mode == 'user') {
 	if (!$output) {
 		$API = new API();
 
-		if ($API->checkAccount($keyID, $vCode) != 0) {
+		if ($API->checkAccount($keyID, $vCode) == 0) {
+			$output['field'] = 'api';
+			$output['error'] = "API requires 'Account Status' permission";
+		} else if ($API->checkMask($keyID, $vCode, $mask) == 0) {
+			$output['field'] = 'api';
+			$output['error'] = "API requires <b><u>ONLY</u></b> 'Account Status' permission";
+		} else {
 			$characters = $API->getCharacters($keyID, $vCode);
 
 			if (count($characters) == 0) {
@@ -116,9 +123,6 @@ if ($mode == 'user') {
 					$output['created'] = $stmt->execute();
 				}
 			}
-		} else {
-			$output['field'] = 'api';
-			$output['error'] = "API requires 'Account Status' permissions";
 		}
 	}
 } else if ($mode == 'corp') {
