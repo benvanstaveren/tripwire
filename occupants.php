@@ -37,4 +37,5 @@ $output['occupants'] = $stmt->fetchAll(PDO::FETCH_CLASS);
 $output['proccessTime'] = sprintf('%.4f', microtime(true) - $startTime);
 
 echo json_encode($output);
+
 ?>
