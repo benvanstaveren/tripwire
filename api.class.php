@@ -140,6 +140,21 @@ class API {
 
 		return 0;
 	}
+
+	public function checkMask($keyID, $vCode, $mask) {
+		$url = '/account/APIKeyInfo.xml.aspx';
+		$params = array('keyId' => $keyID, 'vCode' => $vCode);
+
+		$xpath = "//key[@accessMask='$mask']";
+
+		if ($xmlFile = @simplexml_load_string($this->getAPI($url, $params))) {
+			$result = $xmlFile->xpath($xpath);
+
+			return count($result) > 0 ? 1 : 0;
+		}
+
+		return 0;
+	}
 }
 
 class eveData {
