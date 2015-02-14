@@ -145,12 +145,12 @@ class API {
 		$url = '/account/APIKeyInfo.xml.aspx';
 		$params = array('keyId' => $keyID, 'vCode' => $vCode);
 
-		$xpath = "/key";
+		$xpath = "//key[@accessMask='$mask']";
 
 		if ($xmlFile = @simplexml_load_string($this->getAPI($url, $params))) {
 			$result = $xmlFile->xpath($xpath);
 
-			return $result['accessMask']->__toString() == $mask ? 1 : 0;
+			return count($result) > 0 ? 1 : 0;
 		}
 
 		return 0;
