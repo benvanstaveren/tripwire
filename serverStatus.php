@@ -18,8 +18,9 @@ $query = 'SELECT players, status AS online, time FROM eve_api.serverStatus ORDER
 $stmt = $mysql->prepare($query);
 $stmt->execute();
 $result = $stmt->fetchAll(PDO::FETCH_CLASS);
-if ($result)
+if ($result) {
 	$result[0]->time = strtotime($result[0]->time) - time() + 180;
+}
 
 echo json_encode($result[0]);
 ?>
