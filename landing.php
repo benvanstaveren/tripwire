@@ -6,6 +6,7 @@ $server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 's
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<meta name="globalsign-domain-verification" content="XrOGePZSrLZFPzioQToUbZqQYG07O7YvXm9YVsZdfE" />
 	<title>Tripwire</title>
 	
 	<meta charset="utf-8" />
