@@ -1373,7 +1373,6 @@ input[type="checkbox"] + label {
 }
 
 #donate {
-	content: url("../../images/landing/donate.jpg");
 	border: none;
 	height: 48px;
 	box-shadow: 0px 0px 25px 5px black;
