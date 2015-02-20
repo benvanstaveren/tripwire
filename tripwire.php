@@ -10,7 +10,7 @@ if (!isset($_REQUEST['system']) || empty($_REQUEST['system'])) {
 
 $startTime = microtime(true);
 
-$server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 'static';
+$server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.com' : $_SERVER['SERVER_NAME'];
 
 // Caching
 header('Cache-Control: public, max-age=300');
@@ -46,10 +46,10 @@ if ($row = $stmt->fetchObject()) {
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="system" content="<?= $system ?>">
 	<meta name="systemID" content="<?= $systemID ?>">
-	<link rel="shortcut icon" href="//<?= $server ?>.eve-apps.com/images/favicon.png" />
+	<link rel="shortcut icon" href="//<?= $server ?>/images/favicon.png" />
 	
-	<link rel="stylesheet" type="text/css" href="//<?= $server ?>.eve-apps.com/css/combine.css">
-	<link rel="stylesheet" type="text/css" href="//<?= $server ?>.eve-apps.com/css/style.css">
+	<link rel="stylesheet" type="text/css" href="//<?= $server ?>/css/combine.css">
+	<link rel="stylesheet" type="text/css" href="//<?= $server ?>/css/style.css">
 	
 	<title><?=$system?> - Tripwire</title>
 </head>
@@ -60,7 +60,7 @@ if ($row = $stmt->fetchObject()) {
 	<div id="topbar">
 		<span class="align-left">
 			<h1 id="logo" class="pointer">
-			<?php if ($server == 'static') { ?>
+			<?php if ($server == 'static.eve-apps.com') { ?>
 				<a href=".">Tripwire</a><span id="beta">Beta</span>
 			<?php } else { ?>
 				<a href=".">Galileo</a><span id="dev">Dev</span>
@@ -1032,9 +1032,9 @@ if ($row = $stmt->fetchObject()) {
 	</script>
 
 	<!-- JS Includes -->
-	<script type="text/javascript" src="//<?= $server ?>.eve-apps.com/js/combine.js"></script>
-	<script type="text/javascript" src="//<?= $server ?>.eve-apps.com/ckeditor/ckeditor.js"></script>
-	<script type="text/javascript" src="//<?= $server ?>.eve-apps.com/js/core.js"></script>
+	<script type="text/javascript" src="//<?= $server ?>/js/combine.js"></script>
+	<script type="text/javascript" src="//<?= $server ?>/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="//<?= $server ?>/js/core.js"></script>
 	<!-- JS Includes -->
 
 </body>

@@ -1,6 +1,5 @@
 <?php
 
-//$server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 'static';
 $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.com' : $_SERVER['SERVER_NAME'];
 
 ?>
