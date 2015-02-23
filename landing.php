@@ -712,7 +712,8 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 	<!-- End Wrapper -->
 
 	<!-- Javascripts -->
-	<script type="text/javascript" src="//<?= $server ?>/js/landing/jquery-1.7.1.min.js"></script>
+	<!--<script type="text/javascript" src="//<?= $server ?>/js/landing/jquery-1.7.1.min.js"></script>-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 	<script type="text/javascript" src="//<?= $server ?>/js/landing/html5shiv.js"></script>
 	<script type="text/javascript" src="//<?= $server ?>/js/landing/jquery.tipsy.js"></script>
 	<script type="text/javascript" src="//<?= $server ?>/js/landing/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
