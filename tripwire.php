@@ -333,7 +333,7 @@ if ($row = $stmt->fetchObject()) {
 					<i id="show-chainLegend" data-icon="tree" data-tooltip="<table id='guide'><tr><td><div class='guide-stable'></td><td>Stable</td></tr><tr><td><div class='guide-eol'></div></td><td>End of Life</td></tr><tr><td><div class='guide-destab'></div></td><td>Mass Destabbed</td></tr><tr><td><div class='guide-critical'></div></td><td>Mass Critical</td></tr><tr><td><div class='guide-frigate'></div></td><td>Frigate</td></tr></table>"></i>
 				</div>
 				<div class="content">
-					<span style="position: relative; display: inline-block; min-width: 100%; width: 100%;">
+					<span style="position: relative; display: table; min-width: 100%;">
 						<table id="chainGrid">
 							<tr class="top"><td></td></tr>
 							<tr class="space hidden"><td></td></tr>
