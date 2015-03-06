@@ -1839,7 +1839,6 @@ td.google-visualization-orgchart-linenode[data-signatureid] {
 #chainGrid {
 	position: absolute;
 	width: 100%;
-	height: 100%;
 	z-index: -10;
 	margin-left: -3px;
 	color: #777;
