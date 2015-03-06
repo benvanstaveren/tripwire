@@ -334,7 +334,7 @@ if ($row = $stmt->fetchObject()) {
 				</div>
 				<div class="content">
 					<span style="position: relative; display: table; min-width: 100%;">
-						<table id="chainGrid">
+						<table id="chainGrid" style="display: table; margin: 0 auto;">
 							<tr class="top"><td></td></tr>
 							<tr class="space hidden"><td></td></tr>
 							<tr class="line hidden"><td></td></tr>
