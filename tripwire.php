@@ -333,7 +333,7 @@ if ($row = $stmt->fetchObject()) {
 					<i id="show-chainLegend" data-icon="tree" data-tooltip="<table id='guide'><tr><td><div class='guide-stable'></td><td>Stable</td></tr><tr><td><div class='guide-eol'></div></td><td>End of Life</td></tr><tr><td><div class='guide-destab'></div></td><td>Mass Destabbed</td></tr><tr><td><div class='guide-critical'></div></td><td>Mass Critical</td></tr><tr><td><div class='guide-frigate'></div></td><td>Frigate</td></tr></table>"></i>
 				</div>
 				<div class="content">
-					<span style="position: relative; display: block; min-width: 100%;">
+					<span style="position: relative; display: inline-block; min-width: 100%;">
 						<table id="chainGrid">
 							<tr class="top"><td></td></tr>
 							<tr class="space hidden"><td></td></tr>
@@ -373,6 +373,14 @@ if ($row = $stmt->fetchObject()) {
 							<tr class="space hidden"><td>17</td></tr>
 							<tr class="line hidden"><td></td></tr>
 							<tr class="space hidden"><td>18</td></tr>
+							<tr class="line hidden"><td></td></tr>
+							<tr class="space hidden"><td>19</td></tr>
+							<tr class="line hidden"><td></td></tr>
+							<tr class="space hidden"><td>20</td></tr>
+							<tr class="line hidden"><td></td></tr>
+							<tr class="space hidden"><td>21</td></tr>
+							<tr class="line hidden"><td></td></tr>
+							<tr class="space hidden"><td>22</td></tr>
 						</table>
 						<span id="chainMap"></span>
 					</span>
