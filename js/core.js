@@ -1715,7 +1715,7 @@ var tripwire = new function() {
 	this.activity = {};
 	this.timer;
 	this.refreshRate = 5000;
-	this.sigEditingList = {};
+	this.connected = true;
 	this.ageFormat = "HM";
 	this.instance = new Date().getTime() / 1000;//window.name ? window.name : (new Date().getTime() / 1000, window.name = new Date().getTime() / 1000);
 
@@ -1910,10 +1910,20 @@ var tripwire = new function() {
 			}
 
 			successCallback ? successCallback(data) : null;
-		}).always(function(data) {
+		}).always(function(data, status) {
 			tripwire.timer = setTimeout("tripwire.refresh();", tripwire.refreshRate);
 
 			alwaysCallback ? alwaysCallback(data) : null;
+
+			if (status != "success" && tripwire.connected == true) {
+				tripwire.connected = false;
+				$("#ConnectionSuccess").click();
+				Notify.trigger("Error syncing with server", "red", false, "connectionError");
+			} else if (status == "success" && tripwire.connected == false) {
+				tripwire.connected = true;
+				$("#connectionError").click();
+				Notify.trigger("Successfully reconnected with server", "green", 5000, "connectionSuccess");
+			}
 		});
 
 		return true;
@@ -3739,11 +3749,13 @@ function postLoad() {
 // Notifications
 var Notify = new function() {
 
-	this.trigger = function(content, color, stick) {
+	this.trigger = function(content, color, stick, id) {
 		var color = typeof(color) !== "undefined" ? color : "blue";
 		var stick = typeof(stick) !== "undefined" ? stick : 10000;
+		var id = typeof(id) !== "undefined" ? id : null;
 
 		new jBox("Notice", {
+			id: id,
 			content: content,
 			offset: {y: 35},
 			animation: "flip",
