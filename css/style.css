@@ -555,6 +555,7 @@ to { -o-transform: rotate(360deg); }
 }
 
 #chainMap td.node {
+	height: 30px;
 	min-width: 5em;
 	white-space: nowrap; 
 	text-align: center;

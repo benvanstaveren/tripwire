@@ -373,6 +373,14 @@ if ($row = $stmt->fetchObject()) {
 							<tr class="space hidden"><td>17</td></tr>
 							<tr class="line hidden"><td></td></tr>
 							<tr class="space hidden"><td>18</td></tr>
+							<tr class="line hidden"><td></td></tr>
+							<tr class="space hidden"><td>19</td></tr>
+							<tr class="line hidden"><td></td></tr>
+							<tr class="space hidden"><td>20</td></tr>
+							<tr class="line hidden"><td></td></tr>
+							<tr class="space hidden"><td>21</td></tr>
+							<tr class="line hidden"><td></td></tr>
+							<tr class="space hidden"><td>22</td></tr>
 						</table>
 						<span id="chainMap"></span>
 					</span>
