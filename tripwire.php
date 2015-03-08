@@ -137,7 +137,7 @@ if ($row = $stmt->fetchObject()) {
 
 	<div class="gridster">
 		<ul>
-			<li id="infoWidget" class="gridWidget" data-row="1" data-col="1" data-sizex="7" data-sizey="6" data-min-sizex="6" data-min-sizey="4" style="width: 410px; height: 350px;">
+			<li id="infoWidget" class="gridWidget" data-row="1" data-col="1" data-sizex="7" data-sizey="6" data-min-sizex="5" data-min-sizey="4" style="width: 410px; height: 350px;">
 				<div class="content">
 					<i id="system-favorite" data-icon="star-empty" style="float: right; padding-top: 10px; font-size: 2em;"></i>
 					<h1 style="color: #CCC;"><?=$system?></h1>
@@ -260,31 +260,21 @@ if ($row = $stmt->fetchObject()) {
 					<a style="float: right;" href='http://eve-kill.net/?a=system_detail&sys_name=<?=$system?>' target="_blank">Eve-kill.net&nbsp;&nbsp;</a>
 				</div>
 			</li>
-			<li id="signaturesWidget" class="gridWidget" data-row="1" data-col="8" data-sizex="7" data-sizey="6" data-min-sizex="7" data-min-sizey="2" style="width: 410px; height: 350px;">
+			<li id="signaturesWidget" class="gridWidget" data-row="1" data-col="8" data-sizex="7" data-sizey="6" data-min-sizex="5" data-min-sizey="2" style="width: 410px; height: 350px;">
 				<div class="controls">
 					<i id="add-signature" data-icon="plus" data-tooltip="Add a new signature"></i>
 					<i id="toggle-automapper" data-icon="auto" data-tooltip="Toggle Auto-Mapper"></i>
 				</div>
 				<div class="content">
-					<table id="sigTable">
-						<colgroup>
-							<col id="id" />
-							<col id="type" />
-							<col id="age" />
-							<col id="leads" />
-							<col id="life" />
-							<col id="mass" />
-							<col id="delete" />
-							<col id="edit" />
-						</colgroup>
+					<table id="sigTable" width="100%">
 						<thead>
 							<tr>
-								<th>ID</th>
-								<th>Type</th>
-								<th data-sorter="usLongDate">Age</th>
-								<th>Leads To</th
-								><th>Life</th>
-								<th>Mass</th>
+								<th>ID<i data-icon=""></i></th>
+								<th>Type<i data-icon=""></i></th>
+								<th data-sorter="usLongDate">Age<i data-icon=""></i></th>
+								<th>Leads To<i data-icon=""></i></th>
+								<th>Life<i data-icon=""></i></th>
+								<th>Mass<i data-icon=""></i></th>
 								<th class="sorter-false"></th>
 								<th class="sorter-false"></th>
 							</tr>
@@ -293,7 +283,7 @@ if ($row = $stmt->fetchObject()) {
 					</table>
 				</div>
 			</li>
-			<li id="notesWidget" class="gridWidget" data-row="1" data-col="15" data-sizex="7" data-sizey="6" data-min-sizex="4" data-min-sizey="2" style="width: 410px; height: 350px;">
+			<li id="notesWidget" class="gridWidget" data-row="1" data-col="15" data-sizex="7" data-sizey="6" data-min-sizex="5" data-min-sizey="2" style="width: 410px; height: 350px;">
 				<div class="controls">
 					<i id="add-comment" data-icon="plus" data-tooltip="Add a new comment"></i>
 				</div>
@@ -323,7 +313,7 @@ if ($row = $stmt->fetchObject()) {
 					</div>
 				</div>
 			</li>
-			<li id="chainWidget" class="gridWidget" data-row="7" data-col="1" data-sizex="21" data-sizey="8" style="width: 1250px; height: 470px;">
+			<li id="chainWidget" class="gridWidget" data-row="7" data-col="1" data-sizex="21" data-sizey="8" data-min-sizex="5" data-min-sizey="4" style="width: 1250px; height: 470px;">
 				<div class="controls">
 					<span id="chainTabs"></span>
 					<i id="newTab" data-icon="plus" data-tooltip="New tab"></i>
