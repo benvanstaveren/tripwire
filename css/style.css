@@ -485,23 +485,23 @@ to { -o-transform: rotate(360deg); }
 }
 
 #sigTable th:nth-child(1) {
-	width: 2.5em;
+	width: 20px;
 }
 
 #sigTable th:nth-child(2) {
-	width: 4em;
+	width: 35px;
 }
 
 #sigTable th:nth-child(3) {
-	width: 4em;
+	width: 35px;
 }
 
 #sigTable th:nth-child(5), #sigTable th:nth-child(6) {
-	width: 3.5em;
+	width: 30px;
 }
 
 #sigTable th:nth-child(7), #sigTable th:nth-child(8) {
-	width: 0.1em;
+	width: 1px;
 }
 
 #sigTable .tablesorter-header {
