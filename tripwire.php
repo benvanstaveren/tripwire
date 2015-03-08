@@ -272,8 +272,8 @@ if ($row = $stmt->fetchObject()) {
 								<th>ID</th>
 								<th>Type</th>
 								<th data-sorter="usLongDate">Age</th>
-								<th>Leads To</th
-								><th>Life</th>
+								<th>Leads To</th>
+								<th>Life</th>
 								<th>Mass</th>
 								<th class="sorter-false"></th>
 								<th class="sorter-false"></th>

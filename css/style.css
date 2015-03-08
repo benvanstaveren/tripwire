@@ -484,24 +484,24 @@ to { -o-transform: rotate(360deg); }
 	border: none;
 }
 
-#sigTable #id {
+#sigTable th:nth-child(1) {
+	width: 2.5em;
+}
+
+#sigTable th:nth-child(2) {
 	width: 4em;
 }
 
-#sigTable #type {
-	width: 6em;
+#sigTable th:nth-child(3) {
+	width: 4em;
 }
 
-#sigTable #age {
-	width: 5em;
+#sigTable th:nth-child(5), #sigTable th:nth-child(6) {
+	width: 3.5em;
 }
 
-#sigTable #life, #sigTable #mass {
-	width: 5em;
-}
-
-#sigTable #delete, #sigTable #edit {
-	width: 1.5em;
+#sigTable th:nth-child(7), #sigTable th:nth-child(8) {
+	width: 0.1em;
 }
 
 #sigTable .tablesorter-header {
