@@ -218,10 +218,10 @@ class signatures {
 				$sig2Type			= $whType !== 'K162' ? 'K162' : ($sig->sig2Type !== 'K162' ? $sig->sig2Type : '???');
 				$class 				= property_exists($sig, 'class') ? $sig->class : null;
 				$class2				= property_exists($sig, 'class2') ? $sig->class2 : null;
-				$typeBM 			= $old->typeBM;
-				$type2BM 			= $old->type2BM;
-				$classBM 			= $old->classBM;
-				$class2BM 			= $old->class2BM;
+				$typeBM 			= Array($old->typeBM);
+				$type2BM 			= Array($old->type2BM);
+				$classBM 			= Array($old->classBM);
+				$class2BM 			= Array($old->class2BM);
 				$letters			= range('a', 'z');
 
 				if ($sig->side == 'parent') {
