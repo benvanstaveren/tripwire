@@ -267,16 +267,6 @@ if ($row = $stmt->fetchObject()) {
 				</div>
 				<div class="content">
 					<table id="sigTable" width="100%">
-						<colgroup>
-							<col id="id" />
-							<col id="type" />
-							<col id="age" />
-							<col id="leads" />
-							<col id="life" />
-							<col id="mass" />
-							<col id="delete" />
-							<col id="edit" />
-						</colgroup>
 						<thead>
 							<tr>
 								<th>ID</th>
