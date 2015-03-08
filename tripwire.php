@@ -269,12 +269,12 @@ if ($row = $stmt->fetchObject()) {
 					<table id="sigTable" width="100%">
 						<thead>
 							<tr>
-								<th>ID</th>
-								<th>Type</th>
-								<th data-sorter="usLongDate">Age</th>
-								<th>Leads To</th>
-								<th>Life</th>
-								<th>Mass</th>
+								<th>ID<i data-icon=""></i></th>
+								<th>Type<i data-icon=""></i></th>
+								<th data-sorter="usLongDate">Age<i data-icon=""></i></th>
+								<th>Leads To<i data-icon=""></i></th>
+								<th>Life<i data-icon=""></i></th>
+								<th>Mass<i data-icon=""></i></th>
 								<th class="sorter-false"></th>
 								<th class="sorter-false"></th>
 							</tr>
