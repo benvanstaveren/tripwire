@@ -266,7 +266,7 @@ if ($row = $stmt->fetchObject()) {
 					<i id="toggle-automapper" data-icon="auto" data-tooltip="Toggle Auto-Mapper"></i>
 				</div>
 				<div class="content">
-					<table id="sigTable">
+					<table id="sigTable" width="100%">
 						<colgroup>
 							<col id="id" />
 							<col id="type" />
