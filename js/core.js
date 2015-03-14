@@ -389,7 +389,7 @@ var setCookie = function(c_name, value, exdays) {
 	document.cookie = c_name + "=" + c_value + ";";
 
 	if (document.location.protocol == "https:") {
-		document.cookie += "secure;";
+		document.cookie += " secure;";
 	}
 }
 
