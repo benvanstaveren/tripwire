@@ -1849,7 +1849,7 @@ var tripwire = new function() {
 		// Remove old timer to prevent multiple
 		if (this.timer) clearTimeout(this.timer);
 
-		if (mode == 'refresh') {
+		if (mode == 'refresh' || mode == 'change') {
 			data.sigCount = Object.size(this.client.signatures);
 			data.sigTime = Object.maxTime(this.client.signatures, "time");
 
@@ -1876,7 +1876,7 @@ var tripwire = new function() {
 			$.merge(this.aSigSystems, ["Null-Sec", "Low-Sec", "High-Sec", "Class-1", "Class-2", "Class-3", "Class-4", "Class-5", "Class-6"]);
 		}
 
-		data.mode = mode;
+		data.mode = mode != "init" ? "refresh" : "init";
 		data.systemID = viewingSystemID;
 		data.instance = tripwire.instance;
 		
@@ -2494,7 +2494,7 @@ var tripwire = new function() {
 
 			//client and server should now match
 			this.client = server;
-		} else if (mode == 'init') {
+		} else if (mode == 'init' || mode == 'change') {
 			
 			for (var key in server.signatures) {
 				this.addSig(server.signatures[key], {animate: false});
@@ -2815,7 +2815,7 @@ var tripwire = new function() {
 		this.serverStatus(); // Get TQ status
 		this.pasteSignatures();
 		postLoad();
-		systemChange(viewingSystemID);
+		systemChange(viewingSystemID, "init");
 	}
 	
 	// Use delayed init to speed up rendering
@@ -4517,26 +4517,30 @@ if (window.location.href.indexOf("galileo") != -1) {
 
 //	 New non-refresh code
 
-function systemChange(systemID) {
-	$("#infoSecurity").removeClass();
-	$("#infoStatics").empty();
+function systemChange(systemID, mode) {
+	if (mode != "init") {
+		$("#infoSecurity").removeClass();
+		$("#infoStatics").empty();
 
-	viewingSystem = tripwire.systems[systemID].name;
-	viewingSystemID = systemID;
+		viewingSystem = tripwire.systems[systemID].name;
+		viewingSystemID = systemID;
 
-	// Reset activity
-	activity.refresh();
+		// Reset activity
+		activity.refresh();
 
-	// Reset signatures
-	$("#sigTable tbody").empty()
-	tripwire.client.signatures = null;
+		// Reset signatures
+		$("#sigTable tbody").empty()
+		tripwire.client.signatures = null;
 
-	// Reset chain map
-	chain.redraw();
+		// Reset chain map
+		chain.redraw();
 
-	// Reset comments
-	$("#notesWidget .content .comment:visible").remove();
-	tripwire.comments.data = null;
+		// Reset comments
+		$("#notesWidget .content .comment:visible").remove();
+		tripwire.comments.data = null;
+
+		tripwire.refresh("change");
+	}
 
 	$("#infoSystem").text(tripwire.systems[systemID].name);
 
@@ -4576,8 +4580,6 @@ function systemChange(systemID) {
 
 	// Region
 	$("#infoRegion").text(tripwire.regions[tripwire.systems[systemID].regionID].name);
-
-	tripwire.refresh();
 }
 
 $("body").on("click", "a[href^='.?system=']", function(e) {
