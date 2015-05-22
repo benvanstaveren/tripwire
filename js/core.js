@@ -545,6 +545,7 @@ var options = new function() {
 // Init code
 var viewingSystem = $("meta[name=system]").attr("content");
 var viewingSystemID = $("meta[name=systemID]").attr("content");
+var server = $("meta[name=server]").attr("content");
 
 // Current system favorite
 if ($.inArray(viewingSystemID, options.favorites) != -1) $("#system-favorite").attr("data-icon", "star").addClass("active");
@@ -1863,7 +1864,7 @@ var tripwire = new function() {
 
 			data.activity = this.activity;
 		} else {
-			$.extend(this, $.ajax({url: "//static.eve-apps.com/js/combine.json", async: false, dataType: "JSON"}).responseJSON);
+			$.extend(this, $.ajax({url: "//"+ server +"/js/combine.json", async: false, dataType: "JSON"}).responseJSON);
 
 			//this.wormholes = $.ajax({url: "js/wormholes.json", async: false, dataType: "JSON"}).responseJSON;
 			//this.map = $.ajax({url: "js/map.json", async: false, dataType: "JSON"}).responseJSON;
@@ -2814,6 +2815,7 @@ var tripwire = new function() {
 		this.serverStatus(); // Get TQ status
 		this.pasteSignatures();
 		postLoad();
+		systemChange(viewingSystemID);
 	}
 	
 	// Use delayed init to speed up rendering
@@ -4512,3 +4514,77 @@ CKEDITOR.on("dialogDefinition", function(ev) {
 if (window.location.href.indexOf("galileo") != -1) {
 	Notify.trigger("This is the test version of Tripwire.<br/>Please use <a href='https://tripwire.cloud-things.com'>Tripwire</a>")
 }
+
+//	 New non-refresh code
+
+function systemChange(systemID) {
+	$("#infoSecurity").removeClass();
+	$("#infoStatics").empty();
+
+	viewingSystem = tripwire.systems[systemID].name;
+	viewingSystemID = systemID;
+
+	// Reset activity
+	activity.refresh();
+
+	// Reset signatures
+	$("#sigTable tbody").empty()
+	tripwire.client.signatures = null;
+
+	// Reset chain map
+	chain.redraw();
+
+	// Reset comments
+	$("#notesWidget .content .comment:visible").remove();
+	tripwire.comments.data = null;
+
+	$("#infoSystem").text(tripwire.systems[systemID].name);
+
+	if (tripwire.systems[systemID].class) {
+		$("#infoSecurity").addClass("wh").text("Class " + tripwire.systems[systemID].class);
+
+		// Statics
+		for (var x in tripwire.systems[systemID].statics) {
+			var type = tripwire.systems[systemID].statics[x];
+			var wormhole = tripwire.wormholes[type];
+			var color = "wh";
+
+			switch (wormhole.leadsTo) {
+				case "High-Sec":
+					color = "hisec";
+					break;
+				case "Low-Sec":
+					color = "lowsec";
+					break;
+				case "Null-Sec":
+					color = "nullsec";
+					break;
+			}
+
+			$("#infoStatics").append("<div><span class='"+ color +"'>&#9679;</span> <b>"+ wormhole.leadsTo +"</b> via <span class='"+ color +"'>"+ type +"</span></div>");
+		}
+	} else {
+		// Security
+		if (tripwire.systems[systemID].security >= 0.45) {
+			$("#infoSecurity").addClass("hisec").text("High-Sec " + tripwire.systems[systemID].security);
+		} else if (tripwire.systems[systemID].security > 0.0) {
+			$("#infoSecurity").addClass("lowsec").text("Low-Sec " + tripwire.systems[systemID].security);
+		} else {
+			$("#infoSecurity").addClass("nullsec").text("Null-Sec " + tripwire.systems[systemID].security);
+		}
+	}
+
+	// Region
+	$("#infoRegion").text(tripwire.regions[tripwire.systems[systemID].regionID].name);
+
+	tripwire.refresh();
+}
+
+$("body").on("click", "a[href^='.?system=']", function(e) {
+	e.preventDefault();
+
+	var system = $(this).attr("href").replace(".?system=", "");
+	var systemID = Object.index(tripwire.systems, "name", system);
+
+	systemChange(systemID);
+});
