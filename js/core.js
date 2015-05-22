@@ -4542,6 +4542,8 @@ function systemChange(systemID, mode) {
 		tripwire.refresh("change");
 	}
 
+	document.title = tripwire.systems[systemID].name + " - Tripwire";
+
 	$("#infoSystem").text(tripwire.systems[systemID].name);
 
 	if (tripwire.systems[systemID].class) {
