@@ -52,7 +52,7 @@ if ($row = $stmt->fetchObject()) {
 	<link rel="stylesheet" type="text/css" href="//<?= $server ?>/css/combine.css">
 	<link rel="stylesheet" type="text/css" href="//<?= $server ?>/css/style.css">
 	
-	<title><?=$system?> - Tripwire</title>
+	<title><?=$system?> - <?= $server == 'static.eve-apps.com' ? 'Tripwire' : 'Galileo' ?></title>
 </head>
 <?php flush(); ?>
 <body class="transition">

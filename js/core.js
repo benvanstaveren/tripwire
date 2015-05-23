@@ -2431,11 +2431,14 @@ var tripwire = new function() {
 	this.EVE = function(EVE) {
 		if (EVE) {
 			// Automapper
-			if (this.client.EVE && this.client.EVE.systemID != EVE.systemID)
+			if (this.client.EVE && this.client.EVE.systemID != EVE.systemID) {
 				tripwire.autoMapper(this.client.EVE.systemID, EVE.systemID);
+			}
 
-			if (options.buttons.follow && (this.client.EVE && this.client.EVE.systemID != EVE.systemID) && $(".ui-dialog:visible").length == 0)
-				window.location = "?system="+EVE.systemName;
+			if (options.buttons.follow && (this.client.EVE && this.client.EVE.systemID != EVE.systemID) && $(".ui-dialog:visible").length == 0) {
+				//window.location = "?system="+EVE.systemName;
+				systemChange(EVE.systemID);
+			}
 
 			if (CCPEVE) {
 				$("#link").parent().hide();
@@ -4542,7 +4545,7 @@ function systemChange(systemID, mode) {
 		tripwire.refresh("change");
 	}
 
-	document.title = tripwire.systems[systemID].name + " - Tripwire";
+	document.title = tripwire.systems[systemID].name + " - " + (server == "static.eve-apps.com" ? "Tripwire" : "Galileo");
 
 	$("#infoSystem").text(tripwire.systems[systemID].name);
 
