@@ -2825,6 +2825,61 @@ var tripwire = new function() {
 	setTimeout("tripwire.init();", 50);
 }
 
+$("#add-signature2").click(function(e) {
+	e.preventDefault();
+
+	if (!$("#dialog-signature").hasClass("ui-dialog-content")) {
+		$("#dialog-signature").dialog({
+			autoOpen: true,
+			resizable: false,
+			dialogClass: "dialog-noeffect ui-dialog-shadow",
+			position: {my: "center", at: "center", of: $("#signaturesWidget")},
+			buttons: {
+				Add: function() {
+					$("#form-signature").submit();
+				},
+				Cancel: function() {
+					$(this).dialog("close");
+				}
+			},
+			create: function() {
+				var aSigWormholes = $.map(tripwire.wormholes, function(item, index) { return index;});
+				aSigWormholes.splice(26, 0, "K162");
+				aSigWormholes.push("???", "GATE");
+
+				$("#signatureType, #signatureLife").selectmenu({width: "100px"});
+				$("#dialog-signature [data-autocomplete='sigSystems']").autocomplete({source: tripwire.aSigSystems});
+				$("#dialog-signature [data-autocomplete='sigType']").autocomplete({source: aSigWormholes});
+
+				$("#signatureType").change(function(e) {
+					if (this.value == "Wormhole") {
+						$("#site").slideUp().addClass("hidden");
+						$("#wormhole").slideDown().removeClass("hidden");
+					} else {
+						$("#site").slideDown().removeClass("hidden");
+						$("#wormhole").slideUp().addClass("hidden");
+					}
+				});
+			},
+			open: function() {
+				$("#signatureType").selectmenu("value", "Combat");
+			},
+			close: function() {
+				ValidationTooltips.close();
+			}
+		});
+	} else if (!$("#dialog-signature").dialog("isOpen")) {
+		$("#dialog-signature").dialog("open");
+	}
+});
+
+$("#form-signature").submit(function(e) {
+	e.preventDefault();
+	ValidationTooltips.close();
+
+	ValidationTooltips.open({target: $("#form-signature [name='signatureID']")}).setContent("Must be 3 Letters in length!");
+});
+
 // Toggle dialog inputs based on sig type
 $("#dialog-sigAdd #sigType, #dialog-sigEdit #sigType").change(function() {
 	if ($(this).selectmenu("value") == "Wormhole") {
@@ -2890,10 +2945,25 @@ $("#add-signature").click(function(e) {
 		close: function() {
 			$("th.critical").removeClass("critical");
 			ValidationTooltips.close();
+
+			$(".sigNumHolder").removeClass("hidden");
+			$(".sigNum").addClass("hidden");
 		},
 		create: function() {
 			$("#autoAdd").button().click(function() {
 				$("#sigAddForm #connection").val(tripwire.client.EVE.systemName);
+			});
+
+			$(".sigNumHolder").click(function() {
+				$(this).addClass("hidden");
+				$(".sigNum").removeClass("hidden").focus();
+			});
+
+			$(".sigNum").blur(function() {
+				if (this.value == "") {
+					$(this).addClass("hidden");
+					$(".sigNumHolder").removeClass("hidden");
+				}
 			});
 
 			$("#sigAddForm #sigType, #sigAddForm #sigLife").selectmenu({width: "100px"});
@@ -4585,6 +4655,11 @@ function systemChange(systemID, mode) {
 
 	// Region
 	$("#infoRegion").text(tripwire.regions[tripwire.systems[systemID].regionID].name);
+
+	// Info Links
+	$("#infoWidget .infoLink").each(function() {
+		this.href = $(this).data("href").replace("$system", tripwire.systems[systemID].name);
+	});
 }
 
 $("body").on("click", "a[href^='.?system=']", function(e) {

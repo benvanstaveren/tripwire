@@ -141,7 +141,7 @@ if ($row = $stmt->fetchObject()) {
 			<li id="infoWidget" class="gridWidget" data-row="1" data-col="1" data-sizex="7" data-sizey="6" data-min-sizex="5" data-min-sizey="4" style="width: 410px; height: 350px;">
 				<div class="content">
 					<i id="system-favorite" data-icon="star-empty" style="float: right; padding-top: 10px; font-size: 2em;"></i>
-					<h1 id="infoSystem" style="color: #CCC;"><?=$system?></h1>
+					<h1 id="infoSystem" class="pointer" style="color: #CCC;"><?=$system?></h1>
 					<?php
 						/*
 						if ($regionID >= 11000000) {
@@ -225,14 +225,14 @@ if ($row = $stmt->fetchObject()) {
 						}
 						*/
 					?>
-					<h4 id="infoSecurity">&nbsp;</h4>
-					<h4 id="infoRegion">&nbsp;</h4>
+					<h4 id="infoSecurity" class="pointer">&nbsp;</h4>
+					<h4 id="infoRegion" class="pointer">&nbsp;</h4>
 					<div id="activityGraph"></div>
 					<div style="text-align: center;"><a href="javascript: activity.time(168);">Week</a> - <a href="javascript: activity.time(48);">48Hour</a> - <a href="javascript: activity.time(24);">24Hour</a></div>
 					<span id="infoStatics" class="pointer" style="float: left;"></span>
-					<a style="float: right;" href='http://wh.pasta.gg/<?=$system?>' target="_blank">wormhol.es</a><br/>
-					<a style="float: right;" href="http://evemaps.dotlan.net/search?q=<?=$system?>" target="_blank">dotlan</a>
-					<a style="float: right;" href='http://eve-kill.net/?a=system_detail&sys_name=<?=$system?>' target="_blank">Eve-kill.net&nbsp;&nbsp;</a>
+					<a class="infoLink" style="float: right;" data-href='http://wh.pasta.gg/$system' href="" target="_blank">wormhol.es</a><br/>
+					<a class="infoLink" style="float: right;" data-href="http://evemaps.dotlan.net/search?q=$system" href="" target="_blank">dotlan</a>
+					<a class="infoLink" style="float: right;" data-href='http://eve-kill.net/?a=system_detail&sys_name=$system' href="" target="_blank">Eve-kill.net&nbsp;&nbsp;</a>
 				</div>
 			</li>
 			<li id="signaturesWidget" class="gridWidget" data-row="1" data-col="8" data-sizex="7" data-sizey="6" data-min-sizex="5" data-min-sizey="2" style="width: 410px; height: 350px;">
