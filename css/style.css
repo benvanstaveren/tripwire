@@ -479,58 +479,62 @@ to { -o-transform: rotate(360deg); }
 	background-color: #222;
 }
 
+#sigTable th:nth-child(1) {
+	width: 30px;
+}
+
+#sigTable th:nth-child(2) {
+	width: 40px;
+}
+
+#sigTable th:nth-child(3) {
+	width: 40px;
+}
+
+#sigTable th:nth-child(5), #sigTable th:nth-child(6) {
+	width: 40px;
+}
+
 #sigTable th:nth-child(7), #sigTable th:nth-child(8) {
+	width: 10px;
 	background: transparent;
 	border: none;
 }
 
-#sigTable #id {
-	width: 4em;
-}
-
-#sigTable #type {
-	width: 6em;
-}
-
-#sigTable #age {
-	width: 5em;
-}
-
-#sigTable #life, #sigTable #mass {
-	width: 5em;
-}
-
-#sigTable #delete, #sigTable #edit {
-	width: 1.5em;
-}
-
 #sigTable .tablesorter-header {
 	cursor: pointer;
-	background-image: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAJCAYAAADdA2d2AAAALUlEQVR42mNgIBLMnDnzPwM1AchAGKa6gVQxGJuBVHUxTcKS5kEwOGOfnHQKAFHIWUGkXiGTAAAAAElFTkSuQmCC);
-	background-position: right;
-	background-repeat: no-repeat;
-	padding-right: 15px;
+	vertical-align: middle;
+	font-size: 10px;
 }
 
-#sigTable .headerSortUp,
-#sigTable .tablesorter-headerSortUp,
-#sigTable .tablesorter-headerAsc {
-	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
-	color: #fff;
+#sigTable .tablesorter-header i:before {
+	content: "\f0dc";
+	vertical-align: bottom;
+	padding: 1px 2px;
+	float: right;
 }
 
-#sigTable .headerSortDown,
-#sigTable .tablesorter-headerSortDown,
-#sigTable .tablesorter-headerDesc {
+#sigTable .headerSortUp i:before,
+#sigTable .tablesorter-headerSortUp i:before,
+#sigTable .tablesorter-headerAsc i:before {
+	content: "\f0de";
 	color: #fff;
-	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+	padding: 1px 2px;
+	float: right;
+}
+
+#sigTable .headerSortDown i:before,
+#sigTable .tablesorter-headerSortDown i:before,
+#sigTable .tablesorter-headerDesc i:before {
+	content: "\f0dd";
+	color: #fff;
+	padding: 1px 2px;
+	float: right;
 }
 
 #sigTable thead .sorter-false {
-	background-image: none;
 	cursor: default;
 }
-
 
 /* CHAIN MAP */
 #chainMap {
@@ -555,6 +559,7 @@ to { -o-transform: rotate(360deg); }
 }
 
 #chainMap td.node {
+	height: 30px;
 	min-width: 5em;
 	white-space: nowrap; 
 	text-align: center;
@@ -1454,6 +1459,15 @@ i.closeIcon:hover {
 [data-icon="radio-on"]:before {
 	content: "\e608";
 }
+[data-icon="sort"]:before {
+	content: "\f0dc";
+}
+[data-icon="sort-desc"]:before {
+	content: "\f0dd";
+}
+[data-icon="sort-asc"]:before {
+	content: "\f0de";
+}
 /* ---- */
 
 #activityGraph svg > g:nth-child(3) > g > path {
@@ -1838,7 +1852,6 @@ td.google-visualization-orgchart-linenode[data-signatureid] {
 #chainGrid {
 	position: absolute;
 	width: 100%;
-	height: 100%;
 	z-index: -10;
 	margin-left: -3px;
 	color: #777;
@@ -1999,7 +2012,6 @@ td.google-visualization-orgchart-linenode[data-signatureid] {
 }
 
 #donate {
-	content: url("../images/landing/donate.jpg");
 	border: none;
 	height: 48px;
 	box-shadow: 0px 0px 25px 5px black;

@@ -218,7 +218,7 @@ if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'init') {
 	while ($row = $stmt->fetchObject()) {
 		$row->lifeTime = date('m/d/Y H:i:s e', strtotime($row->lifeTime));
 		$row->lifeLeft = date('m/d/Y H:i:s e', strtotime($row->lifeLeft));
-		//$row->time = date('m/d/Y H:i:s e', strtotime($row->time));
+		$row->time = date('m/d/Y H:i:s e', strtotime($row->time));
 
 		$output['signatures'][$row->id] = $row;
 	}
@@ -314,7 +314,7 @@ if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'init') {
 		while ($row = $stmt->fetchObject()) {
 			$row->lifeTime = date('m/d/Y H:i:s e', strtotime($row->lifeTime));
 			$row->lifeLeft = date('m/d/Y H:i:s e', strtotime($row->lifeLeft));
-			//$row->time = date('m/d/Y H:i:s e', strtotime($row->time));
+			$row->time = date('m/d/Y H:i:s e', strtotime($row->time));
 
 			$output['signatures'][$row->id] = $row;
 		}

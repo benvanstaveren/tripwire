@@ -129,6 +129,7 @@ if ($mode == 'login' || !$mode) {
 	$keyID 		= isset($_REQUEST['api_key'])?$_REQUEST['api_key']:null;
 	$vCode 		= isset($_REQUEST['api_code'])?$_REQUEST['api_code']:null;
 	$method		= 'api';
+	$mask 		= 33554432;
 	$ip 		= $_SERVER['REMOTE_ADDR'];
 
 	// Check input
@@ -139,7 +140,13 @@ if ($mode == 'login' || !$mode) {
 		require('api.class.php');
 		$API = new API();
 
-		if ($API->checkAccount($keyID, $vCode) != 0) {
+		if ($API->checkAccount($keyID, $vCode) == 0) {
+			$output['field'] = 'api';
+			$output['error'] = "API requires 'Account Status' permission";
+		} else if ($API->checkMask($keyID, $vCode, $mask) == 0) {
+			$output['field'] = 'api';
+			$output['error'] = "API requires ONLY 'Account Status' permission";
+		} else {
 			$characters = $API->getCharacters($keyID, $vCode);
 
 			if (count($characters) == 0) {
@@ -189,9 +196,6 @@ if ($mode == 'login' || !$mode) {
 					login_history($ip, NULL, $method, 'fail');
 				}
 			}
-		} else {
-			$output['field'] = 'api';
-			$output['error'] = "API requires 'Account Status' permissions";
 		}
 	}
 }

@@ -10,7 +10,7 @@ if (!isset($_REQUEST['system']) || empty($_REQUEST['system'])) {
 
 $startTime = microtime(true);
 
-$server = explode('.', $_SERVER['SERVER_NAME'])[0] == 'galileo' ? 'galileo' : 'static';
+$server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.com' : $_SERVER['SERVER_NAME'];
 
 // Caching
 header('Cache-Control: public, max-age=300');
@@ -46,10 +46,10 @@ if ($row = $stmt->fetchObject()) {
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="system" content="<?= $system ?>">
 	<meta name="systemID" content="<?= $systemID ?>">
-	<link rel="shortcut icon" href="//<?= $server ?>.eve-apps.com/images/favicon.png" />
+	<link rel="shortcut icon" href="//<?= $server ?>/images/favicon.png" />
 	
-	<link rel="stylesheet" type="text/css" href="//<?= $server ?>.eve-apps.com/css/combine.css">
-	<link rel="stylesheet" type="text/css" href="//<?= $server ?>.eve-apps.com/css/style.css">
+	<link rel="stylesheet" type="text/css" href="//<?= $server ?>/css/combine.css">
+	<link rel="stylesheet" type="text/css" href="//<?= $server ?>/css/style.css">
 	
 	<title><?=$system?> - Tripwire</title>
 </head>
@@ -60,7 +60,7 @@ if ($row = $stmt->fetchObject()) {
 	<div id="topbar">
 		<span class="align-left">
 			<h1 id="logo" class="pointer">
-			<?php if ($server == 'static') { ?>
+			<?php if ($server == 'static.eve-apps.com') { ?>
 				<a href=".">Tripwire</a><span id="beta">Beta</span>
 			<?php } else { ?>
 				<a href=".">Galileo</a><span id="dev">Dev</span>
@@ -137,7 +137,7 @@ if ($row = $stmt->fetchObject()) {
 
 	<div class="gridster">
 		<ul>
-			<li id="infoWidget" class="gridWidget" data-row="1" data-col="1" data-sizex="7" data-sizey="6" data-min-sizex="6" data-min-sizey="4" style="width: 410px; height: 350px;">
+			<li id="infoWidget" class="gridWidget" data-row="1" data-col="1" data-sizex="7" data-sizey="6" data-min-sizex="5" data-min-sizey="4" style="width: 410px; height: 350px;">
 				<div class="content">
 					<i id="system-favorite" data-icon="star-empty" style="float: right; padding-top: 10px; font-size: 2em;"></i>
 					<h1 style="color: #CCC;"><?=$system?></h1>
@@ -260,31 +260,21 @@ if ($row = $stmt->fetchObject()) {
 					<a style="float: right;" href='http://eve-kill.net/?a=system_detail&sys_name=<?=$system?>' target="_blank">Eve-kill.net&nbsp;&nbsp;</a>
 				</div>
 			</li>
-			<li id="signaturesWidget" class="gridWidget" data-row="1" data-col="8" data-sizex="7" data-sizey="6" data-min-sizex="7" data-min-sizey="2" style="width: 410px; height: 350px;">
+			<li id="signaturesWidget" class="gridWidget" data-row="1" data-col="8" data-sizex="7" data-sizey="6" data-min-sizex="5" data-min-sizey="2" style="width: 410px; height: 350px;">
 				<div class="controls">
 					<i id="add-signature" data-icon="plus" data-tooltip="Add a new signature"></i>
 					<i id="toggle-automapper" data-icon="auto" data-tooltip="Toggle Auto-Mapper"></i>
 				</div>
 				<div class="content">
-					<table id="sigTable">
-						<colgroup>
-							<col id="id" />
-							<col id="type" />
-							<col id="age" />
-							<col id="leads" />
-							<col id="life" />
-							<col id="mass" />
-							<col id="delete" />
-							<col id="edit" />
-						</colgroup>
+					<table id="sigTable" width="100%">
 						<thead>
 							<tr>
-								<th>ID</th>
-								<th>Type</th>
-								<th data-sorter="usLongDate">Age</th>
-								<th>Leads To</th
-								><th>Life</th>
-								<th>Mass</th>
+								<th>ID<i data-icon=""></i></th>
+								<th>Type<i data-icon=""></i></th>
+								<th data-sorter="usLongDate">Age<i data-icon=""></i></th>
+								<th>Leads To<i data-icon=""></i></th>
+								<th>Life<i data-icon=""></i></th>
+								<th>Mass<i data-icon=""></i></th>
 								<th class="sorter-false"></th>
 								<th class="sorter-false"></th>
 							</tr>
@@ -293,7 +283,7 @@ if ($row = $stmt->fetchObject()) {
 					</table>
 				</div>
 			</li>
-			<li id="notesWidget" class="gridWidget" data-row="1" data-col="15" data-sizex="7" data-sizey="6" data-min-sizex="4" data-min-sizey="2" style="width: 410px; height: 350px;">
+			<li id="notesWidget" class="gridWidget" data-row="1" data-col="15" data-sizex="7" data-sizey="6" data-min-sizex="5" data-min-sizey="2" style="width: 410px; height: 350px;">
 				<div class="controls">
 					<i id="add-comment" data-icon="plus" data-tooltip="Add a new comment"></i>
 				</div>
@@ -323,7 +313,7 @@ if ($row = $stmt->fetchObject()) {
 					</div>
 				</div>
 			</li>
-			<li id="chainWidget" class="gridWidget" data-row="7" data-col="1" data-sizex="21" data-sizey="8" style="width: 1250px; height: 470px;">
+			<li id="chainWidget" class="gridWidget" data-row="7" data-col="1" data-sizex="21" data-sizey="8" data-min-sizex="5" data-min-sizey="4" style="width: 1250px; height: 470px;">
 				<div class="controls">
 					<span id="chainTabs"></span>
 					<i id="newTab" data-icon="plus" data-tooltip="New tab"></i>
@@ -333,7 +323,7 @@ if ($row = $stmt->fetchObject()) {
 					<i id="show-chainLegend" data-icon="tree" data-tooltip="<table id='guide'><tr><td><div class='guide-stable'></td><td>Stable</td></tr><tr><td><div class='guide-eol'></div></td><td>End of Life</td></tr><tr><td><div class='guide-destab'></div></td><td>Mass Destabbed</td></tr><tr><td><div class='guide-critical'></div></td><td>Mass Critical</td></tr><tr><td><div class='guide-frigate'></div></td><td>Frigate</td></tr></table>"></i>
 				</div>
 				<div class="content">
-					<span style="position: relative; display: block; min-width: 100%;">
+					<span style="position: relative; display: table; width: 100%;">
 						<table id="chainGrid">
 							<tr class="top"><td></td></tr>
 							<tr class="space hidden"><td></td></tr>
@@ -373,6 +363,14 @@ if ($row = $stmt->fetchObject()) {
 							<tr class="space hidden"><td>17</td></tr>
 							<tr class="line hidden"><td></td></tr>
 							<tr class="space hidden"><td>18</td></tr>
+							<tr class="line hidden"><td></td></tr>
+							<tr class="space hidden"><td>19</td></tr>
+							<tr class="line hidden"><td></td></tr>
+							<tr class="space hidden"><td>20</td></tr>
+							<tr class="line hidden"><td></td></tr>
+							<tr class="space hidden"><td>21</td></tr>
+							<tr class="line hidden"><td></td></tr>
+							<tr class="space hidden"><td>22</td></tr>
 						</table>
 						<span id="chainMap"></span>
 					</span>
@@ -385,7 +383,7 @@ if ($row = $stmt->fetchObject()) {
 		<form id="donate_form" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
 			<input type="hidden" name="cmd" value="_s-xclick">
 			<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
-			<img id="donate" onclick="document.getElementById('donate_form').submit();" alt="PayPal - The safer, easier way to pay online!">
+			<img id="donate" src="//<?= $server ?>/images/landing/donate.jpg" onclick="document.getElementById('donate_form').submit();" alt="PayPal - The safer, easier way to pay online!">
 		</form>
 		<?php printf("<span id='pageTime'>Page generated in %.3f seconds.</span>", microtime(true) - $startTime); ?>
 		<p>All Eve Related Materials are Property Of <a href="http://www.ccpgames.com" target="_blank">CCP Games</a></p>
@@ -1032,9 +1030,9 @@ if ($row = $stmt->fetchObject()) {
 	</script>
 
 	<!-- JS Includes -->
-	<script type="text/javascript" src="//<?= $server ?>.eve-apps.com/js/combine.js"></script>
-	<script type="text/javascript" src="//<?= $server ?>.eve-apps.com/ckeditor/ckeditor.js"></script>
-	<script type="text/javascript" src="//<?= $server ?>.eve-apps.com/js/core.js"></script>
+	<script type="text/javascript" src="//<?= $server ?>/js/combine.js"></script>
+	<script type="text/javascript" src="//<?= $server ?>/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="//<?= $server ?>/js/core.js"></script>
 	<!-- JS Includes -->
 
 </body>
