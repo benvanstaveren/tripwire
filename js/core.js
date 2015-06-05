@@ -4687,7 +4687,7 @@ function systemChange(systemID, mode) {
 		}
 
 		// Faction
-		$("#infoFaction").text(tripwire.factions[tripwire.systems[systemID].factionID].name);
+		$("#infoFaction").html(tripwire.systems[systemID].factionID ? tripwire.factions[tripwire.systems[systemID].factionID].name : "&nbsp;");
 	}
 
 	// Region
