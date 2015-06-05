@@ -1864,7 +1864,7 @@ var tripwire = new function() {
 
 			data.activity = this.activity;
 		} else {
-			$.extend(this, $.ajax({url: "//"+ server +"/js/combine.json", async: false, dataType: "JSON"}).responseJSON);
+			$.extend(this, $.ajax({url: "//"+ server +"/js/combine.json?v=0.7.0.1", async: false, dataType: "JSON"}).responseJSON);
 
 			//this.wormholes = $.ajax({url: "js/wormholes.json", async: false, dataType: "JSON"}).responseJSON;
 			//this.map = $.ajax({url: "js/map.json", async: false, dataType: "JSON"}).responseJSON;
@@ -4620,7 +4620,38 @@ function systemChange(systemID, mode) {
 	$("#infoSystem").text(tripwire.systems[systemID].name);
 
 	if (tripwire.systems[systemID].class) {
-		$("#infoSecurity").addClass("wh").text("Class " + tripwire.systems[systemID].class);
+		// Security
+		$("#infoSecurity").html("<span class='wh pointer'>Class " + tripwire.systems[systemID].class + "</span>");
+
+		// Effects
+		if (tripwire.systems[systemID].effect) {
+			var tooltip = "<table cellpadding=\"0\" cellspacing=\"1\">";
+			for (var x in tripwire.effects[tripwire.systems[systemID].effect]) {
+				var effect = tripwire.effects[tripwire.systems[systemID].effect][x].name;
+				var base = tripwire.effects[tripwire.systems[systemID].effect][x].base;
+				var bad = tripwire.effects[tripwire.systems[systemID].effect][x].bad;
+				var whClass = tripwire.systems[systemID].class > 6 ? 6 : tripwire.systems[systemID].class;
+				var modifier = 0;
+
+				switch (Math.abs(base)) {
+					case 15:
+						modifier = base > 0 ? 7 : -7;
+						break;
+					case 30:
+						modifier = base > 0 ? 14 : -14;
+						break;
+					case 60:
+						modifier = base > 0 ? 28 : -28;
+						break;
+				}
+
+				tooltip += "<tr><td>" + effect + "</td><td style=\"padding-left: 25px; text-align: right;\" class=\"" + (bad ? "critical" : "stable") + "\">";
+				tooltip += base + (modifier * (whClass -1)) + "%</td></tr>";
+			}
+			tooltip += "</table>";
+			$("#infoSecurity").append("&nbsp;<span class='pointer' data-tooltip='" + tooltip + "'>" + tripwire.systems[systemID].effect + "</span>");
+			Tooltips.attach($("#infoSecurity [data-tooltip]"));
+		}
 
 		// Statics
 		for (var x in tripwire.systems[systemID].statics) {
@@ -4642,6 +4673,9 @@ function systemChange(systemID, mode) {
 
 			$("#infoStatics").append("<div><span class='"+ color +"'>&#9679;</span> <b>"+ wormhole.leadsTo +"</b> via <span class='"+ color +"'>"+ type +"</span></div>");
 		}
+
+		// Faction
+		$("#infoFaction").html("&nbsp;");
 	} else {
 		// Security
 		if (tripwire.systems[systemID].security >= 0.45) {
@@ -4651,10 +4685,15 @@ function systemChange(systemID, mode) {
 		} else {
 			$("#infoSecurity").addClass("nullsec").text("Null-Sec " + tripwire.systems[systemID].security);
 		}
+
+		// Faction
+		$("#infoFaction").text(tripwire.factions[tripwire.systems[systemID].factionID].name);
 	}
 
 	// Region
 	$("#infoRegion").text(tripwire.regions[tripwire.systems[systemID].regionID].name);
+
+
 
 	// Info Links
 	$("#infoWidget .infoLink").each(function() {
