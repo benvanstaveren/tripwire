@@ -68,7 +68,7 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 					<li><a href="#features">Features</a></li>
 					<li><a href="#screenshots">Screenshots</a></li>
 					<li><a href="#updates">Updates</a></li>
-					<li><a href="http://forums.eve-apps.com" target="_blank">Forums</a></li>
+					<li><a href="https://bitbucket.org/daimian/tripwire/issues" target="_blank">Issue/Idea Tracker</a></li>
 				</ul>
 				<span class="arrow"></span>
 			</nav>
@@ -551,6 +551,15 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 				<h1>Updates</h1>
 				<div class="releases">
 					<article class="release">
+						<h2>Version 0.7.1</h2>
+						<span class="date">Released on June 4th, 2015</span>
+						<ul>
+							<li class="new"><span><b>new</b></span> Added Carnyx systems</li>
+							<li class="new"><span><b>new</b></span> Built-in system change (no more reloading)</li>
+							<li class="new"><span><b>new</b></span> System owning faction added</li>
+							<li class="new"><span><b>new</b></span> Issue/Idea Tracker added</li>
+							<li class="fix"><span><b>fix</b></span> Manual adding wormhole name bug</li>
+						</ul>
 						<h2>Version 0.7</h2>
 						<span class="date">Released on January 13th, 2015</span>
 						<ul>
