@@ -227,6 +227,7 @@ if ($row = $stmt->fetchObject()) {
 					?>
 					<h4 id="infoSecurity" class="pointer">&nbsp;</h4>
 					<h4 id="infoRegion" class="pointer">&nbsp;</h4>
+					<h4 id="infoFaction" class="pointer">&nbsp;</h4>
 					<div id="activityGraph"></div>
 					<div style="text-align: center;"><a href="javascript: activity.time(168);">Week</a> - <a href="javascript: activity.time(48);">48Hour</a> - <a href="javascript: activity.time(24);">24Hour</a></div>
 					<span id="infoStatics" class="pointer" style="float: left;"></span>
