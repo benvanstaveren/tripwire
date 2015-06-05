@@ -2080,7 +2080,7 @@ var tripwire = new function() {
 		this.pasteSignatures.parsePaste = function(data) {
 			var rows = data.split("\n");
 			var data = {"request": {"signatures": {"add": [], "update": []}}};
-			var ids = $.map(tripwire.client.signatures, function(sig) {return viewingSystemID == sig.systemID ? sig.signatureID : sig.sig2ID});
+			var ids = tripwire.client.signatures ? $.map(tripwire.client.signatures, function(sig) {return viewingSystemID == sig.systemID ? sig.signatureID : sig.sig2ID}) : [];
 			
 			for (var row in rows) {
 				var scanner = rowParse(rows[row]);
