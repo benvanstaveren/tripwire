@@ -1520,10 +1520,8 @@ var chain = new function() {
 				systemType = "<span class='wh'>C2</span>";
 			else if (nodeClass == 1 || node.child.name == "Class-1" || (typeof(tripwire.wormholes[node.child.type]) != "undefined" && tripwire.wormholes[node.child.type].leadsTo == "Class 1"))
 				systemType = "<span class='wh'>C1</span>";
-			else if (nodeClass == 12)
-				systemType = "<span class='wh'>C12</span>";
-			else if (nodeClass == 13)
-				systemType = "<span class='wh'>C13</span>";
+			else if (nodeClass > 6)
+				systemType = "<span class='wh'>C" + nodeClass + "</span>";
 			else if (nodeSecurity >= 0.45 || node.child.name == "High-Sec" || (typeof(tripwire.wormholes[node.child.type]) != "undefined" && tripwire.wormholes[node.child.type].leadsTo == "High-Sec" && !nodeSecurity))
 				systemType = "<span class='hisec'>HS</span>";
 			else if (nodeSecurity > 0.0 || node.child.name == "Low-Sec" || (typeof(tripwire.wormholes[node.child.type]) != "undefined" && tripwire.wormholes[node.child.type].leadsTo == "Low-Sec" && !nodeSecurity))
@@ -3040,6 +3038,7 @@ $("#sigAddForm").submit(function(e) {
 	if (Object.index(tripwire.systems, "name", form.connectionName)) {
 		form.connectionID = Object.index(tripwire.systems, "name", form.connectionName);
 		form.class2 = sigClass(form.connectionName, null);
+		form.connectionName = null;
 	}
 
 	var data = {"request": {"signatures": {"add": form}}};
