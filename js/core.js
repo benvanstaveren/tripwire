@@ -386,7 +386,7 @@ var setCookie = function(c_name, value, exdays) {
 	exdate.setDate(exdate.getDate() + exdays);
 	var c_value = escape(value) + ((exdays == null) ? "" : "; expires="+exdate.toUTCString());
 	
-	document.cookie = c_name + "=" + c_value + "; secure;";
+	document.cookie = c_name + "=" + c_value + ";" + (document.location.protocol == "https:" ? "secure;" : "");
 }
 
 /* Function Library */
@@ -545,6 +545,7 @@ var options = new function() {
 // Init code
 var viewingSystem = $("meta[name=system]").attr("content");
 var viewingSystemID = $("meta[name=systemID]").attr("content");
+var server = $("meta[name=server]").attr("content");
 
 // Current system favorite
 if ($.inArray(viewingSystemID, options.favorites) != -1) $("#system-favorite").attr("data-icon", "star").addClass("active");
@@ -1519,10 +1520,8 @@ var chain = new function() {
 				systemType = "<span class='wh'>C2</span>";
 			else if (nodeClass == 1 || node.child.name == "Class-1" || (typeof(tripwire.wormholes[node.child.type]) != "undefined" && tripwire.wormholes[node.child.type].leadsTo == "Class 1"))
 				systemType = "<span class='wh'>C1</span>";
-			else if (nodeClass == 12)
-				systemType = "<span class='wh'>C12</span>";
-			else if (nodeClass == 13)
-				systemType = "<span class='wh'>C13</span>";
+			else if (nodeClass > 6)
+				systemType = "<span class='wh'>C" + nodeClass + "</span>";
 			else if (nodeSecurity >= 0.45 || node.child.name == "High-Sec" || (typeof(tripwire.wormholes[node.child.type]) != "undefined" && tripwire.wormholes[node.child.type].leadsTo == "High-Sec" && !nodeSecurity))
 				systemType = "<span class='hisec'>HS</span>";
 			else if (nodeSecurity > 0.0 || node.child.name == "Low-Sec" || (typeof(tripwire.wormholes[node.child.type]) != "undefined" && tripwire.wormholes[node.child.type].leadsTo == "Low-Sec" && !nodeSecurity))
@@ -1848,7 +1847,7 @@ var tripwire = new function() {
 		// Remove old timer to prevent multiple
 		if (this.timer) clearTimeout(this.timer);
 
-		if (mode == 'refresh') {
+		if (mode == 'refresh' || mode == 'change') {
 			data.sigCount = Object.size(this.client.signatures);
 			data.sigTime = Object.maxTime(this.client.signatures, "time");
 
@@ -1863,7 +1862,7 @@ var tripwire = new function() {
 
 			data.activity = this.activity;
 		} else {
-			$.extend(this, $.ajax({url: "//static.eve-apps.com/js/combine.json", async: false, dataType: "JSON"}).responseJSON);
+			$.extend(this, $.ajax({url: "//"+ server +"/js/combine.json?v=0.7.0.1", async: false, dataType: "JSON"}).responseJSON);
 
 			//this.wormholes = $.ajax({url: "js/wormholes.json", async: false, dataType: "JSON"}).responseJSON;
 			//this.map = $.ajax({url: "js/map.json", async: false, dataType: "JSON"}).responseJSON;
@@ -1875,7 +1874,7 @@ var tripwire = new function() {
 			$.merge(this.aSigSystems, ["Null-Sec", "Low-Sec", "High-Sec", "Class-1", "Class-2", "Class-3", "Class-4", "Class-5", "Class-6"]);
 		}
 
-		data.mode = mode;
+		data.mode = mode != "init" ? "refresh" : "init";
 		data.systemID = viewingSystemID;
 		data.instance = tripwire.instance;
 		
@@ -2430,11 +2429,14 @@ var tripwire = new function() {
 	this.EVE = function(EVE) {
 		if (EVE) {
 			// Automapper
-			if (this.client.EVE && this.client.EVE.systemID != EVE.systemID)
+			if (this.client.EVE && this.client.EVE.systemID != EVE.systemID) {
 				tripwire.autoMapper(this.client.EVE.systemID, EVE.systemID);
+			}
 
-			if (options.buttons.follow && (this.client.EVE && this.client.EVE.systemID != EVE.systemID) && $(".ui-dialog:visible").length == 0)
-				window.location = "?system="+EVE.systemName;
+			if (options.buttons.follow && (this.client.EVE && this.client.EVE.systemID != EVE.systemID) && $(".ui-dialog:visible").length == 0) {
+				//window.location = "?system="+EVE.systemName;
+				systemChange(EVE.systemID);
+			}
 
 			if (CCPEVE) {
 				$("#link").parent().hide();
@@ -2493,7 +2495,7 @@ var tripwire = new function() {
 
 			//client and server should now match
 			this.client = server;
-		} else if (mode == 'init') {
+		} else if (mode == 'init' || mode == 'change') {
 			
 			for (var key in server.signatures) {
 				this.addSig(server.signatures[key], {animate: false});
@@ -2814,11 +2816,67 @@ var tripwire = new function() {
 		this.serverStatus(); // Get TQ status
 		this.pasteSignatures();
 		postLoad();
+		systemChange(viewingSystemID, "init");
 	}
 	
 	// Use delayed init to speed up rendering
 	setTimeout("tripwire.init();", 50);
 }
+
+$("#add-signature2").click(function(e) {
+	e.preventDefault();
+
+	if (!$("#dialog-signature").hasClass("ui-dialog-content")) {
+		$("#dialog-signature").dialog({
+			autoOpen: true,
+			resizable: false,
+			dialogClass: "dialog-noeffect ui-dialog-shadow",
+			position: {my: "center", at: "center", of: $("#signaturesWidget")},
+			buttons: {
+				Add: function() {
+					$("#form-signature").submit();
+				},
+				Cancel: function() {
+					$(this).dialog("close");
+				}
+			},
+			create: function() {
+				var aSigWormholes = $.map(tripwire.wormholes, function(item, index) { return index;});
+				aSigWormholes.splice(26, 0, "K162");
+				aSigWormholes.push("???", "GATE");
+
+				$("#signatureType, #signatureLife").selectmenu({width: "100px"});
+				$("#dialog-signature [data-autocomplete='sigSystems']").autocomplete({source: tripwire.aSigSystems});
+				$("#dialog-signature [data-autocomplete='sigType']").autocomplete({source: aSigWormholes});
+
+				$("#signatureType").change(function(e) {
+					if (this.value == "Wormhole") {
+						$("#site").slideUp().addClass("hidden");
+						$("#wormhole").slideDown().removeClass("hidden");
+					} else {
+						$("#site").slideDown().removeClass("hidden");
+						$("#wormhole").slideUp().addClass("hidden");
+					}
+				});
+			},
+			open: function() {
+				$("#signatureType").selectmenu("value", "Combat");
+			},
+			close: function() {
+				ValidationTooltips.close();
+			}
+		});
+	} else if (!$("#dialog-signature").dialog("isOpen")) {
+		$("#dialog-signature").dialog("open");
+	}
+});
+
+$("#form-signature").submit(function(e) {
+	e.preventDefault();
+	ValidationTooltips.close();
+
+	ValidationTooltips.open({target: $("#form-signature [name='signatureID']")}).setContent("Must be 3 Letters in length!");
+});
 
 // Toggle dialog inputs based on sig type
 $("#dialog-sigAdd #sigType, #dialog-sigEdit #sigType").change(function() {
@@ -2885,10 +2943,25 @@ $("#add-signature").click(function(e) {
 		close: function() {
 			$("th.critical").removeClass("critical");
 			ValidationTooltips.close();
+
+			$(".sigNumHolder").removeClass("hidden");
+			$(".sigNum").addClass("hidden");
 		},
 		create: function() {
 			$("#autoAdd").button().click(function() {
 				$("#sigAddForm #connection").val(tripwire.client.EVE.systemName);
+			});
+
+			$(".sigNumHolder").click(function() {
+				$(this).addClass("hidden");
+				$(".sigNum").removeClass("hidden").focus();
+			});
+
+			$(".sigNum").blur(function() {
+				if (this.value == "") {
+					$(this).addClass("hidden");
+					$(".sigNumHolder").removeClass("hidden");
+				}
 			});
 
 			$("#sigAddForm #sigType, #sigAddForm #sigLife").selectmenu({width: "100px"});
@@ -2965,6 +3038,7 @@ $("#sigAddForm").submit(function(e) {
 	if (Object.index(tripwire.systems, "name", form.connectionName)) {
 		form.connectionID = Object.index(tripwire.systems, "name", form.connectionName);
 		form.class2 = sigClass(form.connectionName, null);
+		form.connectionName = null;
 	}
 
 	var data = {"request": {"signatures": {"add": form}}};
@@ -4512,3 +4586,125 @@ CKEDITOR.on("dialogDefinition", function(ev) {
 if (window.location.href.indexOf("galileo") != -1) {
 	Notify.trigger("This is the test version of Tripwire.<br/>Please use <a href='https://tripwire.cloud-things.com'>Tripwire</a>")
 }
+
+//	 New non-refresh code
+
+function systemChange(systemID, mode) {
+	if (mode != "init") {
+		$("#infoSecurity").removeClass();
+		$("#infoStatics").empty();
+
+		viewingSystem = tripwire.systems[systemID].name;
+		viewingSystemID = systemID;
+
+		// Reset activity
+		activity.refresh();
+
+		// Reset signatures
+		$("#sigTable tbody").empty()
+		tripwire.client.signatures = null;
+
+		// Reset chain map
+		chain.redraw();
+
+		// Reset comments
+		$("#notesWidget .content .comment:visible").remove();
+		tripwire.comments.data = null;
+
+		tripwire.refresh("change");
+	}
+
+	document.title = tripwire.systems[systemID].name + " - " + (server == "static.eve-apps.com" ? "Tripwire" : "Galileo");
+
+	$("#infoSystem").text(tripwire.systems[systemID].name);
+
+	if (tripwire.systems[systemID].class) {
+		// Security
+		$("#infoSecurity").html("<span class='wh pointer'>Class " + tripwire.systems[systemID].class + "</span>");
+
+		// Effects
+		if (tripwire.systems[systemID].effect) {
+			var tooltip = "<table cellpadding=\"0\" cellspacing=\"1\">";
+			for (var x in tripwire.effects[tripwire.systems[systemID].effect]) {
+				var effect = tripwire.effects[tripwire.systems[systemID].effect][x].name;
+				var base = tripwire.effects[tripwire.systems[systemID].effect][x].base;
+				var bad = tripwire.effects[tripwire.systems[systemID].effect][x].bad;
+				var whClass = tripwire.systems[systemID].class > 6 ? 6 : tripwire.systems[systemID].class;
+				var modifier = 0;
+
+				switch (Math.abs(base)) {
+					case 15:
+						modifier = base > 0 ? 7 : -7;
+						break;
+					case 30:
+						modifier = base > 0 ? 14 : -14;
+						break;
+					case 60:
+						modifier = base > 0 ? 28 : -28;
+						break;
+				}
+
+				tooltip += "<tr><td>" + effect + "</td><td style=\"padding-left: 25px; text-align: right;\" class=\"" + (bad ? "critical" : "stable") + "\">";
+				tooltip += base + (modifier * (whClass -1)) + "%</td></tr>";
+			}
+			tooltip += "</table>";
+			$("#infoSecurity").append("&nbsp;<span class='pointer' data-tooltip='" + tooltip + "'>" + tripwire.systems[systemID].effect + "</span>");
+			Tooltips.attach($("#infoSecurity [data-tooltip]"));
+		}
+
+		// Statics
+		for (var x in tripwire.systems[systemID].statics) {
+			var type = tripwire.systems[systemID].statics[x];
+			var wormhole = tripwire.wormholes[type];
+			var color = "wh";
+
+			switch (wormhole.leadsTo) {
+				case "High-Sec":
+					color = "hisec";
+					break;
+				case "Low-Sec":
+					color = "lowsec";
+					break;
+				case "Null-Sec":
+					color = "nullsec";
+					break;
+			}
+
+			$("#infoStatics").append("<div><span class='"+ color +"'>&#9679;</span> <b>"+ wormhole.leadsTo +"</b> via <span class='"+ color +"'>"+ type +"</span></div>");
+		}
+
+		// Faction
+		$("#infoFaction").html("&nbsp;");
+	} else {
+		// Security
+		if (tripwire.systems[systemID].security >= 0.45) {
+			$("#infoSecurity").addClass("hisec").text("High-Sec " + tripwire.systems[systemID].security);
+		} else if (tripwire.systems[systemID].security > 0.0) {
+			$("#infoSecurity").addClass("lowsec").text("Low-Sec " + tripwire.systems[systemID].security);
+		} else {
+			$("#infoSecurity").addClass("nullsec").text("Null-Sec " + tripwire.systems[systemID].security);
+		}
+
+		// Faction
+		$("#infoFaction").html(tripwire.systems[systemID].factionID ? tripwire.factions[tripwire.systems[systemID].factionID].name : "&nbsp;");
+	}
+
+	// Region
+	$("#infoRegion").text(tripwire.regions[tripwire.systems[systemID].regionID].name);
+
+
+
+	// Info Links
+	$("#infoWidget .infoLink").each(function() {
+		this.href = $(this).data("href").replace("$system", tripwire.systems[systemID].name);
+	});
+}
+
+$("body").on("click", "a[href^='.?system=']", function(e) {
+	e.preventDefault();
+
+	var system = $(this).attr("href").replace(".?system=", "");
+	var systemID = Object.index(tripwire.systems, "name", system);
+
+	systemChange(systemID);
+});

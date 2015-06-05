@@ -46,12 +46,13 @@ if ($row = $stmt->fetchObject()) {
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="system" content="<?= $system ?>">
 	<meta name="systemID" content="<?= $systemID ?>">
+	<meta name="server" content="<?= $server ?>">
 	<link rel="shortcut icon" href="//<?= $server ?>/images/favicon.png" />
 	
 	<link rel="stylesheet" type="text/css" href="//<?= $server ?>/css/combine.css">
 	<link rel="stylesheet" type="text/css" href="//<?= $server ?>/css/style.css">
 	
-	<title><?=$system?> - Tripwire</title>
+	<title><?=$system?> - <?= $server == 'static.eve-apps.com' ? 'Tripwire' : 'Galileo' ?></title>
 </head>
 <?php flush(); ?>
 <body class="transition">
@@ -140,8 +141,9 @@ if ($row = $stmt->fetchObject()) {
 			<li id="infoWidget" class="gridWidget" data-row="1" data-col="1" data-sizex="7" data-sizey="6" data-min-sizex="5" data-min-sizey="4" style="width: 410px; height: 350px;">
 				<div class="content">
 					<i id="system-favorite" data-icon="star-empty" style="float: right; padding-top: 10px; font-size: 2em;"></i>
-					<h1 style="color: #CCC;"><?=$system?></h1>
+					<h1 id="infoSystem" class="pointer" style="color: #CCC;"><?=$system?></h1>
 					<?php
+						/*
 						if ($regionID >= 11000000) {
 							$query = 'SELECT effect, class FROM systems WHERE systemID = :systemID';
 							$stmt = $mysql->prepare($query);
@@ -221,43 +223,17 @@ if ($row = $stmt->fetchObject()) {
 							echo "<h4>Region: $region</h4>";
 							echo "<h4>Pirates: <a href='' OnClick='return false;' data-tooltip='$title' id='pirates'>",$faction,'</a></h4>';
 						}
+						*/
 					?>
+					<h4 id="infoSecurity" class="pointer">&nbsp;</h4>
+					<h4 id="infoRegion" class="pointer">&nbsp;</h4>
+					<h4 id="infoFaction" class="pointer">&nbsp;</h4>
 					<div id="activityGraph"></div>
 					<div style="text-align: center;"><a href="javascript: activity.time(168);">Week</a> - <a href="javascript: activity.time(48);">48Hour</a> - <a href="javascript: activity.time(24);">24Hour</a></div>
-					<span style="float: left;">
-					<?php
-						$query = 'SELECT connection, wormhole FROM statics WHERE systemID = :systemID';
-						$stmt = $mysql->prepare($query);
-						$stmt->bindValue(':systemID', $systemID, PDO::PARAM_INT);
-						$stmt->execute();
-						while ($row = $stmt->fetchObject()) {
-							switch($row->connection) {
-								case 'high-sec':
-									echo '<span class="hisec pointer">&#9679; </span>';
-									$wormhole = '<span class="hisec">'.$row->wormhole.'</span>';
-									break;
-								case 'low-sec':
-									echo '<span class="lowsec pointer">&#9679; </span>';
-									$wormhole = '<span class="lowsec">'.$row->wormhole.'</span>';
-									break;
-								case 'null-sec':
-									echo '<span class="nullsec pointer">&#9679; </span>';
-									$wormhole = '<span class="nullsec">'.$row->wormhole.'</span>';
-									break;
-								default:
-									echo '<span class="wh pointer">&#9679; </span>';
-									$wormhole = '<span class="wh">'.$row->wormhole.'</span>';
-									break;
-							}
-
-							//$title = "<b>Life</b>: ".$row->time." Hours<br/><b>Mass</b>: ".number_format($row->mass)." Kg<br/><b>Max Jumpable</b>: ".number_format($row->jump)." Kg";
-							echo '<span class="pointer"><b>',ucwords($row->connection),'</b> via <span">',$wormhole,'</span></span><br/>';
-						}
-					?>
-					</span>
-					<a style="float: right;" href='http://wh.pasta.gg/<?=$system?>' target="_blank">wormhol.es</a><br/>
-					<a style="float: right;" href="http://evemaps.dotlan.net/search?q=<?=$system?>" target="_blank">dotlan</a>
-					<a style="float: right;" href='http://eve-kill.net/?a=system_detail&sys_name=<?=$system?>' target="_blank">Eve-kill.net&nbsp;&nbsp;</a>
+					<span id="infoStatics" class="pointer" style="float: left;"></span>
+					<a class="infoLink" style="float: right;" data-href='http://wh.pasta.gg/$system' href="" target="_blank">wormhol.es</a><br/>
+					<a class="infoLink" style="float: right;" data-href="http://evemaps.dotlan.net/search?q=$system" href="" target="_blank">dotlan</a>
+					<a class="infoLink" style="float: right;" data-href='http://eve-kill.net/?a=system_detail&sys_name=$system' href="" target="_blank">Eve-kill.net&nbsp;&nbsp;</a>
 				</div>
 			</li>
 			<li id="signaturesWidget" class="gridWidget" data-row="1" data-col="8" data-sizex="7" data-sizey="6" data-min-sizex="5" data-min-sizey="2" style="width: 410px; height: 350px;">
@@ -269,12 +245,12 @@ if ($row = $stmt->fetchObject()) {
 					<table id="sigTable" width="100%">
 						<thead>
 							<tr>
-								<th>ID<i data-icon=""></i></th>
-								<th>Type<i data-icon=""></i></th>
-								<th data-sorter="usLongDate">Age<i data-icon=""></i></th>
-								<th>Leads To<i data-icon=""></i></th>
-								<th>Life<i data-icon=""></i></th>
-								<th>Mass<i data-icon=""></i></th>
+								<th class="sortable">ID<i data-icon=""></i></th>
+								<th class="sortable">Type<i data-icon=""></i></th>
+								<th class="sortable" data-sorter="usLongDate">Age<i data-icon=""></i></th>
+								<th class="sortable">Leads To<i data-icon=""></i></th>
+								<th class="sortable">Life<i data-icon=""></i></th>
+								<th class="sortable">Mass<i data-icon=""></i></th>
 								<th class="sorter-false"></th>
 								<th class="sorter-false"></th>
 							</tr>
@@ -400,30 +376,142 @@ if ($row = $stmt->fetchObject()) {
 		<i data-icon="alert"></i> This signature will be removed from this system. Are you sure?
 	</div>
 
+	<style>
+		#dialog-signature .label {
+			font-weight: bold;
+			text-align: right;
+			vertical-align: text-top;
+		}
+
+		#dialog-signature .select {
+			display: inline-block;
+			vertical-align: text-bottom;
+		}
+
+		#dialog-signature .row {
+			min-height: 21px;
+		}
+
+		#dialog-signature .label:first-child {
+			display: inline-block;
+			min-width: 60px;
+		}
+
+		#dialog-signature #signatureName {
+			width: 100%;
+			-webkit-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+
+		#dialog-signature .side {
+			position: relative;
+			min-height: 70px;
+		}
+
+		#dialog-signature .sideLabel {
+			position: absolute;
+			top: 70px;
+			left: -10px;
+			width: 70px;
+			text-align: center;
+			font-weight: bold;
+
+			-ms-transform: rotate(-90deg);
+			-webkit-transform: rotate(-90deg);
+			transform: rotate(-90deg);
+			
+			-ms-transform-origin: left top 0;
+			-webkit-transform-origin: left top 0;
+			transform-origin: left top 0;
+		}
+	</style>
+	<div id="dialog-signature" title="Add Signature" class="hidden">
+		<form id="form-signature">
+			<div class="row">
+				<span class="label">ID:&nbsp;</span><input name="signatureID" type="text" maxlength="3" size="3" /><span class="label">&nbsp;-&nbsp;###</span>
+				<span class="select" style="float: right;">
+					<select id="signatureType">
+						<option value="Combat">Combat</option>
+						<option value="Wormhole">Wormhole</option>
+						<option value="Ore">Ore</option>
+						<option value="Data">Data</option>
+						<option value="Gas">Gas</option>
+						<option value="Relic">Relic</option>
+					</select>
+				</span>
+			</div>
+			<div id="site" class="">
+				<div class="row">
+					<span class="label">Life:&nbsp;</span>
+					<span class="select">
+						<select id="signatureLife">
+							<option value="24">24 Hours</option>
+							<option value="48">48 Hours</option>
+							<option value="72">72 Hours</option>
+							<option value="168">7 Days</option>
+							<option value="672">28 Days</option>
+						</select>
+					</span>
+				</div>
+				<div class="row">
+					<span class="label" style="display: table-cell;">Name:&nbsp;</span>
+					<div style="display: table-cell; width: 100%;"><input id="signatureName" type="text" maxlength="35" /></div>
+				</div>
+			</div>
+			<div id="wormhole" class="hidden">
+				<div class="side">
+					<div class="sideLabel">Jita Side</div>
+					<div class="row">
+						<span class="label">Type:&nbsp;</span><input type="text" data-autocomplete="sigType" maxlength="4" size="4" />
+					</div>
+					<div class="row">
+						<span class="label">Leads:&nbsp;</span><input type="text" data-autocomplete="sigSystems" maxlength="20" size="20" />
+					</div>
+					<div class="row">
+						<span class="label">Name:&nbsp;</span><input type="text" maxlength="20" size="20" />
+					</div>
+				</div>
+				<hr style="margin-left: 15px; margin-bottom: 10px;" />
+				<div class="side">
+					<div class="sideLabel">Other Side</div>
+					<div class="row">
+						<span class="label">Type:&nbsp;</span><input type="text" data-autocomplete="sigType" maxlength="4" size="4" />
+					</div>
+					<div class="row">
+						<span class="label">Leads:&nbsp;</span><input type="text" data-autocomplete="sigSystems" maxlength="20" size="20" />
+					</div>
+					<div class="row">
+						<span class="label">Name:&nbsp;</span><input type="text" maxlength="20" size="20" />
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
 	<div id="dialog-sigAdd" title="Add Signature" class="hidden">
 		<form id="sigAddForm">
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<colgroup>
-					<col style="width: 15%;" />
+					<col style="width: 20%;" />
 					<col style="width: 25%;" />
-					<col style="width: 15%;" />
-					<col style="width: 45%;" />
+					<col style="width: 20%;" />
+					<col style="width: 30%;" />
 				</colgroup>
 				<tr>
 					<th>ID:</th>
-					<td colspan="2">
+					<td colspan="3">
 						<input type="text" name="id" id="sigID" maxlength="3" size="3" /> 
-						<strong>- ###</strong>
-					</td>
-					<td style="float: right;">
-						<select id="sigType" name="type">
-							<option value="Sites">Sites</option>
-							<option value="Wormhole">Wormhole</option>
-							<option value="Ore">Ore</option>
-							<option value="Data">Data</option>
-							<option value="Gas">Gas</option>
-							<option value="Relic">Relic</option>
-						</select>
+						<strong>- <span class="sigNumHolder">###</span><input type="text" class="hidden sigNum" maxlength="3" size="3" /></strong>
+						<span style="float: right;">
+							<select id="sigType" name="type">
+								<option value="Sites">Combat</option>
+								<option value="Wormhole">Wormhole</option>
+								<option value="Ore">Ore</option>
+								<option value="Data">Data</option>
+								<option value="Gas">Gas</option>
+								<option value="Relic">Relic</option>
+							</select>
+						</span>
 					</td>
 				</tr>
 				<tr class="sig-site">
@@ -436,7 +524,6 @@ if ($row = $stmt->fetchObject()) {
 								<option value="72">72 Hours</option>
 								<option value="168">7 Days</option>
 								<option value="672">28 Days</option>
-								<option value="4032">Infinite</option>
 							</select>
 						</div>
 					</td>
