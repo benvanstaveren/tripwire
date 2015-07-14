@@ -298,7 +298,7 @@ if ($row = $stmt->fetchObject()) {
 					<i id="show-favorite" data-icon="star" data-tooltip="Add favorite systems to chain"></i>
 					<i id="show-chainLegend" data-icon="tree" data-tooltip="<table id='guide'><tr><td><div class='guide-stable'></td><td>Stable</td></tr><tr><td><div class='guide-eol'></div></td><td>End of Life</td></tr><tr><td><div class='guide-destab'></div></td><td>Mass Destabbed</td></tr><tr><td><div class='guide-critical'></div></td><td>Mass Critical</td></tr><tr><td><div class='guide-frigate'></div></td><td>Frigate</td></tr></table>"></i>
 				</div>
-				<div class="content">
+				<div id="chainParent" class="content">
 					<span style="position: relative; display: table; width: 100%;">
 						<table id="chainGrid">
 							<tr class="top"><td></td></tr>
@@ -1119,6 +1119,7 @@ if ($row = $stmt->fetchObject()) {
 	<!-- JS Includes -->
 	<script type="text/javascript" src="//<?= $server ?>/js/combine.js"></script>
 	<script type="text/javascript" src="//<?= $server ?>/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="//<?= $server ?>/js/dragdivscroll.js"></script>
 	<script type="text/javascript" src="//<?= $server ?>/js/core.js"></script>
 	<!-- JS Includes -->
 
