@@ -1619,7 +1619,7 @@ var chain = new function() {
 	this.redraw = function() {
 		var data = $.extend(true, {}, this.data);
 		data.map = data.rawMap;
-
+/*
 		console.log(Object.size(data.map));
 		if (options.chain.active && options.chain.tabs[options.chain.active].evescout == false) {
 			for (var i in data.map) {
@@ -1629,7 +1629,7 @@ var chain = new function() {
 			}
 		}
 		console.log(Object.size(data.map));
-
+*/
 		this.draw(data);
 	}
 
