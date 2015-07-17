@@ -359,9 +359,9 @@ var DragDivScroll = function( divId, optionString, funcRef ) /* 15.Mar.14 */
 
    if( this.canDrag )
    {
-     this.preventDefault( evt );
+     //this.preventDefault( evt );
 
-     this.stopPropagation( evt );
+     //this.stopPropagation( evt );
 
      moveBy = this.wheelFactor * ( evt.detail ? evt.detail * 2 : -evt.wheelDelta / 20 );
 
