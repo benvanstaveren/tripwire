@@ -1617,7 +1617,7 @@ var chain = new function() {
 	this.redraw = function() {
 		var data = this.data;
 		data.map = data.rawMap;
-		console.log(data.map);
+		console.log(Object.size(data.map));
 		if (options.chain.tabs[options.chain.active].evescout == false) {
 			for (var i in data.map) {
 				if (data.map[i].mask == "273.0") {
@@ -1625,6 +1625,7 @@ var chain = new function() {
 				}
 			}
 		}
+		console.log(Object.size(data.map));
 
 		this.draw(data);
 	}
