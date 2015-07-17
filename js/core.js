@@ -1610,26 +1610,14 @@ var chain = new function() {
 		// Apply critical/destab line colors
 		connections.reverse(); // so we apply to outer systems first
 
-		//this.data.map = chain;
+		this.data.map = chain;
 		this.data.lines = connections;
-
-		return chain;
 	}
 
 	this.redraw = function() {
 		var data = $.extend(true, {}, this.data);
 		data.map = data.rawMap;
-/*
-		console.log(Object.size(data.map));
-		if (options.chain.active && options.chain.tabs[options.chain.active].evescout == false) {
-			for (var i in data.map) {
-				if (data.map[i].mask == "273.0") {
-					delete data.map[i];
-				}
-			}
-		}
-		console.log(Object.size(data.map));
-*/
+
 		this.draw(data);
 	}
 
@@ -1650,8 +1638,8 @@ var chain = new function() {
 				}
 			}
 
-			data.map = this.nodes(data.map); // 250ms -> <100ms
-			this.map.draw(this.newView(data.map), this.options); // 150ms
+			this.nodes(data.map); // 250ms -> <100ms
+			this.map.draw(this.newView(this.data.map), this.options); // 150ms
 		
 			if (options.chain.tabs[options.chain.active]) {
 				for (var x in options.chain.tabs[options.chain.active].collapsed) {
