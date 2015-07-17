@@ -4022,6 +4022,68 @@ $("#newTab").on("click", function() {
 	}
 });
 
+$("#chainTabs").on("click", ".editTab", function(e) {
+	e.stopPropagation();
+
+	// check if dialog is open
+	if (!$("#dialog-editTab").hasClass("ui-dialog-content")) {
+		$("#dialog-editTab").dialog({
+			resizable: false,
+			minHeight: 0,
+			dialogClass: "dialog-noeffect ui-dialog-shadow",
+			buttons: {
+				OK: function() {
+					$("#editTab_form").submit();
+				},
+				Cancel: function() {
+					$(this).dialog("close");
+				}
+			},
+			open: function() {
+				$("#dialog-editTab #name").val(options.chain.tabs[options.chain.active].name).focus();
+				$("#dialog-editTab #system").val(tripwire.systems[options.chain.tabs[options.chain.active].systemID].name);
+			},
+			close: function() {
+				ValidationTooltips.close();
+			},
+			create: function() {
+				$("#editTab_form").submit(function(e) {
+					e.preventDefault();
+					var $tab = $("#chainTabs .tab").eq([options.chain.active]);
+					var name = $("#dialog-editTab #name").val();
+					var systemID = Object.index(tripwire.systems, "name", $("#dialog-editTab #system").val());
+					var thera = $("#editTabThera")[0].checked ? true : false;
+
+					if (!name) {
+						ValidationTooltips.open({target: $("#dialog-editTab #name")}).setContent("Must have a name!");
+						return false;
+					} else if (!systemID && $("#editTabType1")[0].checked) {
+						ValidationTooltips.open({target: $("#dialog-editTab #system")}).setContent("Must have a valid system!");
+						return false;
+					} else if ($("#editTabType2")[0].checked) {
+						systemID = 0;
+					}
+
+					$tab.attr("id", $("#chainTabs .tab").length).find(".name").data("tab", systemID).html(name);
+					options.chain.tabs[options.chain.active] = {systemID: systemID, name: name, evescout: thera};
+					options.save();
+					chain.redraw();
+
+					//$("#chainTabs").append($tab);
+
+					$("#dialog-editTab").dialog("close");
+				});
+
+				$("#dialog-editTab #system").click(function(e) {
+					$("#dialog-editTab #editTabType1").click();
+				});
+			}
+		});
+	} else if (!$("#dialog-editTab").dialog("isOpen")) {
+		$("#dialog-editTab").dialog("open");
+	}
+});
+
 // Signature overwrite
 $(document).on("click", "#overwrite", function() {
 	var data = {request: {signatures: {"delete": [$(this).data("id")]}}, systemID: viewingSystemID};

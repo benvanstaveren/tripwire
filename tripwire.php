@@ -1001,6 +1001,30 @@ if ($row = $stmt->fetchObject()) {
 		</form>
 	</div>
 
+	<div id="dialog-editTab" title="Edit Tab" class="hidden">
+		<form id="editTab_form">
+			<table class="optionsTable" width="100%" cellpadding="1" cellspacing="0">
+				<tr>
+					<th>Name:</th>
+					<td><input type="text" id="name" maxlength="20" size="20" /></td>
+				</tr>
+				<tr>
+					<th>System:</th>
+					<td><input type="radio" name="tabType" id="editTabType1" checked="checked" style="vertical-align: text-top;" /><input type="text" id="system" class="sigSystemsAutocomplete" size="20" /></td>
+				</tr>
+				<tr>
+					<th></th>
+					<td><input type="radio" name="tabType" id="editTabType2" style="vertical-align: middle;" /><label for="editTabType2" style="width: 164px; display: inline-block; padding-left: 2px; text-align: left;">&nbsp;K-Space</label></td>
+				</tr>
+				<tr>
+					<th></th>
+					<td><input type="checkbox" id="editTabThera" /><label for="editTabThera">Include EVE-Scout's Thera chain</label></td>
+				</tr>
+			</table>
+			<input type="submit" style="position: absolute; left: -9999px"/>
+		</form>
+	</div>
+
 	<div id="dialog-error" title="Error" class="hidden">
 		<span data-icon="alert" class="critical"></span>
 		<span id="msg"></span>
@@ -1052,6 +1076,7 @@ if ($row = $stmt->fetchObject()) {
 		<span class="tab">
 			<span class="name" data-tab=""></span>
 			<i class="closeTab" data-icon="times"></i>
+			<i class="editTab" data-icon="edit"></i>
 		</span>
 	</div>
 
