@@ -1617,7 +1617,7 @@ var chain = new function() {
 	this.redraw = function() {
 		var data = this.data;
 		data.map = data.rawMap;
-
+		console.log(data.map);
 		if (options.chain.tabs[options.chain.active].evescout == false) {
 			for (var i in data.map) {
 				if (data.map[i].mask == "273.0") {
