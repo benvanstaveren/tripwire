@@ -1618,6 +1618,14 @@ var chain = new function() {
 		var data = this.data;
 		data.map = data.rawMap;
 
+		if (options.chain.tabs[options.chain.active].evescout == false) {
+			for (var i in data.map) {
+				if (data.map[i].mask == "273.0") {
+					delete data.map[i];
+				}
+			}
+		}
+
 		this.draw(data);
 	}
 
