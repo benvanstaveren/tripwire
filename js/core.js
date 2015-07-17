@@ -1629,9 +1629,9 @@ var chain = new function() {
 			this.drawing = true;
 
 			if (options.chain.tabs[options.chain.active].evescout == false) {
-				for (var i = data.map.length; i > 0; i--) {
-					if (data.map[i].mask == 273) {
-						data.map[i] = null;
+				for (var i in data.map) {
+					if (data.map[i].mask == "273") {
+						data.map[i].delete;
 					}
 				}
 			}
