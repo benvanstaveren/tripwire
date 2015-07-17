@@ -4041,7 +4041,9 @@ $("#chainTabs").on("click", ".editTab", function(e) {
 			},
 			open: function() {
 				$("#dialog-editTab #name").val(options.chain.tabs[options.chain.active].name).focus();
-				$("#dialog-editTab #system").val(tripwire.systems[options.chain.tabs[options.chain.active].systemID].name);
+				$("#dialog-editTab #system").val(options.chain.tabs[options.chain.active].systemID > 0 ? tripwire.systems[options.chain.tabs[options.chain.active].systemID].name : "");
+				options.chain.tabs[options.chain.active].systemID > 0 ? $("#dialog-editTab #editTabType1")[0].checked = true : $("#dialog-editTab #editTabType2")[0].checked = true;
+				$("#dialog-editTab #editTabThera")[0].checked = options.chain.tabs[options.chain.active].evescout;
 			},
 			close: function() {
 				ValidationTooltips.close();
