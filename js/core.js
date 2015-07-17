@@ -1629,10 +1629,8 @@ var chain = new function() {
 			this.drawing = true;
 
 			if (options.chain.tabs[options.chain.active].evescout == false) {
-				console.log("Remove Thera");
 				for (var i in data.map) {
 					if (data.map[i].mask == "273.0") {
-						console.log("Deleting map data...");
 						delete data.map[i];
 					}
 				}
@@ -3992,6 +3990,7 @@ $("#newTab").on("click", function() {
 					var $tab = $("#chainTab .tab").clone();
 					var name = $("#dialog-newTab #name").val();
 					var systemID = Object.index(tripwire.systems, "name", $("#dialog-newTab #system").val());
+					var thera = $("#tabThera")[0].checked ? true : false;
 
 					if (!name) {
 						ValidationTooltips.open({target: $("#dialog-newTab #name")}).setContent("Must have a name!");
@@ -4001,12 +4000,14 @@ $("#newTab").on("click", function() {
 						return false;
 					} else if ($("#tabType2")[0].checked) {
 						systemID = 0;
-					} else if ($("#tabType3")[0].checked) {
-						systemID = 31000005;
+					}
+
+					if ($("")[0].checked) {
+
 					}
 
 					$tab.attr("id", $("#chainTabs .tab").length).find(".name").data("tab", systemID).html(name);
-					options.chain.tabs.push({systemID: systemID, name: name});
+					options.chain.tabs.push({systemID: systemID, name: name, evescout: thera});
 					options.save();
 
 					$("#chainTabs").append($tab);

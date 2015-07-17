@@ -994,7 +994,7 @@ if ($row = $stmt->fetchObject()) {
 					<th></th><td><input type="radio" name="tabType" id="tabType2" style="vertical-align: middle;" /><label for="tabType2" style="width: 164px; display: inline-block; padding-left: 2px; text-align: left;">&nbsp;K-Space</label></td>
 				</tr>
 				<tr>
-					<th></th><td><input type="radio" name="tabType" id="tabType3" style="vertical-align: middle;" /><label for="tabType3" style="width: 164px; display: inline-block; padding-left: 2px; text-align: left;">&nbsp;EvE-Scout (Thera)</label></td>
+					<th></th><td><input type="checkbox" id="tabThera" /><label for="tabThera">Include EVE-Scout's Thera chain</label></td>
 				</tr>
 			</table>
 			<input type="submit" style="position: absolute; left: -9999px"/>
