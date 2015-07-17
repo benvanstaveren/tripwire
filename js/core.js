@@ -1627,6 +1627,15 @@ var chain = new function() {
 
 		if (data.map) {
 			this.drawing = true;
+
+			if (options.chain.tabs[options.chain.active].evescout == false) {
+				for (var i = data.map.length; i > 0; i--) {
+					if (data.map[i].mask == 273) {
+						data.map[i] = null;
+					}
+				}
+			}
+
 			this.data.rawMap = data.map;
 			this.nodes(data.map); // 250ms -> <100ms
 			this.map.draw(this.newView(this.data.map), this.options); // 150ms
