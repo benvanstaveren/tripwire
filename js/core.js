@@ -1615,7 +1615,7 @@ var chain = new function() {
 	}
 
 	this.redraw = function() {
-		var data = this.data;
+		var data = $.extend(true, {}, this.data);
 		data.map = data.rawMap;
 
 		this.draw(data);
@@ -1627,7 +1627,17 @@ var chain = new function() {
 
 		if (data.map) {
 			this.drawing = true;
-			this.data.rawMap = data.map;
+
+			this.data.rawMap = $.extend(true, {}, data.map);
+
+			if (options.chain.active && options.chain.tabs[options.chain.active].evescout == false) {
+				for (var i in data.map) {
+					if (data.map[i].mask == "273.0") {
+						delete data.map[i];
+					}
+				}
+			}
+
 			this.nodes(data.map); // 250ms -> <100ms
 			this.map.draw(this.newView(this.data.map), this.options); // 150ms
 		
@@ -3981,6 +3991,7 @@ $("#newTab").on("click", function() {
 					var $tab = $("#chainTab .tab").clone();
 					var name = $("#dialog-newTab #name").val();
 					var systemID = Object.index(tripwire.systems, "name", $("#dialog-newTab #system").val());
+					var thera = $("#tabThera")[0].checked ? true : false;
 
 					if (!name) {
 						ValidationTooltips.open({target: $("#dialog-newTab #name")}).setContent("Must have a name!");
@@ -3990,12 +4001,10 @@ $("#newTab").on("click", function() {
 						return false;
 					} else if ($("#tabType2")[0].checked) {
 						systemID = 0;
-					} else if ($("#tabType3")[0].checked) {
-						systemID = 31000005;
 					}
 
 					$tab.attr("id", $("#chainTabs .tab").length).find(".name").data("tab", systemID).html(name);
-					options.chain.tabs.push({systemID: systemID, name: name});
+					options.chain.tabs.push({systemID: systemID, name: name, evescout: thera});
 					options.save();
 
 					$("#chainTabs").append($tab);
@@ -4010,6 +4019,70 @@ $("#newTab").on("click", function() {
 		});
 	} else if (!$("#dialog-newTab").dialog("isOpen")) {
 		$("#dialog-newTab").dialog("open");
+	}
+});
+
+$("#chainTabs").on("click", ".editTab", function(e) {
+	e.stopPropagation();
+
+	// check if dialog is open
+	if (!$("#dialog-editTab").hasClass("ui-dialog-content")) {
+		$("#dialog-editTab").dialog({
+			resizable: false,
+			minHeight: 0,
+			dialogClass: "dialog-noeffect ui-dialog-shadow",
+			buttons: {
+				OK: function() {
+					$("#editTab_form").submit();
+				},
+				Cancel: function() {
+					$(this).dialog("close");
+				}
+			},
+			open: function() {
+				$("#dialog-editTab #name").val(options.chain.tabs[options.chain.active].name).focus();
+				$("#dialog-editTab #system").val(options.chain.tabs[options.chain.active].systemID > 0 ? tripwire.systems[options.chain.tabs[options.chain.active].systemID].name : "");
+				options.chain.tabs[options.chain.active].systemID > 0 ? $("#dialog-editTab #editTabType1")[0].checked = true : $("#dialog-editTab #editTabType2")[0].checked = true;
+				$("#dialog-editTab #editTabThera")[0].checked = options.chain.tabs[options.chain.active].evescout;
+			},
+			close: function() {
+				ValidationTooltips.close();
+			},
+			create: function() {
+				$("#editTab_form").submit(function(e) {
+					e.preventDefault();
+					var $tab = $("#chainTabs .tab").eq([options.chain.active]);
+					var name = $("#dialog-editTab #name").val();
+					var systemID = Object.index(tripwire.systems, "name", $("#dialog-editTab #system").val());
+					var thera = $("#editTabThera")[0].checked ? true : false;
+
+					if (!name) {
+						ValidationTooltips.open({target: $("#dialog-editTab #name")}).setContent("Must have a name!");
+						return false;
+					} else if (!systemID && $("#editTabType1")[0].checked) {
+						ValidationTooltips.open({target: $("#dialog-editTab #system")}).setContent("Must have a valid system!");
+						return false;
+					} else if ($("#editTabType2")[0].checked) {
+						systemID = 0;
+					}
+
+					$tab.attr("id", $("#chainTabs .tab").length).find(".name").data("tab", systemID).html(name);
+					options.chain.tabs[options.chain.active] = {systemID: systemID, name: name, evescout: thera};
+					options.save();
+					chain.redraw();
+
+					//$("#chainTabs").append($tab);
+
+					$("#dialog-editTab").dialog("close");
+				});
+
+				$("#dialog-editTab #system").click(function(e) {
+					$("#dialog-editTab #editTabType1").click();
+				});
+			}
+		});
+	} else if (!$("#dialog-editTab").dialog("isOpen")) {
+		$("#dialog-editTab").dialog("open");
 	}
 });
 

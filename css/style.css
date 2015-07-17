@@ -1965,11 +1965,12 @@ td.google-visualization-orgchart-linenode[data-signatureid] {
 	float: left;
 }
 
-.tab .closeTab {
+.tab .closeTab, .tab .editTab {
 	opacity: 0;
+	visibility: hidden;
 	float: right;
 	font-size: .8em;
-	padding: 2px 4px 0 6px;
+	padding: 2px 2px 0 4px;
 
 	transition: opacity .15s ease-out;
 	-moz-transition: opacity .15s ease-out;
@@ -1977,8 +1978,9 @@ td.google-visualization-orgchart-linenode[data-signatureid] {
 	-o-transition: opacity .15s ease-out;
 }
 
-.tab:hover .closeTab {
+.tab:hover .closeTab, .tab.current:hover .editTab {
 	opacity: 1;
+	visibility: visible;
 }
 
 #guide td:first-child {
