@@ -1615,8 +1615,9 @@ var chain = new function() {
 	}
 
 	this.redraw = function() {
-		var data = jQuery.extend(true, {}, this.data);
+		var data = $.extend(true, {}, this.data);
 		data.map = data.rawMap;
+
 		console.log(Object.size(data.map));
 		if (options.chain.active && options.chain.tabs[options.chain.active].evescout == false) {
 			for (var i in data.map) {
@@ -1637,6 +1638,8 @@ var chain = new function() {
 		if (data.map) {
 			this.drawing = true;
 
+			this.data.rawMap = $.extend(true, {}, data.map);
+
 			if (options.chain.active && options.chain.tabs[options.chain.active].evescout == false) {
 				for (var i in data.map) {
 					if (data.map[i].mask == "273.0") {
@@ -1645,7 +1648,6 @@ var chain = new function() {
 				}
 			}
 
-			this.data.rawMap = data.map;
 			this.nodes(data.map); // 250ms -> <100ms
 			this.map.draw(this.newView(this.data.map), this.options); // 150ms
 		
