@@ -1610,8 +1610,10 @@ var chain = new function() {
 		// Apply critical/destab line colors
 		connections.reverse(); // so we apply to outer systems first
 
-		this.data.map = chain;
+		//this.data.map = chain;
 		this.data.lines = connections;
+
+		return chain;
 	}
 
 	this.redraw = function() {
@@ -1648,8 +1650,8 @@ var chain = new function() {
 				}
 			}
 
-			this.nodes(data.map); // 250ms -> <100ms
-			this.map.draw(this.newView(this.data.map), this.options); // 150ms
+			data.map = this.nodes(data.map); // 250ms -> <100ms
+			this.map.draw(this.newView(data.map), this.options); // 150ms
 		
 			if (options.chain.tabs[options.chain.active]) {
 				for (var x in options.chain.tabs[options.chain.active].collapsed) {
