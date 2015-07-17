@@ -4002,10 +4002,6 @@ $("#newTab").on("click", function() {
 						systemID = 0;
 					}
 
-					if ($("")[0].checked) {
-
-					}
-
 					$tab.attr("id", $("#chainTabs .tab").length).find(".name").data("tab", systemID).html(name);
 					options.chain.tabs.push({systemID: systemID, name: name, evescout: thera});
 					options.save();
