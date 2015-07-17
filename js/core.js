@@ -1633,7 +1633,7 @@ var chain = new function() {
 				for (var i in data.map) {
 					if (data.map[i].mask == "273.0") {
 						console.log("Deleting map data...");
-						data.map[i] = null;
+						delete data.map[i];
 					}
 				}
 			}
