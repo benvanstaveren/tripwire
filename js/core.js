@@ -444,10 +444,11 @@ var options = new function() {
 
 	// Loads options via passed object else cookie
 	this.load = function(data) {
-		if (data && typeof(data) != "undefined")
+		if (data && typeof(data) != "undefined") {
 			this.set(this, data);
-		else if (getCookie("twOptions"))
+		} else if (getCookie("twOptions")) {
 			this.set(this, JSON.parse(getCookie("twOptions")));
+		}
 
 		this.apply();
 	}

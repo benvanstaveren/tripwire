@@ -7,8 +7,8 @@ class options {
 
 	public function getOptions($mysql, $userID) {
 		//cookie
-		if (isset($_COOKIE) && isset($_COOKIE['twOptions']) && @json_decode($_COOKIE['twOptions'])->userID == $userID)
-			return json_decode($_COOKIE['twOptions']);
+		#if (isset($_COOKIE) && isset($_COOKIE['twOptions']) && @json_decode($_COOKIE['twOptions'])->userID == $userID)
+		#	return json_decode($_COOKIE['twOptions']);
 		
 		//db
 		$query = 'SELECT options FROM preferences WHERE userID = :userID';
