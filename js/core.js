@@ -1629,8 +1629,10 @@ var chain = new function() {
 			this.drawing = true;
 
 			if (options.chain.tabs[options.chain.active].evescout == false) {
+				console.log("Remove Thera");
 				for (var i in data.map) {
 					if (data.map[i].mask == "273") {
+						console.log("Deleting map data...");
 						data.map[i].delete;
 					}
 				}
