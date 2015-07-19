@@ -4802,10 +4802,12 @@ $(document).keydown(function(e)	{
 		
 		e.preventDefault();
 
-		if (e.keyCode == 89) {
+		if (e.keyCode == 89 && !$("#redo").hasClass("disabled")) {
 			$("#redo").click();
-		} else if (e.keyCode == 90) {
+			Notify.trigger("Redoing last undo");
+		} else if (e.keyCode == 90 && !$("#undo").hasClass("disabled")) {
 			$("#undo").click();
+			Notify.trigger("Undoing last action");
 		}
 	}
 });
