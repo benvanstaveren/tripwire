@@ -1056,7 +1056,7 @@ var chain = new function() {
 					}
 				});
 				
-				if ($.map(chain.data.map.rows, function(node) { return node.c[1].v == checkSystem ? node : null; }).length <= 0) {
+				if ($.map(data.map.rows, function(node) { return node.c[1].v == checkSystem ? node : null; }).length <= 0) {
 					newparentIndex--;
 				}
 			}
