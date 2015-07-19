@@ -1622,7 +1622,7 @@ var chain = new function() {
 
 	this.draw = function(data) {
 		var data = typeof(data) !== "undefined" ? data : {};
-		var startTime = window.performance.now();
+		//var startTime = window.performance.now();
 
 		if (data.map) {
 			this.drawing = true;
@@ -1638,7 +1638,6 @@ var chain = new function() {
 			}
 
 			data = this.nodes(data.map); // 250ms -> <100ms
-			console.log(data);
 			this.map.draw(this.newView(data.map), this.options); // 150ms
 		
 			if (options.chain.tabs[options.chain.active]) {
@@ -1674,7 +1673,7 @@ var chain = new function() {
 		if (data.last_modified)
 			this.data.last_modified = data.last_modified;
 
-		console.log("stint: "+ (window.performance.now() - startTime));
+		//console.log("stint: "+ (window.performance.now() - startTime));
 	}
 
 	this.collapse = function(c) {
