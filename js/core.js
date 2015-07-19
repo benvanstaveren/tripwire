@@ -1638,7 +1638,7 @@ var chain = new function() {
 			}
 
 			console.log(data);
-			data = $.extend(true, {}, this.nodes(data.map)); // 250ms -> <100ms
+			$.extend(data, this.nodes(data.map)); // 250ms -> <100ms
 			console.log(data);
 			this.map.draw(this.newView(data.map), this.options); // 150ms
 		
