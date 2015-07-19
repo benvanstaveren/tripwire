@@ -1627,7 +1627,7 @@ var chain = new function() {
 		if (data.map) {
 			this.drawing = true;
 
-			data.rawMap = $.extend(true, {}, data.map);
+			this.data.rawMap = $.extend(true, {}, data.map);
 
 			if (options.chain.active && options.chain.tabs[options.chain.active].evescout == false) {
 				for (var i in data.map) {
@@ -1638,6 +1638,7 @@ var chain = new function() {
 			}
 
 			data = this.nodes(data.map); // 250ms -> <100ms
+			console.log(data);
 			this.map.draw(this.newView(data.map), this.options); // 150ms
 		
 			if (options.chain.tabs[options.chain.active]) {
@@ -1672,6 +1673,7 @@ var chain = new function() {
 
 		if (data.last_modified)
 			this.data.last_modified = data.last_modified;
+
 		console.log("stint: "+ (window.performance.now() - startTime));
 	}
 
