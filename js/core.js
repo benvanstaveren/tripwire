@@ -959,6 +959,8 @@ var chain = new function() {
 		}
 
 		OccupiedToolTips.attach($("#chainMap [data-icon='user']:not(.invisible)"));
+
+		return data;
 	}
 
 	this.flares = function(data) {
@@ -1635,7 +1637,7 @@ var chain = new function() {
 				}
 			}
 
-			data = this.nodes(data.map); // 250ms -> <100ms
+			data = $.extend(true, {}, this.nodes(data.map)); // 250ms -> <100ms
 			this.map.draw(this.newView(data.map), this.options); // 150ms
 		
 			if (options.chain.tabs[options.chain.active]) {
@@ -1663,7 +1665,7 @@ var chain = new function() {
 			this.data.activity = this.activity(data.activity);
 
 		if (data.occupied) // 3ms
-			this.occupied(data.occupied);
+			this.data.occupied = this.occupied(data.occupied);
 
 		if (data.flares) // 20ms
 			this.data.flares = this.flares(data.flares);
