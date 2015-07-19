@@ -1622,7 +1622,7 @@ var chain = new function() {
 
 	this.draw = function(data) {
 		var data = typeof(data) !== "undefined" ? data : {};
-		//var startTime = window.performance.now();
+		var startTime = window.performance.now();
 
 		if (data.map) {
 			this.drawing = true;
@@ -1672,7 +1672,7 @@ var chain = new function() {
 
 		if (data.last_modified)
 			this.data.last_modified = data.last_modified;
-		//console.log("stint: "+ (window.performance.now() - startTime));
+		console.log("stint: "+ (window.performance.now() - startTime));
 	}
 
 	this.collapse = function(c) {
