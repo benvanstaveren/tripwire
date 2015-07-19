@@ -910,7 +910,7 @@ var chain = new function() {
 
 	this.activity = function(data) {
 		/*	function for adding recent activity to chain map nodes	*/
-		var data = typeof(data) !== "undefined" ? data : this.data.activity;
+		//var data = typeof(data) !== "undefined" ? data : this.data.activity;
 
 		// Hide all activity colored dots instead of checking each one
 		$("#chainMap .nodeActivity > span:not(.invisible)").addClass("invisible");
@@ -943,13 +943,12 @@ var chain = new function() {
 
 		$("#chainMap .nodeActivity > span[title]").jBox("Tooltip", {position: {y: "bottom"}});
 
-		// Store data locally for re-draws
-		this.data.activity = data;
+		return data;
 	}
 
 	this.occupied = function(data) {
 		/*	function for showing occupied icon  */
-		var data = typeof(data) !== "undefined" ? data : this.data.occupied;
+		//var data = typeof(data) !== "undefined" ? data : this.data.occupied;
 
 		// Hide all icons instead of checking each one
 		$("#chainMap [data-icon='user']").addClass("invisible");//.hide();
@@ -961,13 +960,12 @@ var chain = new function() {
 
 		OccupiedToolTips.attach($("#chainMap [data-icon='user']:not(.invisible)"));
 
-		// Store data locally for re-draws
-		chain.data.occupied = data;
+		return data;
 	}
 
 	this.flares = function(data) {
 		/*	function for coloring chain map nodes via flares  */
-		var data = typeof(data) !== "undefined" ? data : this.data.flares;
+		//var data = typeof(data) !== "undefined" ? data : this.data.flares;
 		
 		// Remove all current node coloring instead of checking each one
 		$("#chainMap td.node").removeClass("redNode yellowNode greenNode");
@@ -989,8 +987,7 @@ var chain = new function() {
 			}
 		}
 
-		// Store data locally for re-draws
-		chain.data.flares = data;
+		return data;
 	}
 
 	this.grid = function() {
@@ -1006,7 +1003,7 @@ var chain = new function() {
 	}
 
 	this.lines = function(data) {
-		var data = typeof(data) !== "undefined" ? data : this.data.lines;
+		//var data = typeof(data) !== "undefined" ? data : this.data.lines;
 
 		function drawNodeLine(system, parent, mode, signatureID) {
 			/*	function for drawing colored lines  */
@@ -1059,7 +1056,7 @@ var chain = new function() {
 					}
 				});
 				
-				if ($.map(chain.data.map.rows, function(node) { return node.c[1].v == checkSystem ? node : null; }).length <= 0) {
+				if ($.map(data.map.rows, function(node) { return node.c[1].v == checkSystem ? node : null; }).length <= 0) {
 					newparentIndex--;
 				}
 			}
@@ -1135,8 +1132,8 @@ var chain = new function() {
 			});
 		}
 
-		for (var x in data) {
-			drawNodeLine(data[x][0], data[x][1], data[x][2], data[x][3]);
+		for (var x in data.lines) {
+			drawNodeLine(data.lines[x][0], data.lines[x][1], data.lines[x][2], data.lines[x][3]);
 		}
 	}
 
@@ -1611,8 +1608,9 @@ var chain = new function() {
 		// Apply critical/destab line colors
 		connections.reverse(); // so we apply to outer systems first
 
-		this.data.map = chain;
-		this.data.lines = connections;
+		//this.data.map = chain;
+		//this.data.lines = connections;
+		return {"map": chain, "lines": connections};
 	}
 
 	this.redraw = function() {
@@ -1639,8 +1637,8 @@ var chain = new function() {
 				}
 			}
 
-			this.nodes(data.map); // 250ms -> <100ms
-			this.map.draw(this.newView(this.data.map), this.options); // 150ms
+			$.extend(data, this.nodes(data.map)); // 250ms -> <100ms
+			this.map.draw(this.newView(data.map), this.options); // 150ms
 		
 			if (options.chain.tabs[options.chain.active]) {
 				for (var x in options.chain.tabs[options.chain.active].collapsed) {
@@ -1653,7 +1651,7 @@ var chain = new function() {
 				}
 			}
 
-			this.lines(data.lines); // 300ms
+			this.lines(data); // 300ms
 			this.grid(); // 4ms
 
 			// Apply current system style
@@ -1664,16 +1662,17 @@ var chain = new function() {
 		}
 		
 		if (data.activity) // 100ms
-			this.activity(data.activity);
+			this.data.activity = this.activity(data.activity);
 
 		if (data.occupied) // 3ms
-			this.occupied(data.occupied);
+			this.data.occupied = this.occupied(data.occupied);
 
 		if (data.flares) // 20ms
-			this.flares(data.flares);
+			this.data.flares = this.flares(data.flares);
 
 		if (data.last_modified)
 			this.data.last_modified = data.last_modified;
+
 		//console.log("stint: "+ (window.performance.now() - startTime));
 	}
 
@@ -4784,3 +4783,11 @@ $("body").on("click", "a[href^='.?system=']", function(e) {
 });
 
 new DragDivScroll("chainParent", "noXBarHide noYBarHide noStatus");
+
+$("#undo").on("click", function() {
+	tripwire.refresh("refresh", {undo: true});
+});
+
+$("#redo").on("click", function() {
+	tripwire.refresh("refresh", {redo: true});
+});
