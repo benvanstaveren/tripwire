@@ -959,8 +959,6 @@ var chain = new function() {
 		}
 
 		OccupiedToolTips.attach($("#chainMap [data-icon='user']:not(.invisible)"));
-
-		return data;
 	}
 
 	this.flares = function(data) {
@@ -1665,7 +1663,7 @@ var chain = new function() {
 			this.data.activity = this.activity(data.activity);
 
 		if (data.occupied) // 3ms
-			this.data.occupied = this.occupied(data.occupied);
+			this.occupied(data.occupied);
 
 		if (data.flares) // 20ms
 			this.data.flares = this.flares(data.flares);
