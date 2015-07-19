@@ -5,21 +5,32 @@ class signatures {
 		global $mysql, $maskID, $userID, $refresh;
 
 		foreach ($ids AS $id) {
-			$query = 'UPDATE signatures SET userID = :userID WHERE id = :id AND mask = :mask';
+			$query = 'SET @disable_trigger = 1';
+			$stmt = $mysql->prepare($query);
+			$stmt->execute();
+			
+			$query = 'UPDATE signatures SET userID = :userID, time = NOW() WHERE id = :id AND mask = :mask';
 			$stmt = $mysql->prepare($query);
 			$stmt->bindValue(':id', $id, PDO::PARAM_INT);
 			$stmt->bindValue(':mask', $maskID, PDO::PARAM_STR);
 			$stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 			$success = @$stmt->execute();
 
+			$query = 'SET @disable_trigger = NULL';
+			$stmt = $mysql->prepare($query);
+			$stmt->execute();
+
 			$query = 'DELETE FROM signatures WHERE id = :id AND mask = :mask';
 			$stmt = $mysql->prepare($query);
 			$stmt->bindValue(':id', $id, PDO::PARAM_INT);
 			$stmt->bindValue(':mask', $maskID, PDO::PARAM_STR);
 			$success = @$stmt->execute();
-
-			if ($success)
+			
+			if ($success) {
 				$refresh['sigUpdate'] = $refresh['chainUpdate'] = true;
+			} else {
+				$success = $mysql->errorInfo();
+			}
 		}
 
 		return $success;
