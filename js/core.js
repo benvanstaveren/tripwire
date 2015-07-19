@@ -1132,8 +1132,8 @@ var chain = new function() {
 			});
 		}
 
-		for (var x in data) {
-			drawNodeLine(data[x][0], data[x][1], data[x][2], data[x][3]);
+		for (var x in data.lines) {
+			drawNodeLine(data.lines[x][0], data.lines[x][1], data.lines[x][2], data.lines[x][3]);
 		}
 	}
 
@@ -1651,7 +1651,7 @@ var chain = new function() {
 				}
 			}
 
-			this.lines(data.lines); // 300ms
+			this.lines(data); // 300ms
 			this.grid(); // 4ms
 
 			// Apply current system style
