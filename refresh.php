@@ -205,6 +205,266 @@ if ($data) {
 		$output['result'] = $signatures->update($data->signatures->update);
 }
 
+/**
+// *********************
+// Undo / Redo
+// *********************
+*/
+if (isset($_REQUEST['undo'])) {
+	$query = "SELECT * FROM _history_signatures WHERE status NOT IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND time = (SELECT time FROM _history_signatures WHERE status NOT IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND DATE_ADD(time, INTERVAL 4 HOUR) > NOW() ORDER BY time DESC LIMIT 1)";
+	$stmt = $mysql->prepare($query);
+	$stmt->bindValue(':userID', $userID, PDO::PARAM_STR);
+	$stmt->bindValue(':mask', $maskID, PDO::PARAM_STR);
+	$stmt->bindValue(':systemID', $_REQUEST['systemID'], PDO::PARAM_STR);
+	$stmt->execute();
+	
+	foreach ($stmt->fetchAll(PDO::FETCH_OBJ) AS $row) {
+		if ($row->status == 'add') {
+			$query = "UPDATE _history_signatures SET status = 'undo:add', time = NOW() WHERE historyID = :historyID";
+			$stmt = $mysql->prepare($query);
+			$stmt->bindValue(':historyID', $row->historyID, PDO::PARAM_STR);
+			$stmt->execute();
+			
+			$query = 'SET @disable_trigger = 1';
+			$stmt = $mysql->prepare($query);
+			$stmt->execute();
+
+			$query = 'DELETE FROM signatures WHERE id = :id';
+			$stmt = $mysql->prepare($query);
+			$stmt->bindValue(':id', $row->id, PDO::PARAM_INT);
+			$stmt->execute();
+
+			$query = 'SET @disable_trigger = NULL';
+			$stmt = $mysql->prepare($query);
+			$stmt->execute();
+
+		} else if ($row->status == 'update') {
+			$query = "SELECT * FROM _history_signatures WHERE id = :id AND status NOT IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND time = (SELECT time FROM _history_signatures WHERE id = :id AND status NOT IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask ORDER BY time DESC LIMIT 1,1)";
+			$stmt = $mysql->prepare($query);
+			$stmt->bindValue(':id', $row->id, PDO::PARAM_INT);
+			$stmt->bindValue(':userID', $userID, PDO::PARAM_STR);
+			$stmt->bindValue(':mask', $maskID, PDO::PARAM_STR);
+			$stmt->execute();
+			$restore = $stmt->fetchObject();
+
+			$query = "UPDATE _history_signatures SET status = 'undo:update', time = NOW() WHERE historyID = :historyID";
+			$stmt = $mysql->prepare($query);
+			$stmt->bindValue(':historyID', $row->historyID, PDO::PARAM_STR);
+			$stmt->execute();
+
+			$query = 'SET @disable_trigger = 1';
+			$stmt = $mysql->prepare($query);
+			$stmt->execute();
+
+			$query = 'UPDATE signatures SET signatureID = :signatureID, system = :system, systemID = :systemID, type = :type, class = :class, classBM = :classBM, typeBM = :typeBM, nth = :nth, sig2ID = :sig2ID, sig2Type = :sig2Type, class2 = :class2, class2BM = :class2BM, type2BM = :type2BM, nth2 = :nth2, connection = :connection, connectionID = :connectionID, life = :life, lifeTime = :lifeTime, lifeLeft = :lifeLeft, lifeLength = :lifeLength, mass = :mass, name = :name, userID = :userID, time = NOW() WHERE id = :id';
+			$stmt = $mysql->prepare($query);
+			$stmt->bindValue(':id', $restore->id, PDO::PARAM_STR);
+			$stmt->bindValue(':signatureID', $restore->signatureID, PDO::PARAM_STR);
+			$stmt->bindValue(':system', $restore->system, PDO::PARAM_STR);
+			$stmt->bindValue(':systemID', $restore->systemID, PDO::PARAM_STR);
+			$stmt->bindValue(':type', $restore->type, PDO::PARAM_STR);
+			$stmt->bindValue(':class', $restore->class, PDO::PARAM_STR);
+			$stmt->bindValue(':classBM', $restore->classBM, PDO::PARAM_STR);
+			$stmt->bindValue(':typeBM', $restore->typeBM, PDO::PARAM_STR);
+			$stmt->bindValue(':nth', $restore->nth, PDO::PARAM_STR);
+			$stmt->bindValue(':sig2ID', $restore->sig2ID, PDO::PARAM_STR);
+			$stmt->bindValue(':sig2Type', $restore->sig2Type, PDO::PARAM_STR);
+			$stmt->bindValue(':class2', $restore->class2, PDO::PARAM_STR);
+			$stmt->bindValue(':class2BM', $restore->class2BM, PDO::PARAM_STR);
+			$stmt->bindValue(':type2BM', $restore->type2BM, PDO::PARAM_STR);
+			$stmt->bindValue(':nth2', $restore->nth2, PDO::PARAM_STR);
+			$stmt->bindValue(':connection', $restore->connection, PDO::PARAM_STR);
+			$stmt->bindValue(':connectionID', $restore->connectionID, PDO::PARAM_STR);
+			$stmt->bindValue(':life', $restore->life, PDO::PARAM_STR);
+			$stmt->bindValue(':lifeTime', $restore->lifeTime, PDO::PARAM_STR);
+			$stmt->bindValue(':lifeLeft', $restore->lifeLeft, PDO::PARAM_STR);
+			$stmt->bindValue(':lifeLength', $restore->lifeLength, PDO::PARAM_STR);
+			$stmt->bindValue(':mass', $restore->mass, PDO::PARAM_STR);
+			$stmt->bindValue(':name', $restore->name, PDO::PARAM_STR);
+			$stmt->bindValue(':userID', $restore->userID, PDO::PARAM_STR);
+			$stmt->execute();
+
+			$query = 'SET @disable_trigger = NULL';
+			$stmt = $mysql->prepare($query);
+			$stmt->execute();
+		} else if ($row->status == 'delete') {
+			$query = "UPDATE _history_signatures SET status = 'undo:delete', time = NOW() WHERE historyID = :historyID";
+			$stmt = $mysql->prepare($query);
+			$stmt->bindValue(':historyID', $row->historyID, PDO::PARAM_STR);
+			$stmt->execute();
+
+			$query = 'SET @disable_trigger = 1';
+			$stmt = $mysql->prepare($query);
+			$stmt->execute();
+
+			$query = 'INSERT INTO signatures SET id = :id, signatureID = :signatureID, system = :system, systemID = :systemID, type = :type, class = :class, classBM = :classBM, typeBM = :typeBM, nth = :nth, sig2ID = :sig2ID, sig2Type = :sig2Type, class2 = :class2, class2BM = :class2BM, type2BM = :type2BM, nth2 = :nth2, connection = :connection, connectionID = :connectionID, life = :life, lifeTime = :lifeTime, lifeLeft = :lifeLeft, lifeLength = :lifeLength, mass = :mass, name = :name, userID = :userID, time = NOW(), mask = :mask';
+			$stmt = $mysql->prepare($query);
+			$stmt->bindValue(':id', $row->id, PDO::PARAM_STR);
+			$stmt->bindValue(':signatureID', $row->signatureID, PDO::PARAM_STR);
+			$stmt->bindValue(':system', $row->system, PDO::PARAM_STR);
+			$stmt->bindValue(':systemID', $row->systemID, PDO::PARAM_STR);
+			$stmt->bindValue(':type', $row->type, PDO::PARAM_STR);
+			$stmt->bindValue(':class', $row->class, PDO::PARAM_STR);
+			$stmt->bindValue(':classBM', $row->classBM, PDO::PARAM_STR);
+			$stmt->bindValue(':typeBM', $row->typeBM, PDO::PARAM_STR);
+			$stmt->bindValue(':nth', $row->nth, PDO::PARAM_STR);
+			$stmt->bindValue(':sig2ID', $row->sig2ID, PDO::PARAM_STR);
+			$stmt->bindValue(':sig2Type', $row->sig2Type, PDO::PARAM_STR);
+			$stmt->bindValue(':class2', $row->class2, PDO::PARAM_STR);
+			$stmt->bindValue(':class2BM', $row->class2BM, PDO::PARAM_STR);
+			$stmt->bindValue(':type2BM', $row->type2BM, PDO::PARAM_STR);
+			$stmt->bindValue(':nth2', $row->nth2, PDO::PARAM_STR);
+			$stmt->bindValue(':connection', $row->connection, PDO::PARAM_STR);
+			$stmt->bindValue(':connectionID', $row->connectionID, PDO::PARAM_STR);
+			$stmt->bindValue(':life', $row->life, PDO::PARAM_STR);
+			$stmt->bindValue(':lifeTime', $row->lifeTime, PDO::PARAM_STR);
+			$stmt->bindValue(':lifeLeft', $row->lifeLeft, PDO::PARAM_STR);
+			$stmt->bindValue(':lifeLength', $row->lifeLength, PDO::PARAM_STR);
+			$stmt->bindValue(':mass', $row->mass, PDO::PARAM_STR);
+			$stmt->bindValue(':name', $row->name, PDO::PARAM_STR);
+			$stmt->bindValue(':userID', $row->userID, PDO::PARAM_STR);
+			$stmt->bindValue(':mask', $row->mask, PDO::PARAM_STR);
+			$stmt->execute();
+
+			$query = 'SET @disable_trigger = NULL';
+			$stmt = $mysql->prepare($query);
+			$stmt->execute();
+		}
+	}
+	
+} else if (isset($_REQUEST['redo'])) {
+	$query = "SELECT * FROM _history_signatures WHERE status IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND time = (SELECT time FROM _history_signatures WHERE status IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND DATE_ADD(time, INTERVAL 4 HOUR) > NOW() ORDER BY time DESC LIMIT 1)";
+	$stmt = $mysql->prepare($query);
+	$stmt->bindValue(':userID', $userID, PDO::PARAM_STR);
+	$stmt->bindValue(':mask', $maskID, PDO::PARAM_STR);
+	$stmt->bindValue(':systemID', $_REQUEST['systemID'], PDO::PARAM_STR);
+	$stmt->execute();
+
+	foreach ($stmt->fetchAll(PDO::FETCH_OBJ) AS $row) {
+		if ($row->status == 'undo:add') {
+			$query = "UPDATE _history_signatures SET status = 'add', time = now() WHERE historyID = :historyID";
+			$stmt = $mysql->prepare($query);
+			$stmt->bindValue(':historyID', $row->historyID, PDO::PARAM_STR);
+			$stmt->execute();
+
+			$query = 'SET @disable_trigger = 1';
+			$stmt = $mysql->prepare($query);
+			$stmt->execute();
+
+			$query = 'INSERT INTO signatures SET id = :id, signatureID = :signatureID, system = :system, systemID = :systemID, type = :type, class = :class, classBM = :classBM, typeBM = :typeBM, nth = :nth, sig2ID = :sig2ID, sig2Type = :sig2Type, class2 = :class2, class2BM = :class2BM, type2BM = :type2BM, nth2 = :nth2, connection = :connection, connectionID = :connectionID, life = :life, lifeTime = :lifeTime, lifeLeft = :lifeLeft, lifeLength = :lifeLength, mass = :mass, name = :name, userID = :userID, time = NOW(), mask = :mask';
+			$stmt = $mysql->prepare($query);
+			$stmt->bindValue(':id', $row->id, PDO::PARAM_STR);
+			$stmt->bindValue(':signatureID', $row->signatureID, PDO::PARAM_STR);
+			$stmt->bindValue(':system', $row->system, PDO::PARAM_STR);
+			$stmt->bindValue(':systemID', $row->systemID, PDO::PARAM_STR);
+			$stmt->bindValue(':type', $row->type, PDO::PARAM_STR);
+			$stmt->bindValue(':class', $row->class, PDO::PARAM_STR);
+			$stmt->bindValue(':classBM', $row->classBM, PDO::PARAM_STR);
+			$stmt->bindValue(':typeBM', $row->typeBM, PDO::PARAM_STR);
+			$stmt->bindValue(':nth', $row->nth, PDO::PARAM_STR);
+			$stmt->bindValue(':sig2ID', $row->sig2ID, PDO::PARAM_STR);
+			$stmt->bindValue(':sig2Type', $row->sig2Type, PDO::PARAM_STR);
+			$stmt->bindValue(':class2', $row->class2, PDO::PARAM_STR);
+			$stmt->bindValue(':class2BM', $row->class2BM, PDO::PARAM_STR);
+			$stmt->bindValue(':type2BM', $row->type2BM, PDO::PARAM_STR);
+			$stmt->bindValue(':nth2', $row->nth2, PDO::PARAM_STR);
+			$stmt->bindValue(':connection', $row->connection, PDO::PARAM_STR);
+			$stmt->bindValue(':connectionID', $row->connectionID, PDO::PARAM_STR);
+			$stmt->bindValue(':life', $row->life, PDO::PARAM_STR);
+			$stmt->bindValue(':lifeTime', $row->lifeTime, PDO::PARAM_STR);
+			$stmt->bindValue(':lifeLeft', $row->lifeLeft, PDO::PARAM_STR);
+			$stmt->bindValue(':lifeLength', $row->lifeLength, PDO::PARAM_STR);
+			$stmt->bindValue(':mass', $row->mass, PDO::PARAM_STR);
+			$stmt->bindValue(':name', $row->name, PDO::PARAM_STR);
+			$stmt->bindValue(':userID', $row->userID, PDO::PARAM_STR);
+			$stmt->bindValue(':mask', $row->mask, PDO::PARAM_STR);
+			$stmt->execute();
+
+			$query = 'SET @disable_trigger = NULL';
+			$stmt = $mysql->prepare($query);
+			$stmt->execute();
+		} else if ($row->status == 'undo:update') {
+			$query = "UPDATE _history_signatures SET status = 'update', time = NOW() WHERE historyID = :historyID";
+			$stmt = $mysql->prepare($query);
+			$stmt->bindValue(':historyID', $row->historyID, PDO::PARAM_STR);
+			$stmt->execute();
+
+			$query = 'SET @disable_trigger = 1';
+			$stmt = $mysql->prepare($query);
+			$stmt->execute();
+
+			$query = 'UPDATE signatures SET signatureID = :signatureID, system = :system, systemID = :systemID, type = :type, class = :class, classBM = :classBM, typeBM = :typeBM, nth = :nth, sig2ID = :sig2ID, sig2Type = :sig2Type, class2 = :class2, class2BM = :class2BM, type2BM = :type2BM, nth2 = :nth2, connection = :connection, connectionID = :connectionID, life = :life, lifeTime = :lifeTime, lifeLeft = :lifeLeft, lifeLength = :lifeLength, mass = :mass, name = :name, userID = :userID, time = NOW() WHERE id = :id';
+			$stmt = $mysql->prepare($query);
+			$stmt->bindValue(':id', $row->id, PDO::PARAM_STR);
+			$stmt->bindValue(':signatureID', $row->signatureID, PDO::PARAM_STR);
+			$stmt->bindValue(':system', $row->system, PDO::PARAM_STR);
+			$stmt->bindValue(':systemID', $row->systemID, PDO::PARAM_STR);
+			$stmt->bindValue(':type', $row->type, PDO::PARAM_STR);
+			$stmt->bindValue(':class', $row->class, PDO::PARAM_STR);
+			$stmt->bindValue(':classBM', $row->classBM, PDO::PARAM_STR);
+			$stmt->bindValue(':typeBM', $row->typeBM, PDO::PARAM_STR);
+			$stmt->bindValue(':nth', $row->nth, PDO::PARAM_STR);
+			$stmt->bindValue(':sig2ID', $row->sig2ID, PDO::PARAM_STR);
+			$stmt->bindValue(':sig2Type', $row->sig2Type, PDO::PARAM_STR);
+			$stmt->bindValue(':class2', $row->class2, PDO::PARAM_STR);
+			$stmt->bindValue(':class2BM', $row->class2BM, PDO::PARAM_STR);
+			$stmt->bindValue(':type2BM', $row->type2BM, PDO::PARAM_STR);
+			$stmt->bindValue(':nth2', $row->nth2, PDO::PARAM_STR);
+			$stmt->bindValue(':connection', $row->connection, PDO::PARAM_STR);
+			$stmt->bindValue(':connectionID', $row->connectionID, PDO::PARAM_STR);
+			$stmt->bindValue(':life', $row->life, PDO::PARAM_STR);
+			$stmt->bindValue(':lifeTime', $row->lifeTime, PDO::PARAM_STR);
+			$stmt->bindValue(':lifeLeft', $row->lifeLeft, PDO::PARAM_STR);
+			$stmt->bindValue(':lifeLength', $row->lifeLength, PDO::PARAM_STR);
+			$stmt->bindValue(':mass', $row->mass, PDO::PARAM_STR);
+			$stmt->bindValue(':name', $row->name, PDO::PARAM_STR);
+			$stmt->bindValue(':userID', $row->userID, PDO::PARAM_STR);
+			$stmt->execute();
+
+			$query = 'SET @disable_trigger = NULL';
+			$stmt = $mysql->prepare($query);
+			$stmt->execute();
+		} else if ($row->status == 'undo:delete') {
+			$query = "UPDATE _history_signatures SET status = 'delete', time = NOW() WHERE historyID = :historyID";
+			$stmt = $mysql->prepare($query);
+			$stmt->bindValue(':historyID', $row->historyID, PDO::PARAM_STR);
+			$stmt->execute();
+
+			$query = 'SET @disable_trigger = 1';
+			$stmt = $mysql->prepare($query);
+			$stmt->execute();
+
+			$query = 'DELETE FROM signatures WHERE id = :id AND userID = :userID AND mask = :mask';
+			$stmt = $mysql->prepare($query);
+			$stmt->bindValue(':id', $row->id, PDO::PARAM_STR);
+			$stmt->bindValue(':userID', $userID, PDO::PARAM_STR);
+			$stmt->bindValue(':mask', $maskID, PDO::PARAM_STR);
+			$stmt->execute();
+
+			$query = 'SET @disable_trigger = NULL';
+			$stmt = $mysql->prepare($query);
+			$stmt->execute();
+		}
+	}
+}
+
+// Check if Undo/Redo is available
+$query = "SELECT * FROM _history_signatures WHERE status NOT IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND time = (SELECT time FROM _history_signatures WHERE status NOT IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND DATE_ADD(time, INTERVAL 4 HOUR) > NOW() ORDER BY time DESC LIMIT 1)";
+$stmt = $mysql->prepare($query);
+$stmt->bindValue(':userID', $userID, PDO::PARAM_STR);
+$stmt->bindValue(':mask', $maskID, PDO::PARAM_STR);
+$stmt->bindValue(':systemID', $_REQUEST['systemID'], PDO::PARAM_STR);
+$stmt->execute();
+$stmt->rowCount() ? $output['undo'] = true : null;
+
+$query = "SELECT * FROM _history_signatures WHERE status IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND time = (SELECT time FROM _history_signatures WHERE status IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND DATE_ADD(time, INTERVAL 4 HOUR) > NOW() ORDER BY time DESC LIMIT 1)";
+$stmt = $mysql->prepare($query);
+$stmt->bindValue(':userID', $userID, PDO::PARAM_STR);
+$stmt->bindValue(':mask', $maskID, PDO::PARAM_STR);
+$stmt->bindValue(':systemID', $_REQUEST['systemID'], PDO::PARAM_STR);
+$stmt->execute();
+$stmt->rowCount() ? $output['redo'] = true : null;
+
 if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'init') {
 	$output['signatures'] = Array();
 	$systemID = $_REQUEST['systemID'];

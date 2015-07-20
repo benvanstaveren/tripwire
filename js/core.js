@@ -1916,6 +1916,9 @@ var tripwire = new function() {
 				tripwire.EVE(data.EVE);
 
 				if (data.notify) Notify.trigger(data.notify, "yellow", false);
+
+				data.undo == true ? $("#undo").removeClass("disabled") : $("#undo").addClass("disabled");
+				data.redo == true ? $("#redo").removeClass("disabled") : $("#redo").addClass("disabled");
 			}
 
 			successCallback ? successCallback(data) : null;
@@ -4790,4 +4793,21 @@ $("#undo").on("click", function() {
 
 $("#redo").on("click", function() {
 	tripwire.refresh("refresh", {redo: true});
+});
+
+$(document).keydown(function(e)	{
+	if ((e.metaKey || e.ctrlKey) && (e.keyCode == 89 || e.keyCode == 90)) {
+		//Abort - user is in input or textarea
+		if ($(document.activeElement).is("textarea, input")) return;
+		
+		e.preventDefault();
+
+		if (e.keyCode == 89 && !$("#redo").hasClass("disabled")) {
+			$("#redo").click();
+			Notify.trigger("Redoing last undo");
+		} else if (e.keyCode == 90 && !$("#undo").hasClass("disabled")) {
+			$("#undo").click();
+			Notify.trigger("Undoing last action");
+		}
+	}
 });

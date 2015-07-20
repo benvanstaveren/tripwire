@@ -297,7 +297,7 @@ to { -o-transform: rotate(360deg); }
     overflow: hidden;
 }
 
-.gridster .controls i {
+.controls i {
 	cursor: pointer;
 }
 
@@ -1333,6 +1333,12 @@ i.closeIcon:hover {
 	text-decoration: none;
 }
 
+[data-icon="undo"]:before {
+	content: "\e60e";
+}
+[data-icon="redo"]:before {
+	content: "\e612";
+}
 [data-icon="move-horizontal"]:before {
 	content: "\e600";
 }
@@ -1446,9 +1452,6 @@ i.closeIcon:hover {
 }
 [data-icon="tree"]:before {
 	content: "\e019";
-}
-[data-icon="k-space"]:before {
-	content: "\e60e";
 }
 [data-icon="follow"]:before {
 	content: "\e60f";
