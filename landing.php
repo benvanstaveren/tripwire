@@ -551,6 +551,19 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 				<h1>Updates</h1>
 				<div class="releases">
 					<article class="release">
+						<h2>Version 0.7.3</h2>
+						<span class="date">Released on July 19th, 2015</span>
+						<ul>
+							<li class="new"><span><b>new</b></span> Added Undo/Redo feature</li>
+							<li class="fix"><span><b>fix</b></span> Fixed some missing wormhole statics</li>
+							<li class="fix"><span><b>fix</b></span> Chain map rendering fixes</li>
+						</ul>
+						<h2>Version 0.7.2</h2>
+						<span class="date">Released on July 17th, 2015</span>
+						<ul>
+							<li class="new"><span><b>new</b></span> Added ability to edit chain map tabs</li>
+							<li class="new"><span><b>new</b></span> EVE-Scout Thera chain toggle added</li>
+						</ul>
 						<h2>Version 0.7.1</h2>
 						<span class="date">Released on June 4th, 2015</span>
 						<ul>
