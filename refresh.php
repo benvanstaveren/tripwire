@@ -211,7 +211,7 @@ if ($data) {
 // *********************
 */
 if (isset($_REQUEST['undo'])) {
-	$query = "SELECT * FROM _history_signatures WHERE status NOT IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND time = (SELECT time FROM _history_signatures WHERE status NOT IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND DATE_ADD(time, INTERVAL 15 MINUTE) > NOW() ORDER BY time DESC LIMIT 1)";
+	$query = "SELECT * FROM _history_signatures WHERE status NOT IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND time = (SELECT time FROM _history_signatures WHERE status NOT IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND DATE_ADD(time, INTERVAL 4 HOUR) > NOW() ORDER BY time DESC LIMIT 1)";
 	$stmt = $mysql->prepare($query);
 	$stmt->bindValue(':userID', $userID, PDO::PARAM_STR);
 	$stmt->bindValue(':mask', $maskID, PDO::PARAM_STR);
@@ -228,12 +228,12 @@ if (isset($_REQUEST['undo'])) {
 			$query = 'SET @disable_trigger = 1';
 			$stmt = $mysql->prepare($query);
 			$stmt->execute();
-#$shortTime = microtime(true);
+
 			$query = 'DELETE FROM signatures WHERE id = :id';
 			$stmt = $mysql->prepare($query);
 			$stmt->bindValue(':id', $row->id, PDO::PARAM_INT);
 			$stmt->execute();
-#$output['shortTime'] = sprintf('%.4f', microtime(true) - $shortTime);
+
 			$query = 'SET @disable_trigger = NULL';
 			$stmt = $mysql->prepare($query);
 			$stmt->execute();
@@ -333,7 +333,7 @@ if (isset($_REQUEST['undo'])) {
 	}
 	
 } else if (isset($_REQUEST['redo'])) {
-	$query = "SELECT * FROM _history_signatures WHERE status IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND time = (SELECT time FROM _history_signatures WHERE status IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND DATE_ADD(time, INTERVAL 15 MINUTE) > NOW() ORDER BY time DESC LIMIT 1)";
+	$query = "SELECT * FROM _history_signatures WHERE status IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND time = (SELECT time FROM _history_signatures WHERE status IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND DATE_ADD(time, INTERVAL 4 HOUR) > NOW() ORDER BY time DESC LIMIT 1)";
 	$stmt = $mysql->prepare($query);
 	$stmt->bindValue(':userID', $userID, PDO::PARAM_STR);
 	$stmt->bindValue(':mask', $maskID, PDO::PARAM_STR);
@@ -449,7 +449,7 @@ if (isset($_REQUEST['undo'])) {
 }
 
 // Check if Undo/Redo is available
-$query = "SELECT * FROM _history_signatures WHERE status NOT IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND time = (SELECT time FROM _history_signatures WHERE status NOT IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND DATE_ADD(time, INTERVAL 15 MINUTE) > NOW() ORDER BY time DESC LIMIT 1)";
+$query = "SELECT * FROM _history_signatures WHERE status NOT IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND time = (SELECT time FROM _history_signatures WHERE status NOT IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND DATE_ADD(time, INTERVAL 4 HOUR) > NOW() ORDER BY time DESC LIMIT 1)";
 $stmt = $mysql->prepare($query);
 $stmt->bindValue(':userID', $userID, PDO::PARAM_STR);
 $stmt->bindValue(':mask', $maskID, PDO::PARAM_STR);
@@ -457,7 +457,7 @@ $stmt->bindValue(':systemID', $_REQUEST['systemID'], PDO::PARAM_STR);
 $stmt->execute();
 $stmt->rowCount() ? $output['undo'] = true : null;
 
-$query = "SELECT * FROM _history_signatures WHERE status IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND time = (SELECT time FROM _history_signatures WHERE status IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND DATE_ADD(time, INTERVAL 15 MINUTE) > NOW() ORDER BY time DESC LIMIT 1)";
+$query = "SELECT * FROM _history_signatures WHERE status IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND time = (SELECT time FROM _history_signatures WHERE status IN ('undo:add', 'undo:update', 'undo:delete') AND userID = :userID AND mask = :mask AND (systemID = :systemID OR connectionID = :systemID) AND DATE_ADD(time, INTERVAL 4 HOUR) > NOW() ORDER BY time DESC LIMIT 1)";
 $stmt = $mysql->prepare($query);
 $stmt->bindValue(':userID', $userID, PDO::PARAM_STR);
 $stmt->bindValue(':mask', $maskID, PDO::PARAM_STR);
