@@ -75,7 +75,7 @@ if ($mode == 'user') {
 			$output['error'] = "API requires 'Account Status' permission";
 		} else if ($API->checkMask($keyID, $vCode, $mask) == 0) {
 			$output['field'] = 'api';
-			$output['error'] = "API requires ONLY 'Account Status' permission";
+			$output['error'] = "API 'Account Status' permission ONLY - too many permissions";
 		} else {
 			$characters = $API->getCharacters($keyID, $vCode);
 
@@ -96,11 +96,11 @@ if ($mode == 'user') {
 				$stmt->execute();
 				
 				if ($stmt->fetchColumn(1)) {
-					$output['field'] = 'select';
-					$output['error'] = 'Character is banned';
+					$output['field'] = count($characters) > 1 ? 'select' : 'api';
+					$output['error'] = 'Character '.$characters[$selected]->characterName.' is banned';
 				} else if ($stmt->rowCount()) {
-					$output['field'] = 'select';
-					$output['error'] = 'Character is already assigned to an account';
+					$output['field'] = count($characters) > 1 ? 'select' : 'api';
+					$output['error'] = 'Character '.$characters[$selected]->characterName.' already assigned to an account';
 				} else {
 					$hasher = new PasswordHash(8, FALSE);
 					$password = $hasher->HashPassword($password);
