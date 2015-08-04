@@ -1327,7 +1327,7 @@ var chain = new function() {
 						usedLinks.push(node.id);
 						//usedLinks[system[2]].push(node.id);
 						
-						if ($("#show-viewing").hasClass("active") && tripwire.systems[node.child.systemID] && !tripwire.systems[viewingSystemID].class && !tripwire.systems[node.child.systemID].class) {
+						if ($("#show-viewing").hasClass("active") && tripwire.systems[node.parent.systemID] && !tripwire.systems[viewingSystemID].class && !tripwire.systems[node.parent.systemID].class) {
 							var jumps = guidance.findShortestPath(tripwire.map.shortest, [viewingSystemID - 30000000, node.child.systemID - 30000000]).length - 1;
 							if (node.child.systemID == 30002404) console.log(node);
 
