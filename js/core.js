@@ -2205,26 +2205,23 @@ var tripwire = new function() {
 				e.preventDefault();
 
 				var rows = paste.split("\n");
+				var pasteIDs = [];
 				var deletes = [];
-				var ids = $.map(tripwire.client.signatures, function(sig) {return sig.type == "GATE" || sig.sig2Type == "GATE" ? null : (viewingSystemID == sig.systemID ? sig.signatureID : sig.sig2ID)});
 
 				for (var x in rows) {
 					var scan = rowParse(rows[x]);
 
-					if (scan.id) {
-						var i = $.inArray(scan.id[0], ids);
-
-						if (i != -1) {
-							ids.splice(i, 1);
-						}
-					} else {
-						return false;
-					}
+					pasteIDs.push(scan.id[0]);
 				}
 
-				for (var x in ids) {
-					var id = $.map(tripwire.client.signatures, function(sig) {return viewingSystemID == sig.systemID && (sig.signatureID == ids[x] || sig.sig2ID == ids[x]) ? sig.id : null})[0];
-					deletes.push(id);
+				for (var i in tripwire.client.signatures) {
+					var sig = tripwire.client.signatures[i];
+
+					if (sig.systemID == viewingSystemID && $.inArray(sig.signatureID, pasteIDs) == -1) {
+						deletes.push(sig.id);
+					} else if (sig.connectionID == viewingSystemID && $.inArray(sig.sig2ID, pasteIDs) == -1) {
+						deletes.push(sig.id);
+					}
 				}
 
 				if (deletes.length > 0) {
