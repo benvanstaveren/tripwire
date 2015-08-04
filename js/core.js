@@ -549,7 +549,7 @@ var viewingSystemID = $("meta[name=systemID]").attr("content");
 var server = $("meta[name=server]").attr("content");
 
 // Current system favorite
-if ($.inArray(viewingSystemID, options.favorites) != -1) $("#system-favorite").attr("data-icon", "star").addClass("active");
+//if ($.inArray(viewingSystemID, options.favorites) != -1) $("#system-favorite").attr("data-icon", "star").addClass("active");
 
 // Page cache indicator
 if (getCookie("loadedFromBrowserCache") == "true") {
@@ -4693,6 +4693,9 @@ function systemChange(systemID, mode) {
 	document.title = tripwire.systems[systemID].name + " - " + (server == "static.eve-apps.com" ? "Tripwire" : "Galileo");
 
 	$("#infoSystem").text(tripwire.systems[systemID].name);
+
+	// Current system favorite
+	if ($.inArray(viewingSystemID, options.favorites) != -1) $("#system-favorite").attr("data-icon", "star").addClass("active");
 
 	if (tripwire.systems[systemID].class) {
 		// Security
