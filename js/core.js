@@ -1361,11 +1361,11 @@ var chain = new function() {
 								var calcNode = {};
 								calcNode.life = "Gate";
 								calcNode.parent = {};
-								calcNode.parent.id = parentID;
-								calcNode.parent.systemID = node.parent.systemID;
-								calcNode.parent.name = node.parent.name;
-								calcNode.parent.type = node.parent.type;
-								calcNode.parent.nth = node.parent.nth;
+								calcNode.parent.id = node.child.id;
+								calcNode.parent.systemID = node.child.systemID;
+								calcNode.parent.name = node.child.name;
+								calcNode.parent.type = node.child.type;
+								calcNode.parent.nth = node.child.nth;
 
 								calcNode.child = {};
 								calcNode.child.id = ++childID;
