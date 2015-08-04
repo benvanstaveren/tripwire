@@ -549,7 +549,7 @@ var viewingSystemID = $("meta[name=systemID]").attr("content");
 var server = $("meta[name=server]").attr("content");
 
 // Current system favorite
-if ($.inArray(viewingSystemID, options.favorites) != -1) $("#system-favorite").attr("data-icon", "star").addClass("active");
+//if ($.inArray(viewingSystemID, options.favorites) != -1) $("#system-favorite").attr("data-icon", "star").addClass("active");
 
 // Page cache indicator
 if (getCookie("loadedFromBrowserCache") == "true") {
@@ -1247,7 +1247,7 @@ var chain = new function() {
 						usedLinks.push(node.id);
 						//usedLinks[system[2]].push(node.id);
 						
-						if ($("#show-viewing").hasClass("active") && tripwire.systems[node.child.systemID] && tripwire.systems[viewingSystemID].regionID < 11000000 && tripwire.systems[node.child.systemID].regionID < 11000000) {
+						if ($("#show-viewing").hasClass("active") && tripwire.systems[node.child.systemID] && !tripwire.systems[viewingSystemID].class && !tripwire.systems[node.child.systemID].class) {
 							var jumps = guidance.findShortestPath(tripwire.map.shortest, [viewingSystemID - 30000000, node.child.systemID - 30000000]).length - 1;
 
 							var calcNode = {};
@@ -1327,17 +1327,17 @@ var chain = new function() {
 						usedLinks.push(node.id);
 						//usedLinks[system[2]].push(node.id);
 						
-						if ($("#show-viewing").hasClass("active") && tripwire.systems[node.child.systemID] && tripwire.systems[viewingSystemID].regionID < 11000000 && tripwire.systems[node.child.systemID].regionID < 11000000) {
+						if ($("#show-viewing").hasClass("active") && tripwire.systems[node.child.systemID] && !tripwire.systems[viewingSystemID].class && !tripwire.systems[node.child.systemID].class) {
 							var jumps = guidance.findShortestPath(tripwire.map.shortest, [viewingSystemID - 30000000, node.child.systemID - 30000000]).length - 1;
 
 							var calcNode = {};
 							calcNode.life = "Gate";
 							calcNode.parent = {};
-							calcNode.parent.id = parentID;
-							calcNode.parent.systemID = node.parent.systemID;
-							calcNode.parent.name = node.parent.name;
-							calcNode.parent.type = node.parent.type;
-							calcNode.parent.nth = node.parent.nth;
+							calcNode.parent.id = node.child.id;
+							calcNode.parent.systemID = node.child.systemID;
+							calcNode.parent.name = node.child.name;
+							calcNode.parent.type = node.child.type;
+							calcNode.parent.nth = node.child.nth;
 
 							calcNode.child = {};
 							calcNode.child.id = ++childID;
@@ -1360,11 +1360,11 @@ var chain = new function() {
 								var calcNode = {};
 								calcNode.life = "Gate";
 								calcNode.parent = {};
-								calcNode.parent.id = parentID;
-								calcNode.parent.systemID = node.parent.systemID;
-								calcNode.parent.name = node.parent.name;
-								calcNode.parent.type = node.parent.type;
-								calcNode.parent.nth = node.parent.nth;
+								calcNode.parent.id = node.child.id;
+								calcNode.parent.systemID = node.child.systemID;
+								calcNode.parent.name = node.child.name;
+								calcNode.parent.type = node.child.type;
+								calcNode.parent.nth = node.child.nth;
 
 								calcNode.child = {};
 								calcNode.child.id = ++childID;
@@ -4693,6 +4693,9 @@ function systemChange(systemID, mode) {
 	document.title = tripwire.systems[systemID].name + " - " + (server == "static.eve-apps.com" ? "Tripwire" : "Galileo");
 
 	$("#infoSystem").text(tripwire.systems[systemID].name);
+
+	// Current system favorite
+	$.inArray(viewingSystemID, options.favorites) != -1 ? $("#system-favorite").attr("data-icon", "star").addClass("active") : $("#system-favorite").attr("data-icon", "star-empty").removeClass("active");
 
 	if (tripwire.systems[systemID].class) {
 		// Security
