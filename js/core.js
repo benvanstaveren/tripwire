@@ -4695,7 +4695,7 @@ function systemChange(systemID, mode) {
 	$("#infoSystem").text(tripwire.systems[systemID].name);
 
 	// Current system favorite
-	if ($.inArray(viewingSystemID, options.favorites) != -1) $("#system-favorite").attr("data-icon", "star").addClass("active");
+	$.inArray(viewingSystemID, options.favorites) != -1 ? $("#system-favorite").attr("data-icon", "star").addClass("active") : $("#system-favorite").attr("data-icon", "star-empty").removeClass("active");
 
 	if (tripwire.systems[systemID].class) {
 		// Security
