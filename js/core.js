@@ -4194,7 +4194,7 @@ $("#chainMap").contextmenu({
 			open: function() {
 				var sigID = $(this).data("id");
 				var systemID = $(this).data("systemID");
-				var sig = Object.find(tripwire.client.chain.map, "id", sigID);
+				var sig = Object.find(chain.rawMap, "id", sigID);
 
 				$("#dialog-mass").dialog("option", "title", "From "+(sig.systemID == systemID ? tripwire.systems[sig.connectionID].name : tripwire.systems[sig.systemID].name)+" to "+tripwire.systems[systemID].name);
 
