@@ -505,7 +505,7 @@ if ($row = $stmt->fetchObject()) {
 					<th>ID:</th>
 					<td colspan="3">
 						<input type="text" name="id" id="sigID" maxlength="3" size="3" /> 
-						<strong>- <span class="sigNumHolder">###</span><input type="text" class="hidden sigNum" maxlength="3" size="3" /></strong>
+						<strong>- ###</strong>
 						<span style="float: right;">
 							<select id="sigType" name="type">
 								<option value="Sites">Combat</option>
@@ -1061,6 +1061,7 @@ if ($row = $stmt->fetchObject()) {
 		<li>
 		<li data-command="mass"><a>Mass</a></li>
 		<li data-command="rename"><a>Rename</a></li>
+		<li data-command="collapse"><a>Collapse</a></li>
 	</ul>
 
 	<ul id="oogChainMenu" class="hidden">
@@ -1074,6 +1075,7 @@ if ($row = $stmt->fetchObject()) {
 		<li>
 		<li data-command="mass"><a>Mass</a></li>
 		<li data-command="rename"><a>Rename</a></li>
+		<li data-command="collapse"><a>Collapse</a></li>
 	</ul>
 
 	<div id="chainTab" class="hidden">
