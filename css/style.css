@@ -529,11 +529,6 @@ to { -o-transform: rotate(360deg); }
 	letter-spacing: 1px;
 }
 
-#sigTable td:nth-child(2) {
-	font-family: "lucida";
-	letter-spacing: 0px;
-}
-
 #sigTable .tablesorter-header {
 	cursor: pointer;
 	vertical-align: middle;
