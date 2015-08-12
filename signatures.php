@@ -89,8 +89,8 @@ class signatures {
 				$connectionID		= property_exists($sig, 'connectionID') ? $sig->connectionID : null;
 				$connectionName		= property_exists($sig, 'connectionName') ? $sig->connectionName : null;
 				$sig2ID				= '???';
-				$sig2Type			= $whType !== 'K162' ? 'K162' : '???';
-				$lifeLength			= $whLife == 'Critical' ? 4 : (property_exists($sig, 'lifeLength') ? $sig->lifeLength : 24);
+				$sig2Type			= $whType == 'GATE' ? 'GATE' : ($whType !== 'K162' ? 'K162' : '???');
+				$lifeLength			= $whType == 'GATE' ? 0 : ($whLife == 'Critical' ? 4 : (property_exists($sig, 'lifeLength') ? $sig->lifeLength : 24));
 				$class 				= property_exists($sig, 'class') ? $sig->class : null;
 				$class2				= property_exists($sig, 'class2') ? $sig->class2 : null;
 				$letters			= range('a', 'z');
@@ -110,7 +110,7 @@ class signatures {
 					$typeBM = array(null);
 				}
 
-				if ($sig2Type !== '???') {
+				if ($sig2Type !== '???' && $sig2Type !== 'GATE') {
 					//$query = 'SELECT type2BM FROM signatures WHERE (systemID = :connectionID AND type = :sig2Type AND mask = :mask) OR (connectionID = :connectionID AND sig2Type = :sig2Type AND mask = :mask)';
 					$query = 'SELECT typeBM FROM signatures WHERE systemID = :connectionID AND type = :sig2Type AND mask = :mask UNION SELECT type2BM AS typeBM FROM signatures WHERE connectionID = :connectionID AND sig2Type = :sig2Type AND mask = :mask';
 					$stmt = $mysql->prepare($query);
@@ -231,11 +231,11 @@ class signatures {
 				$whType				= property_exists($sig, 'whType') ? strtoupper($sig->whType) : '???';
 				$whLife				= $sig->whLife;
 				$whMass				= $sig->whMass;
-				$lifeLength			= $whLife == 'Critical' ? 4 : $sig->lifeLength;
+				$lifeLength			= $whType == 'GATE' ? 0 : ($whLife == 'Critical' ? 4 : $sig->lifeLength);
 				$connectionID		= property_exists($sig, 'connectionID') ? $sig->connectionID : $old->connectionID;
 				$connectionName		= $sig->connectionName;
 				$sig2ID				= $sig->sig2ID ? $sig->sig2ID : '???';
-				$sig2Type			= $whType !== 'K162' ? 'K162' : ($sig->sig2Type !== 'K162' ? $sig->sig2Type : '???');
+				$sig2Type			= $whType == 'GATE' ? 'GATE' : ($whType !== 'K162' ? 'K162' : ($sig->sig2Type !== 'K162' ? $sig->sig2Type : '???'));
 				$class 				= property_exists($sig, 'class') ? $sig->class : null;
 				$class2				= property_exists($sig, 'class2') ? $sig->class2 : null;
 				$typeBM 			= Array($old->typeBM);
@@ -245,7 +245,7 @@ class signatures {
 				$letters			= range('a', 'z');
 
 				if ($sig->side == 'parent') {
-					if ($whType != $old->type && $whType !== '???') {
+					if ($whType != $old->type && $whType !== '???' && $whType !== 'GATE') {
 						//$query = 'SELECT typeBM FROM signatures WHERE (systemID = :systemID AND type = :type AND mask = :mask) OR (connectionID = :systemID AND sig2Type = :type AND mask = :mask)';
 						$query = 'SELECT typeBM FROM signatures WHERE systemID = :systemID AND type = :type AND mask = :mask UNION SELECT type2BM AS typeBM FROM signatures WHERE connectionID = :systemID AND sig2Type = :type AND mask = :mask';
 						$stmt = $mysql->prepare($query);
@@ -257,7 +257,7 @@ class signatures {
 						$typeBM = array_values(array_diff($letters, $stmt->fetchAll(PDO::FETCH_COLUMN, 0)));
 					}
 
-					if ($sig2Type != $old->sig2Type && $sig2Type !== '???') {
+					if ($sig2Type != $old->sig2Type && $sig2Type !== '???' && $sig2Type !== 'GATE') {
 						//$query = 'SELECT type2BM FROM signatures WHERE (systemID = :connectionID AND type = :sig2Type AND mask = :mask) OR (connectionID = :connectionID AND sig2Type = :sig2Type AND mask = :mask)';
 						$query = 'SELECT typeBM FROM signatures WHERE systemID = :connectionID AND type = :sig2Type AND mask = :mask UNION SELECT type2BM AS typeBM FROM signatures WHERE connectionID = :connectionID AND sig2Type = :sig2Type AND mask = :mask';
 						$stmt = $mysql->prepare($query);
@@ -328,7 +328,7 @@ class signatures {
 					$stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 					$success = $stmt->execute();
 				} else {
-					if ($sig2Type != $old->type && $sig2Type !== '???') {
+					if ($sig2Type != $old->type && $sig2Type !== '???' && $sig2Type !== 'GATE') {
 						//$query = 'SELECT typeBM FROM signatures WHERE (systemID = :systemID AND type = :type AND mask = :mask) OR (connectionID = :systemID AND sig2Type = :type AND mask = :mask)';
 						$query = 'SELECT typeBM FROM signatures WHERE systemID = :systemID AND type = :type AND mask = :mask UNION SELECT type2BM AS typeBM FROM signatures WHERE connectionID = :systemID AND sig2Type = :type AND mask = :mask';
 						$stmt = $mysql->prepare($query);
@@ -340,7 +340,7 @@ class signatures {
 						$typeBM = array_values(array_diff($letters, $stmt->fetchAll(PDO::FETCH_COLUMN, 0)));
 					}
 
-					if ($whType != $old->sig2Type && $whType !== '???') {
+					if ($whType != $old->sig2Type && $whType !== '???' && $whType !== 'GATE') {
 						//$query = 'SELECT type2BM FROM signatures WHERE (systemID = :connectionID AND type = :sig2Type AND mask = :mask) OR (connectionID = :connectionID AND sig2Type = :sig2Type AND mask = :mask)';
 						$query = 'SELECT typeBM FROM signatures WHERE systemID = :connectionID AND type = :sig2Type AND mask = :mask UNION SELECT type2BM AS typeBM FROM signatures WHERE connectionID = :connectionID AND sig2Type = :sig2Type AND mask = :mask';
 						$stmt = $mysql->prepare($query);

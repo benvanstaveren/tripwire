@@ -46,7 +46,7 @@ Object.time = function(obj) {
 		dates.push(new Date(obj[key].time));
 	}
 	
-	return dates.length?dates.sort()[dates.length -1].getTime()/1000:0;
+	return dates.length ? dates.sort()[dates.length -1].getTime() /1000 : 0;
 };
 
 /* Function Library */
@@ -1638,6 +1638,7 @@ var chain = new function() {
 			}
 
 			$.extend(data, this.nodes(data.map)); // 250ms -> <100ms
+			$.extend(this.data, data);
 			this.map.draw(this.newView(data.map), this.options); // 150ms
 		
 			if (options.chain.tabs[options.chain.active]) {
@@ -1685,19 +1686,19 @@ var chain = new function() {
 			var systemID = $("#chainMap #node"+(collapsed[x] +1)).data("nodeid");
 			options.chain.tabs[options.chain.active].collapsed.push(systemID);
 		}
-
-		chain.lines();
+		
+		chain.lines(chain.data);
 
 		// Apply current system style
 		$("#chainMap [data-nodeid='"+viewingSystemID+"']").parent().addClass("currentNode");
 
 		Tooltips.attach($("#chainMap .whEffect"));
 
-		chain.activity();
+		chain.activity(chain.data.activity);
 
-		chain.occupied();
+		chain.occupied(chain.data.occupied);
 
-		chain.flares();
+		chain.flares(chain.data.flares);
 
 		chain.grid();
 
@@ -2070,8 +2071,9 @@ var tripwire = new function() {
 					continue;
 				}
 
-				if (columns[x].match(/(\d+[.|,]\d+(%))/) || columns[x].match(/(\d[.|,]?\d+\s(AU|km|m))/i)) // Exclude scan % || AU
+				if (columns[x].match(/(\d+[.|,]\d+(%))/) || columns[x].match(/(\d[.|,]?\d+\s(AU|km|m))/i)) { // Exclude scan % || AU
 					continue;
+				}
 
 				if (columns[x] == "Cosmic Signature" || columns[x] == "Cosmic Anomaly") {
 					scanner.scanGroup = columns[x];
@@ -2083,8 +2085,13 @@ var tripwire = new function() {
 					continue;
 				}
 
-				if (columns[x] != "")
+				if (columns[x] != "") {
 					scanner.type = columns[x];
+				}
+			}
+
+			if (!scanner.id || scanner.id.length !== 2) {
+				return false;
 			}
 
 			return scanner;
@@ -2209,17 +2216,17 @@ var tripwire = new function() {
 				var deletes = [];
 
 				for (var x in rows) {
-					var scan = rowParse(rows[x]);
-
-					pasteIDs.push(scan.id[0]);
+					if (scan = rowParse(rows[x])) {
+						pasteIDs.push(scan.id[0]);
+					}
 				}
 
 				for (var i in tripwire.client.signatures) {
 					var sig = tripwire.client.signatures[i];
 
-					if (sig.systemID == viewingSystemID && $.inArray(sig.signatureID, pasteIDs) == -1) {
+					if (sig.systemID == viewingSystemID && $.inArray(sig.signatureID, pasteIDs) == -1 && sig.type !== "GATE") {
 						deletes.push(sig.id);
-					} else if (sig.connectionID == viewingSystemID && $.inArray(sig.sig2ID, pasteIDs) == -1) {
+					} else if (sig.connectionID == viewingSystemID && $.inArray(sig.sig2ID, pasteIDs) == -1 && sig.type !== "GATE") {
 						deletes.push(sig.id);
 					}
 				}
@@ -2885,7 +2892,10 @@ $("#form-signature").submit(function(e) {
 	e.preventDefault();
 	ValidationTooltips.close();
 
-	ValidationTooltips.open({target: $("#form-signature [name='signatureID']")}).setContent("Must be 3 Letters in length!");
+	// Check if signature ID part 1 is 3 letters long
+	if ($("#form-signature [name='p_id1']").val().length < 3) {
+		ValidationTooltips.open({target: $("#form-signature [name='p_id1']")}).setContent("Must be 3 Letters in length!");
+	}
 });
 
 // Toggle dialog inputs based on sig type
@@ -2953,33 +2963,18 @@ $("#add-signature").click(function(e) {
 		close: function() {
 			$("th.critical").removeClass("critical");
 			ValidationTooltips.close();
-
-			$(".sigNumHolder").removeClass("hidden");
-			$(".sigNum").addClass("hidden");
 		},
 		create: function() {
 			$("#autoAdd").button().click(function() {
 				$("#sigAddForm #connection").val(tripwire.client.EVE.systemName);
 			});
 
-			$(".sigNumHolder").click(function() {
-				$(this).addClass("hidden");
-				$(".sigNum").removeClass("hidden").focus();
-			});
-
-			$(".sigNum").blur(function() {
-				if (this.value == "") {
-					$(this).addClass("hidden");
-					$(".sigNumHolder").removeClass("hidden");
-				}
-			});
-
 			$("#sigAddForm #sigType, #sigAddForm #sigLife").selectmenu({width: "100px"});
 			$("#sigAddForm #whLife, #sigAddForm #whMass").selectmenu({width: "80px"});
 
-			$("#sigAddForm #whType").blur(function(e) {
-				if ($(this).val() == "") {
-					$(this).val("???");
+			$("#sigAddForm #whType, #sigAddForm #sigID").blur(function(e) {
+				if (this.value == "") {
+					this.value = "???";
 				}
 			});
 		}
@@ -3011,13 +3006,13 @@ $("#sigAddForm").submit(function(e) {
 				return;
 			}
 		}
-	}
 
-	// Check for existing ID
-	if ($.map(tripwire.client.signatures, function(sig) {return viewingSystemID == sig.systemID ?sig.signatureID : sig.sig2ID}).indexOf($("#sigAddForm #sigID").val().toUpperCase()) !== -1) {
-		$("#sigAddForm #sigID").focus().parent().prev("th").addClass("critical");
-		ValidationTooltips.open({target: $("#sigAddForm #sigID")}).setContent("Signature ID already exists!");
-		return;
+		// Check for existing ID
+		if ($.map(tripwire.client.signatures, function(sig) {return viewingSystemID == sig.systemID ?sig.signatureID : sig.sig2ID}).indexOf($("#sigAddForm #sigID").val().toUpperCase()) !== -1) {
+			$("#sigAddForm #sigID").focus().parent().prev("th").addClass("critical");
+			ValidationTooltips.open({target: $("#sigAddForm #sigID")}).setContent("Signature ID already exists!");
+			return;
+		}
 	}
 
 	// Check for !empty WH type
@@ -3094,14 +3089,14 @@ $("#sigEditForm").submit(function(e) {
 				return;
 			}
 		}
-	}
 
-	// Check for existing ID
-	if ($("#sigEditForm #sigID").val().toUpperCase() !== (viewingSystemID == tripwire.client.signatures[$(this).data("id")].systemID ? tripwire.client.signatures[$(this).data("id")].signatureID : tripwire.client.signatures[$(this).data("id")].sig2ID) && $.map(tripwire.client.signatures, function(sig) {return viewingSystemID == sig.systemID ? sig.signatureID : sig.sig2ID}).indexOf($("#sigEditForm #sigID").val().toUpperCase()) !== -1) {
-		$("#sigEditForm #sigID").focus().parent().prev("th").addClass("critical");
-		ValidationTooltips.open({target: $("#sigEditForm #sigID")}).setContent("Signature ID already exists! <input type='button' autofocus='true' id='overwrite' value='Overwrite' style='margin-bottom: -4px; margin-top: -4px; font-size: 0.8em;' data-id='"+ $("#sigTable tr:has(td:first-child:contains("+$("#sigEditForm #sigID").val().toUpperCase()+"))").data("id") +"' />");
-		$("#overwrite").focus();
-		return;
+		// Check for existing ID
+		if ($("#sigEditForm #sigID").val().toUpperCase() !== (viewingSystemID == tripwire.client.signatures[$(this).data("id")].systemID ? tripwire.client.signatures[$(this).data("id")].signatureID : tripwire.client.signatures[$(this).data("id")].sig2ID) && $.map(tripwire.client.signatures, function(sig) {return viewingSystemID == sig.systemID ? sig.signatureID : sig.sig2ID}).indexOf($("#sigEditForm #sigID").val().toUpperCase()) !== -1) {
+			$("#sigEditForm #sigID").focus().parent().prev("th").addClass("critical");
+			ValidationTooltips.open({target: $("#sigEditForm #sigID")}).setContent("Signature ID already exists! <input type='button' autofocus='true' id='overwrite' value='Overwrite' style='margin-bottom: -4px; margin-top: -4px; font-size: 0.8em;' data-id='"+ $("#sigTable tr:has(td:first-child:contains("+$("#sigEditForm #sigID").val().toUpperCase()+"))").data("id") +"' />");
+			$("#overwrite").focus();
+			return;
+		}
 	}
 	
 	// Check for empty WH type
@@ -4114,6 +4109,7 @@ $("#chainMap").contextmenu({
 	show: {effect: "slideDown", duration: 150},
 	select: function(e, ui) {
 		var id = $(ui.target[0]).closest("[data-nodeid]").data("nodeid");
+		var row = $(ui.target[0]).closest("[data-nodeid]").attr("id").replace("node", "") -1;
 
 		switch(ui.cmd) {
 			case "showInfo":
@@ -4142,6 +4138,9 @@ $("#chainMap").contextmenu({
 				break;
 			case "rename":
 				$("#dialog-rename").data("id", $(ui.target[0]).closest("[data-nodeid]").data("sigid")).data("systemID", $(ui.target[0]).closest("[data-nodeid]").data("nodeid")).dialog("open");
+				break;
+			case "collapse":
+				chain.map.collapse(row, ($.inArray(id, options.chain.tabs[options.chain.active].collapsed) == -1 ? true : false));
 				break;
 		}
 	},
@@ -4450,9 +4449,9 @@ function openSigEdit(e) {
 				$("#sigEditForm #sigType, #sigEditForm #sigLife").selectmenu({width: "100px"});
 				$("#sigEditForm #whLife, #sigEditForm #whMass").selectmenu({width: "80px"});
 
-				$("#sigEditForm #whType").blur(function(e) {
-					if ($(this).val() == "") {
-						$(this).val("???");
+				$("#sigEditForm #whType, #sigEditForm #sigID").blur(function(e) {
+					if (this.value == "") {
+						this.value = "???";
 					}
 				});
 			}
