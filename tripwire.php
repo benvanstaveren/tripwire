@@ -231,15 +231,17 @@ if ($row = $stmt->fetchObject()) {
 					<div id="activityGraph"></div>
 					<div style="text-align: center;"><a href="javascript: activity.time(168);">Week</a> - <a href="javascript: activity.time(48);">48Hour</a> - <a href="javascript: activity.time(24);">24Hour</a></div>
 					<span id="infoStatics" class="pointer" style="float: left;"></span>
-					<a class="infoLink" style="float: right;" data-href='http://wh.pasta.gg/$system' href="" target="_blank">wormhol.es</a><br/>
-					<a class="infoLink" style="float: right;" data-href="http://evemaps.dotlan.net/search?q=$system" href="" target="_blank">dotlan</a>
-					<a class="infoLink" style="float: right;" data-href='http://eve-kill.net/?a=system_detail&sys_name=$system' href="" target="_blank">Eve-kill.net&nbsp;&nbsp;</a>
+					<a class="infoLink" style="float: right;" data-href='http://wh.pasta.gg/$systemName' href="" target="_blank">wormhol.es</a><br/>
+					<a class="infoLink" style="float: right;" data-href="http://evemaps.dotlan.net/search?q=$systemName" href="" target="_blank">dotlan</a>
+					<!--<a class="infoLink" style="float: right;" data-href='http://eve-kill.net/?a=system_detail&sys_name=$systemName' href="" target="_blank">Eve-kill.net&nbsp;&nbsp;</a>-->
+					<a class="infoLink" style="float: right;" data-href='https://zkillboard.com/system/$systemID' href="" target="_blank">zKillboard&nbsp;&nbsp;</a>
 				</div>
 			</li>
 			<li id="signaturesWidget" class="gridWidget" data-row="1" data-col="8" data-sizex="7" data-sizey="6" data-min-sizex="5" data-min-sizey="2" style="width: 410px; height: 350px;">
 				<div class="controls">
 					<i id="add-signature" data-icon="plus" data-tooltip="Add a new signature"></i>
 					<i id="toggle-automapper" data-icon="auto" data-tooltip="Toggle Auto-Mapper"></i>
+					<i id="add-signature2" data-icon="plus" data-tooltip="Add a new signature"></i>
 					<span style="padding-left: 25px;">
 						<i id="undo" data-icon="undo" class="disabled" data-tooltip="Undo last signature change"></i>
 						<i id="redo" data-icon="redo" class="disabled" data-tooltip="Redo what was undone"></i>

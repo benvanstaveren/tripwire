@@ -4771,7 +4771,7 @@ function systemChange(systemID, mode) {
 
 	// Info Links
 	$("#infoWidget .infoLink").each(function() {
-		this.href = $(this).data("href").replace("$system", tripwire.systems[systemID].name);
+		this.href = $(this).data("href").replace(/\$systemName/gi, tripwire.systems[systemID].name).replace(/\$systemID/gi, systemID);
 	});
 }
 
