@@ -1638,6 +1638,7 @@ var chain = new function() {
 			}
 
 			$.extend(data, this.nodes(data.map)); // 250ms -> <100ms
+			$.extend(this.data, data);
 			this.map.draw(this.newView(data.map), this.options); // 150ms
 		
 			if (options.chain.tabs[options.chain.active]) {
@@ -1685,19 +1686,19 @@ var chain = new function() {
 			var systemID = $("#chainMap #node"+(collapsed[x] +1)).data("nodeid");
 			options.chain.tabs[options.chain.active].collapsed.push(systemID);
 		}
-
-		chain.lines();
+		
+		chain.lines(chain.data);
 
 		// Apply current system style
 		$("#chainMap [data-nodeid='"+viewingSystemID+"']").parent().addClass("currentNode");
 
 		Tooltips.attach($("#chainMap .whEffect"));
 
-		chain.activity();
+		chain.activity(chain.data.activity);
 
-		chain.occupied();
+		chain.occupied(chain.data.occupied);
 
-		chain.flares();
+		chain.flares(chain.data.flares);
 
 		chain.grid();
 
