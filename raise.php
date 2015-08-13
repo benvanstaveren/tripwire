@@ -211,7 +211,7 @@ $goal = 2500;
 					<img width="340" style="position: absolute; left: 150px; top: 150px;" src="//static.eve-apps.com/images/tshirt_white.png" data-zoom-image="//static.eve-apps.com/images/tshirt_white.png" />
 				</div>
 				<div id="donate">
-					<span style="font-size: 2em;"><a id="order" href="">Donate and get your t-shirt!</a></span>
+					<span style="font-size: 2em;"><a id="order" href="">Click to get your t-shirt!</a></span>
 					<div class="details">
 						Goal: <span style="font-size: 18px;" class="super">$</span>2,500<span style="font-size: 18px;" class="super">.00</span>
 					</div>
