@@ -4784,8 +4784,6 @@ $("body").on("click", "a[href^='.?system=']", function(e) {
 	systemChange(systemID);
 });
 
-new DragDivScroll("chainParent", "noXBarHide noYBarHide noStatus");
-
 $("#undo").on("click", function() {
 	tripwire.refresh("refresh", {undo: true});
 });
