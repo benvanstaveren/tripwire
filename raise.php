@@ -298,6 +298,7 @@ $goal = 2500;
 					<ul>
 						<li>If you would like to donate more or donate without getting a t-shirt <a href="https://tripwire.eve-apps.com/donate">Click Here</a></li>
 						<li>Please be sure your PayPal is set to the address you want the t-shirt sent when checking out</li>
+						<li>Yes I can ship outside of the US</li>
 						<li>If you want more then 1 t-shirt you must place 1 at a time, sorry PayPal sucks</li>
 						<li>Once the goal is met I will place the order for the shirts and once I receive them I will send them to you individually - expect 2-4 weeks</li>
 						<li>If the goal is met and you still want a t-shirt I will place more orders every 2 weeks</li>
