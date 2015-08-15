@@ -2223,10 +2223,11 @@ var tripwire = new function() {
 
 				for (var i in tripwire.client.signatures) {
 					var sig = tripwire.client.signatures[i];
+					console.log(sig);
 
-					if (sig.systemID == viewingSystemID && $.inArray(sig.signatureID, pasteIDs) == -1 && sig.type !== "GATE") {
+					if (sig.systemID == viewingSystemID && $.inArray(sig.signatureID, pasteIDs) == -1 && sig.type !== "GATE" && sig.signatureID !== "???") {
 						deletes.push(sig.id);
-					} else if (sig.connectionID == viewingSystemID && $.inArray(sig.sig2ID, pasteIDs) == -1 && sig.type !== "GATE") {
+					} else if (sig.connectionID == viewingSystemID && $.inArray(sig.sig2ID, pasteIDs) == -1 && sig2Type.type !== "GATE" && sig.sig2ID !== "???") {
 						deletes.push(sig.id);
 					}
 				}
