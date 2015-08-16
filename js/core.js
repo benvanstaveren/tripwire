@@ -2223,7 +2223,6 @@ var tripwire = new function() {
 
 				for (var i in tripwire.client.signatures) {
 					var sig = tripwire.client.signatures[i];
-					console.log(sig);
 
 					if (sig.systemID == viewingSystemID && $.inArray(sig.signatureID, pasteIDs) == -1 && sig.type !== "GATE" && sig.signatureID !== "???") {
 						deletes.push(sig.id);
