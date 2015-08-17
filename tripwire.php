@@ -241,7 +241,7 @@ if ($row = $stmt->fetchObject()) {
 				<div class="controls">
 					<i id="add-signature" data-icon="plus" data-tooltip="Add a new signature"></i>
 					<i id="toggle-automapper" data-icon="auto" data-tooltip="Toggle Auto-Mapper"></i>
-					<i id="add-signature2" data-icon="plus" data-tooltip="Add a new signature"></i>
+					<!--<i id="add-signature2" data-icon="plus" data-tooltip="Add a new signature"></i>-->
 					<span style="padding-left: 25px;">
 						<i id="undo" data-icon="undo" class="disabled" data-tooltip="Undo last signature change"></i>
 						<i id="redo" data-icon="redo" class="disabled" data-tooltip="Redo what was undone"></i>
