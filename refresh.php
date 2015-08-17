@@ -489,7 +489,7 @@ if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'init') {
 	$output['sync'] = $now->format("m/d/Y H:i:s e");
 
 	// Grab chain map data
-	$query = "SELECT DISTINCT signatures.id, signatureID, system, systemID, connection, connectionID, sig2ID, type, nth, sig2Type, nth2, lifeLength, life, mass, time, typeBM, type2BM, classBM, class2BM, mask FROM signatures WHERE life IS NOT NULL AND (mask = :mask OR ((signatures.systemID = 31000005 OR signatures.connectionID = 31000005) AND mask = 273))";
+	$query = "SELECT DISTINCT signatures.id, signatureID, system, systemID, connection, connectionID, sig2ID, type, nth, sig2Type, nth2, lifeLength, life, mass, time, typeBM, type2BM, classBM, class2BM, mask FROM signatures WHERE life IS NOT NULL AND (mask = :mask OR ((signatures.systemID = 31000005 OR signatures.connectionID = 31000005) AND mask = 273)) ORDER BY id ASC";
 	#$query = "SELECT DISTINCT signatures.id, signatureID, system, CASE WHEN signatures.systemID = 0 THEN signatures.id ELSE signatures.systemID END AS systemID, connection, CASE WHEN connectionID IS NULL OR connectionID = 0 THEN signatures.id ELSE connectionID END AS connectionID, sig2ID, type, nth, sig2Type, nth2, class1.class, class2.class AS class2, (SELECT security FROM $eve_dump.mapSolarSystems WHERE solarSystemID = signatures.systemID) AS security, (SELECT security FROM $eve_dump.mapSolarSystems WHERE solarSystemID = connectionID) AS security2, lifeLength, life, mass, time, typeBM, type2BM, classBM, class2BM FROM signatures LEFT JOIN systems class1 ON class1.systemID = signatures.systemID LEFT JOIN systems class2 ON class2.systemID = connectionID WHERE life IS NOT NULL AND mask = :mask";
 	$stmt = $mysql->prepare($query);
 	$stmt->bindValue(':mask', $maskID, PDO::PARAM_INT);
@@ -598,7 +598,7 @@ if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'init') {
 	if ($refresh['chainUpdate'] == true) {
 		$output['chain']['map'] = Array();
 
-		$query = "SELECT DISTINCT signatures.id, signatureID, system, systemID, connection, connectionID, sig2ID, type, nth, sig2Type, nth2, lifeLength, life, mass, time, typeBM, type2BM, classBM, class2BM, mask FROM signatures WHERE life IS NOT NULL AND (mask = :mask OR ((signatures.systemID = 31000005 OR signatures.connectionID = 31000005) AND mask = 273))";
+		$query = "SELECT DISTINCT signatures.id, signatureID, system, systemID, connection, connectionID, sig2ID, type, nth, sig2Type, nth2, lifeLength, life, mass, time, typeBM, type2BM, classBM, class2BM, mask FROM signatures WHERE life IS NOT NULL AND (mask = :mask OR ((signatures.systemID = 31000005 OR signatures.connectionID = 31000005) AND mask = 273)) ORDER BY id ASC";
 		$stmt = $mysql->prepare($query);
 		$stmt->bindValue(':mask', $maskID, PDO::PARAM_STR);
 		$stmt->execute();
