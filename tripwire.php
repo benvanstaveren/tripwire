@@ -241,7 +241,6 @@ if ($row = $stmt->fetchObject()) {
 				<div class="controls">
 					<i id="add-signature" data-icon="plus" data-tooltip="Add a new signature"></i>
 					<i id="toggle-automapper" data-icon="auto" data-tooltip="Toggle Auto-Mapper"></i>
-					<!--<i id="add-signature2" data-icon="plus" data-tooltip="Add a new signature"></i>-->
 					<span style="padding-left: 25px;">
 						<i id="undo" data-icon="undo" class="disabled" data-tooltip="Undo last signature change"></i>
 						<i id="redo" data-icon="redo" class="disabled" data-tooltip="Redo what was undone"></i>
@@ -380,118 +379,6 @@ if ($row = $stmt->fetchObject()) {
 
 	<div id="dialog-deleteSig" title="Delete Signature(s)" class="hidden">
 		<i data-icon="alert"></i> This signature will be removed from this system. Are you sure?
-	</div>
-
-	<style>
-		#dialog-signature .label {
-			font-weight: bold;
-			text-align: right;
-			vertical-align: text-top;
-		}
-
-		#dialog-signature .select {
-			display: inline-block;
-			vertical-align: text-bottom;
-		}
-
-		#dialog-signature .row {
-			min-height: 21px;
-		}
-
-		#dialog-signature .label:first-child {
-			display: inline-block;
-			min-width: 60px;
-		}
-
-		#dialog-signature #signatureName {
-			width: 100%;
-			-webkit-box-sizing: border-box;
-			box-sizing: border-box;
-		}
-
-		#dialog-signature .side {
-			position: relative;
-			min-height: 70px;
-		}
-
-		#dialog-signature .sideLabel {
-			position: absolute;
-			top: 70px;
-			left: -10px;
-			width: 70px;
-			text-align: center;
-			font-weight: bold;
-
-			-ms-transform: rotate(-90deg);
-			-webkit-transform: rotate(-90deg);
-			transform: rotate(-90deg);
-			
-			-ms-transform-origin: left top 0;
-			-webkit-transform-origin: left top 0;
-			transform-origin: left top 0;
-		}
-	</style>
-	<div id="dialog-signature" title="Add Signature" class="hidden">
-		<form id="form-signature">
-			<div class="row">
-				<span class="label">ID:&nbsp;</span><input name="signatureID" type="text" maxlength="3" size="3" /><span class="label">&nbsp;-&nbsp;###</span>
-				<span class="select" style="float: right;">
-					<select id="signatureType">
-						<option value="Combat">Combat</option>
-						<option value="Wormhole">Wormhole</option>
-						<option value="Ore">Ore</option>
-						<option value="Data">Data</option>
-						<option value="Gas">Gas</option>
-						<option value="Relic">Relic</option>
-					</select>
-				</span>
-			</div>
-			<div id="site" class="">
-				<div class="row">
-					<span class="label">Life:&nbsp;</span>
-					<span class="select">
-						<select id="signatureLife">
-							<option value="24">24 Hours</option>
-							<option value="48">48 Hours</option>
-							<option value="72">72 Hours</option>
-							<option value="168">7 Days</option>
-							<option value="672">28 Days</option>
-						</select>
-					</span>
-				</div>
-				<div class="row">
-					<span class="label" style="display: table-cell;">Name:&nbsp;</span>
-					<div style="display: table-cell; width: 100%;"><input id="signatureName" type="text" maxlength="35" /></div>
-				</div>
-			</div>
-			<div id="wormhole" class="hidden">
-				<div class="side">
-					<div class="sideLabel">Jita Side</div>
-					<div class="row">
-						<span class="label">Type:&nbsp;</span><input type="text" data-autocomplete="sigType" maxlength="4" size="4" />
-					</div>
-					<div class="row">
-						<span class="label">Leads:&nbsp;</span><input type="text" data-autocomplete="sigSystems" maxlength="20" size="20" />
-					</div>
-					<div class="row">
-						<span class="label">Name:&nbsp;</span><input type="text" maxlength="20" size="20" />
-					</div>
-				</div>
-				<hr style="margin-left: 15px; margin-bottom: 10px;" />
-				<div class="side">
-					<div class="sideLabel">Other Side</div>
-					<div class="row">
-						<span class="label">Type:&nbsp;</span><input type="text" data-autocomplete="sigType" maxlength="4" size="4" />
-					</div>
-					<div class="row">
-						<span class="label">Leads:&nbsp;</span><input type="text" data-autocomplete="sigSystems" maxlength="20" size="20" />
-					</div>
-					<div class="row">
-						<span class="label">Name:&nbsp;</span><input type="text" maxlength="20" size="20" />
-					</div>
-				</div>
-			</div>
-		</form>
 	</div>
 
 	<div id="dialog-sigAdd" title="Add Signature" class="hidden">

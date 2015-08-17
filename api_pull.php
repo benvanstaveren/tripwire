@@ -36,12 +36,16 @@ if ($xml = @simplexml_load_file($url)) {
 }
 
 // Get activity
-$query = "SELECT time FROM eve_api.cacheTime WHERE type = 'activity'";
+$query = "SELECT time FROM eve_api.cacheTime WHERE type = 'activity' AND time IS NOT NULL";
 $stmt = $mysql->prepare($query);
 $stmt->execute();
 $row = $stmt->fetchObject();
 if (!$row || ($row && strtotime($row->time) + 3600 <= time())) {
 	$activity = array();
+
+	$query = "UPDATE eve_api.cacheTime SET time = NULL WHERE type = 'activity'";
+	$stmt = $mysql->prepare($query);
+	$stmt->execute();
 
 	// Gather jump data
 	$url = 'https://api.eveonline.com/map/Jumps.xml.aspx';
@@ -98,7 +102,7 @@ if (!$row || ($row && strtotime($row->time) + 3600 <= time())) {
 }
 
 // Check characters
-$query = 'SELECT characterID FROM characters';
+$query = 'SELECT c.characterID FROM active a INNER JOIN characters c ON a.userID = c.userID';
 $stmt = $mysql->prepare($query);
 $stmt->execute();
 $chars = $stmt->fetchAll(PDO::FETCH_COLUMN);

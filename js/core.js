@@ -2840,64 +2840,6 @@ var tripwire = new function() {
 	setTimeout("tripwire.init();", 50);
 }
 
-$("#add-signature2").click(function(e) {
-	e.preventDefault();
-
-	if (!$("#dialog-signature").hasClass("ui-dialog-content")) {
-		$("#dialog-signature").dialog({
-			autoOpen: true,
-			resizable: false,
-			dialogClass: "dialog-noeffect ui-dialog-shadow",
-			position: {my: "center", at: "center", of: $("#signaturesWidget")},
-			buttons: {
-				Add: function() {
-					$("#form-signature").submit();
-				},
-				Cancel: function() {
-					$(this).dialog("close");
-				}
-			},
-			create: function() {
-				var aSigWormholes = $.map(tripwire.wormholes, function(item, index) { return index;});
-				aSigWormholes.splice(26, 0, "K162");
-				aSigWormholes.push("???", "GATE");
-
-				$("#signatureType, #signatureLife").selectmenu({width: "100px"});
-				$("#dialog-signature [data-autocomplete='sigSystems']").autocomplete({source: tripwire.aSigSystems});
-				$("#dialog-signature [data-autocomplete='sigType']").autocomplete({source: aSigWormholes});
-
-				$("#signatureType").change(function(e) {
-					if (this.value == "Wormhole") {
-						$("#site").slideUp().addClass("hidden");
-						$("#wormhole").slideDown().removeClass("hidden");
-					} else {
-						$("#site").slideDown().removeClass("hidden");
-						$("#wormhole").slideUp().addClass("hidden");
-					}
-				});
-			},
-			open: function() {
-				$("#signatureType").selectmenu("value", "Combat");
-			},
-			close: function() {
-				ValidationTooltips.close();
-			}
-		});
-	} else if (!$("#dialog-signature").dialog("isOpen")) {
-		$("#dialog-signature").dialog("open");
-	}
-});
-
-$("#form-signature").submit(function(e) {
-	e.preventDefault();
-	ValidationTooltips.close();
-
-	// Check if signature ID part 1 is 3 letters long
-	if ($("#form-signature [name='p_id1']").val().length < 3) {
-		ValidationTooltips.open({target: $("#form-signature [name='p_id1']")}).setContent("Must be 3 Letters in length!");
-	}
-});
-
 // Toggle dialog inputs based on sig type
 $("#dialog-sigAdd #sigType, #dialog-sigEdit #sigType").change(function() {
 	if ($(this).selectmenu("value") == "Wormhole") {
