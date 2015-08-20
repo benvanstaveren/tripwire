@@ -1724,6 +1724,7 @@ var tripwire = new function() {
 	this.server = {signatures: {}};
 	this.activity = {};
 	this.timer;
+	this.xhr;
 	this.refreshRate = 5000;
 	this.connected = true;
 	this.ageFormat = "HM";
@@ -1857,6 +1858,7 @@ var tripwire = new function() {
 
 		// Remove old timer to prevent multiple
 		if (this.timer) clearTimeout(this.timer);
+		if (this.xhr) this.xhr.abort();
 
 		if (mode == 'refresh' || mode == 'change') {
 			data.sigCount = Object.size(this.client.signatures);
@@ -1889,7 +1891,7 @@ var tripwire = new function() {
 		data.systemID = viewingSystemID;
 		data.instance = tripwire.instance;
 		
-		$.ajax({
+		this.xhr = $.ajax({
 			url: "refresh.php",
 			data: data,
 			type: "POST",
