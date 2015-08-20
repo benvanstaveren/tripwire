@@ -1929,8 +1929,8 @@ var tripwire = new function() {
 			tripwire.timer = setTimeout("tripwire.refresh();", tripwire.refreshRate);
 
 			alwaysCallback ? alwaysCallback(data) : null;
-console.log(status);
-			if (status != "success" && status != "canceled" && tripwire.connected == true) {
+
+			if (status != "success" && status != "abort" && tripwire.connected == true) {
 				tripwire.connected = false;
 				$("#ConnectionSuccess").click();
 				Notify.trigger("Error syncing with server", "red", false, "connectionError");
