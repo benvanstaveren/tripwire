@@ -1930,11 +1930,11 @@ var tripwire = new function() {
 
 			alwaysCallback ? alwaysCallback(data) : null;
 
-			if (status != "success" && tripwire.connected == true) {
+			if (status !== "success" && status !== "canceled" && tripwire.connected === true) {
 				tripwire.connected = false;
 				$("#ConnectionSuccess").click();
 				Notify.trigger("Error syncing with server", "red", false, "connectionError");
-			} else if (status == "success" && tripwire.connected == false) {
+			} else if (status === "success" && tripwire.connected === false) {
 				tripwire.connected = true;
 				$("#connectionError").click();
 				Notify.trigger("Successfully reconnected with server", "green", 5000, "connectionSuccess");
