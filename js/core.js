@@ -892,8 +892,8 @@ var activity = new function() {
 		this.graph.draw(this.view, this.options);
 	}
 	
-	this.refresh = function() {
-		this.graph.draw(this.getData(this.span, false), this.options);
+	this.refresh = function(cache) {
+		this.graph.draw(this.getData(this.span, cache), this.options);
 	}
 	
 	//google.setOnLoadCallback(this.init());
@@ -4614,7 +4614,7 @@ function systemChange(systemID, mode) {
 		viewingSystemID = systemID;
 
 		// Reset activity
-		activity.refresh();
+		activity.refresh(true);
 
 		// Reset signatures
 		$("#sigTable tbody").empty()
