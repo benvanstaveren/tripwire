@@ -2267,7 +2267,7 @@ var tripwire = new function() {
 			return false;
 
 		// Is pilot in a pod?
-		if ($.inArray(parseInt(tripwire.client.EVE.shipType), pods) >= 0)
+		if ($.inArray(parseInt(tripwire.client.EVE.shipTypeID), pods) >= 0)
 			return false;
 
 		// Is this a gate?
