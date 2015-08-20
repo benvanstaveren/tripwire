@@ -2260,9 +2260,14 @@ var tripwire = new function() {
 		// Testing 
 		//from = $.map(tripwire.systems, function(system, id) { return system.name == from ? id : null; })[0];
 		//to = $.map(tripwire.systems, function(system, id) { return system.name == to ? id : null; })[0];
+		var pods = [33328, 670];
 
 		// Is auto-mapper toggled?
 		if (!$("#toggle-automapper").hasClass("active"))
+			return false;
+
+		// Is pilot in a pod?
+		if ($.inArray(tripwire.client.EVE.shipType, pods) !== -1)
 			return false;
 
 		// Is this a gate?
