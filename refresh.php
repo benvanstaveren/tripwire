@@ -8,7 +8,8 @@
 // Verify access via Tripwire signon
 if (!session_id()) session_start();
 
-if(!isset($_SESSION['userID'])) {
+if(!isset($_SESSION['userID']) || $_SESSION['ip'] != $_SERVER['REMOTE_ADDR']) {
+	session_destroy();
 	exit();
 }
 
