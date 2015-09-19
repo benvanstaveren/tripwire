@@ -91,6 +91,7 @@ if ($mode == 'login' || !$mode) {
 
 					$_SESSION['userID'] = $account->id;
 					$_SESSION['username'] = $account->username;
+					$_SESSION['ip'] = $ip;
 					$_SESSION['mask'] = @$options->masks->active ? $options->masks->active : $account->corporationID . '.2';
 					$_SESSION['characterID'] = $account->characterID;
 					$_SESSION['characterName'] = $account->characterName;
@@ -171,6 +172,7 @@ if ($mode == 'login' || !$mode) {
 
 					$_SESSION['userID'] = $account->id;
 					$_SESSION['username'] = $account->username;
+					$_SESSION['ip'] = $ip;
 					$_SESSION['mask'] = @$options->masks->active ? $options->masks->active : $account->corporationID . '.2';
 					$_SESSION['characterID'] = $account->characterID;
 					$_SESSION['characterName'] = $account->characterName;
