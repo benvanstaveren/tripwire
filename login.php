@@ -65,7 +65,7 @@ if ($mode == 'login' || !$mode) {
 			// Log the attempt
 			login_history($ip, $username, $method, 'fail');
 		} else {
-			$query = 'SELECT id, username, password, accounts.ban, characterID, characterName, corporationID, corporationName, admin, options FROM accounts LEFT JOIN preferences ON id = preferences.userID LEFT JOIN characters ON id = characters.userID WHERE username = :username';
+			$query = 'SELECT id, username, password, accounts.ban, characterID, characterName, corporationID, corporationName, admin, super, options FROM accounts LEFT JOIN preferences ON id = preferences.userID LEFT JOIN characters ON id = characters.userID WHERE username = :username';
 			$stmt = $mysql->prepare($query);
 			$stmt->bindValue(':username', $username, PDO::PARAM_STR);
 			$stmt->execute();
@@ -96,8 +96,9 @@ if ($mode == 'login' || !$mode) {
 					$_SESSION['characterID'] = $account->characterID;
 					$_SESSION['characterName'] = $account->characterName;
 					$_SESSION['corporationID'] = $account->corporationID;
-					$_SESSION['corporationName'] = $account->corporationName;
-					$_SESSION['admin'] = $account->admin;
+                    $_SESSION['corporationName'] = $account->corporationName;
+                    $_SESSION['admin'] = $account->admin;
+                    $_SESSION['super'] = $account->super;
 					$_SESSION['options'] = $options;
 
 					$output['result'] = 'success';
@@ -161,7 +162,7 @@ if ($mode == 'login' || !$mode) {
 			} else if (count($characters) == 1 || array_key_exists($selected, $characters)) {
 				$selected = $selected ? $selected : key($characters);
 
-				$query = 'SELECT id, username, password, accounts.ban, characterID, characterName, corporationID, corporationName, admin, options FROM accounts LEFT JOIN preferences ON id = preferences.userID LEFT JOIN characters ON id = characters.userID WHERE characterID = :characterID';
+				$query = 'SELECT id, username, password, accounts.ban, characterID, characterName, corporationID, corporationName, admin, super, options FROM accounts LEFT JOIN preferences ON id = preferences.userID LEFT JOIN characters ON id = characters.userID WHERE characterID = :characterID';
 				$stmt = $mysql->prepare($query);
 				$stmt->bindValue(':characterID', $characters[$selected]->characterID, PDO::PARAM_INT);
 				$stmt->execute();
@@ -178,6 +179,8 @@ if ($mode == 'login' || !$mode) {
 					$_SESSION['characterName'] = $account->characterName;
 					$_SESSION['corporationID'] = $account->corporationID;
 					$_SESSION['corporationName'] = $account->corporationName;
+                    $_SESSION['admin'] = $account->admin;
+					$_SESSION['super'] = $account->super;
 					$_SESSION['options'] = $options;
 
 					$output['result'] = 'success';
