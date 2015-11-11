@@ -811,7 +811,7 @@ var activity = new function() {
 		var cache = typeof(cache) !== "undefined" ? cache : true;
 
 		var json = $.ajax({
-					url: "activityGraph.php",
+					url: "activity_graph.php",
 					data: {systemID: viewingSystemID, time: span},
 					type: "GET",
 					dataType: "JSON",
@@ -1767,7 +1767,7 @@ var tripwire = new function() {
 		this.time;
 
 		$.ajax({
-			url: "serverStatus.php",
+			url: "server_status.php",
 			dataType: "JSON",
 			cache: false
 		}).done(function(data) {
@@ -1803,7 +1803,7 @@ var tripwire = new function() {
 
 		this.API.refresh = function() {
 			$.ajax({
-				url: "APIupdate.php",
+				url: "api_update.php",
 				cache: false,
 				dataType: "JSON",
 				data: "indicator="+tripwire.API.indicator
@@ -1830,7 +1830,7 @@ var tripwire = new function() {
 
 		this.API.init = function() {
 			$.ajax({
-				url: "APIupdate.php",
+				url: "api_update.php",
 				cache: true,
 				dataType: "JSON",
 				data: "init=true"
@@ -3162,7 +3162,7 @@ $(".options").click(function(e) {
 		open: function() {
 			// Get user stats data
 			$.ajax({
-				url: "userStats.php",
+				url: "user_stats.php",
 				type: "POST",
 				dataType: "JSON"
 			}).done(function(data) {

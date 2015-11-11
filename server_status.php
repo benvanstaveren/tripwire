@@ -1,6 +1,6 @@
 <?php
 //***********************************************************
-//	File: 		serverStatus.php
+//	File: 		server_status.php
 //	Author: 	Daimian
 //	Created: 	6/1/2013
 //	Modified: 	2/14/2014 - Daimian
@@ -23,4 +23,3 @@ if ($result) {
 }
 
 echo json_encode($result[0]);
-?>
