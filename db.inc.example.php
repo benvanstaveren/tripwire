@@ -5,9 +5,9 @@ $eve_dump = 'eve_carnyx';
 
 try {
     $mysql = new PDO(
-        'mysql:host=10.132.118.131;dbname=tripwire;charset=utf8',
-        'tripwire',
-        'mWPBHh54BjP28Dws',
+        'mysql:host=localhost;dbname=tripwire_database;charset=utf8',
+        'username',
+        'password',
         Array(
             PDO::ATTR_PERSISTENT     => true
         )
