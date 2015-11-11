@@ -1,6 +1,6 @@
 <?php
 //***********************************************************
-//	File: 		userStats.php
+//	File: 		user_stats.php
 //	Author: 	Daimian
 //	Created: 	6/1/2013
 //	Modified: 	1/25/2014 - Daimian
@@ -66,4 +66,3 @@ $output['whDiscovered'] = number_format($stmt->rowCount());
 $output['proccessTime'] = sprintf('%.4f', microtime(true) - $startTime);
 
 echo json_encode($output);
-?>
