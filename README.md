@@ -1,6 +1,6 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+This is just some basic info on the source atm - more details on how to setup and the database still to come.
 
 ### Tripwire - EVE Online wormhole mapping web tool ###
 
@@ -10,19 +10,17 @@ This README would normally document whatever steps are necessary to get your app
 
 ### How do I get set up? ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+* Setup PHP PDO compatible database with Tripwire blank database (coming soon)
+* Create a `db.inc.php` file in root from `db.inc.example`
+* Setup `tools/api_pull.php` under a 3 minute cron
+* More to come...
 
 ### Contribution guidelines ###
 
-* Writing tests
-* Code review
-* Other guidelines
+* Base off of master
+* Look over issues, branches or get with me to ensure it isn't already being worked on
 
 ### Who do I talk to? ###
 
 * Daimian Mercer (Project lead / Creator)
+* Tripwire Public in-game channel
