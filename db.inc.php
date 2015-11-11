@@ -1,5 +1,6 @@
 <?php
 
+// EVE SDE table name
 $eve_dump = 'eve_carnyx';
 
 try {
