@@ -1,4 +1,4 @@
-{"Magnetar":[{"name": "Targeting Range", "base": -15, "bad": 1},
+ {"Magnetar":[{"name": "Targeting Range", "base": -15, "bad": 1},
 			 {"name": "Missile Explosion Radius", "base": 15, "bad": 1},
 			 {"name": "Turret / Drone Tracking Speed", "base": -15, "bad": 1},
 			 {"name": "Damage modifier", "base": 30, "bad": 0},
