@@ -4,7 +4,7 @@ $startTime = microtime(true);
 
 session_start();
 
-if(!isset($_SESSION['userID']) || $_SESSION['userID'] != 1) {
+if(!isset($_SESSION['super']) || $_SESSION['super'] != 1) {
 	echo 'Security Failure!';
 	exit();
 }

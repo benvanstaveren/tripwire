@@ -8,6 +8,13 @@
 	- Create a way to crawl for statics and include run from here
 **/
 
+session_start();
+
+if(!isset($_SESSION['super']) || $_SESSION['super'] != 1) {
+	echo 'Security Failure!';
+	exit();
+}
+
 require('../db.inc.php');
 
 /*
