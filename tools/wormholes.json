@@ -1,4 +1,4 @@
- {"H296": {"life": "24 Hours", "leadsTo": "Class 5", "mass": 3000000000, "jump": 1350000000},
+{"H296": {"life": "24 Hours", "leadsTo": "Class 5", "mass": 3000000000, "jump": 1350000000},
 "B274": {"life": "24 Hours", "leadsTo": "High-Sec", "mass": 2000000000, "jump": 300000000},
 "B041": {"life": "48 Hours", "leadsTo": "Class 6", "mass": 5000000000, "jump": 300000000},
 "U319": {"life": "48 Hours", "leadsTo": "Class 6", "mass": 3000000000, "jump": 1800000000},
