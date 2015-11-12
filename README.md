@@ -6,6 +6,7 @@ This is just some basic info on the source atm - more details on how to setup an
 
 * Quick summary
 * Version
+* MIT license
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
 ### How do I get set up? ###
