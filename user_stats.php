@@ -1,6 +1,6 @@
 <?php
 //***********************************************************
-//	File: 		userStats.php
+//	File: 		user_stats.php
 //	Author: 	Daimian
 //	Created: 	6/1/2013
 //	Modified: 	1/25/2014 - Daimian
@@ -48,7 +48,7 @@ if ($row = $stmt->fetchObject()) {
 $output['username'] = $_SESSION['username'];
 
 // Get unique visits
-$query = 'SELECT DISTINCT systemName FROM systemVisits WHERE userID = :userID';
+$query = "SELECT DISTINCT systemID FROM systemVisits WHERE userID = :userID";
 $stmt = $mysql->prepare($query);
 $stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 $stmt->execute();
@@ -56,7 +56,7 @@ $stmt->execute();
 $output['uniqueVisits'] = number_format($stmt->rowCount());
 
 // Get discovered whs
-$query = 'SELECT DISTINCT systemName FROM systemVisits, systems WHERE userID = :userID AND systemName = name';
+$query = "SELECT DISTINCT systemID FROM systemVisits WHERE userID = :userID";
 $stmt = $mysql->prepare($query);
 $stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 $stmt->execute();
@@ -66,4 +66,3 @@ $output['whDiscovered'] = number_format($stmt->rowCount());
 $output['proccessTime'] = sprintf('%.4f', microtime(true) - $startTime);
 
 echo json_encode($output);
-?>

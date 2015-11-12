@@ -70,7 +70,7 @@ if ($mode == 'login' || !$mode) {
 			$stmt->bindValue(':username', $username, PDO::PARAM_STR);
 			$stmt->execute();
 			if ($account = $stmt->fetchObject()) {
-				require('PasswordHash.php');
+				require('password_hash.php');
 				$hasher = new PasswordHash(8, FALSE);
 
 				if ($account->ban == 1) {

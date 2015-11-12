@@ -69,5 +69,3 @@ for ($x = 0; $x <= $length; $x++) {
 $output['proccessTime'] = sprintf('%.4f', microtime(true) - $startTime);
 
 echo json_encode($output);
-
-?>

@@ -1,8 +1,16 @@
 <?php
+
+session_start();
+
+if(!isset($_SESSION['super']) || $_SESSION['super'] != 1) {
+	echo 'Security Failure!';
+	exit();
+}
+
 ini_set('display_errors', 'On');
 
-require('db.inc.php');
-require('api.class.php');
+require('../db.inc.php');
+require('../api.class.php');
 
 date_default_timezone_set('UTC');
 
