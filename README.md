@@ -11,8 +11,10 @@ This is just some basic info on the source atm - more details on how to setup an
 
 ### How do I get set up? ###
 
-* Setup PHP PDO compatible database (MySQL)
+* Setup PHP PDO compatible database (MySQL) -- make sure event scheduler is on
 * Import blank Tripwire database and EVE_API database (links above)
+* EVE_API database needs 1 row inserted before use:
+`INSERT INTO eve_api.cacheTime (type, time) VALUES ('activity', now())`
 * Create a `db.inc.php` file in root from `db.inc.example`
 * Setup `tools/api_pull.php` under a 3 minute cron
 * More to come...
