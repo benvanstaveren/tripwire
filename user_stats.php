@@ -48,7 +48,7 @@ if ($row = $stmt->fetchObject()) {
 $output['username'] = $_SESSION['username'];
 
 // Get unique visits
-$query = 'SELECT DISTINCT systemName FROM systemVisits WHERE userID = :userID';
+$query = "SELECT DISTINCT systemID FROM systemVisits WHERE userID = :userID";
 $stmt = $mysql->prepare($query);
 $stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 $stmt->execute();
@@ -56,7 +56,7 @@ $stmt->execute();
 $output['uniqueVisits'] = number_format($stmt->rowCount());
 
 // Get discovered whs
-$query = 'SELECT DISTINCT systemName FROM systemVisits, systems WHERE userID = :userID AND systemName = name';
+$query = "SELECT DISTINCT systemID FROM systemVisits WHERE userID = :userID";
 $stmt = $mysql->prepare($query);
 $stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 $stmt->execute();
