@@ -4,14 +4,15 @@ This is just some basic info on the source atm - more details on how to setup an
 
 ### Tripwire - EVE Online wormhole mapping web tool ###
 
-* Quick summary
-* Version
+* [Tripwire database](https://drive.google.com/file/d/0B2nU7w1pM6WrNVc0YThXRGlZV2M/view?usp=sharing)
+* [EVE_API database](https://drive.google.com/file/d/0B2nU7w1pM6WrNnRZVE94aExJd2M/view?usp=sharing)
 * MIT license
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
 ### How do I get set up? ###
 
-* Setup PHP PDO compatible database with Tripwire blank database (coming soon)
+* Setup PHP PDO compatible database (MySQL)
+* Import blank Tripwire database and EVE_API database (links above)
 * Create a `db.inc.php` file in root from `db.inc.example`
 * Setup `tools/api_pull.php` under a 3 minute cron
 * More to come...
