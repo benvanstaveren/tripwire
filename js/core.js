@@ -4156,10 +4156,10 @@ $("#chainMap").contextmenu({
 					if (data && data.mass) {
                         var totalMass = 0;
 						for (x in data.mass) {
-                            totalMass += data.mass[x].mass;
+                            totalMass += parseFloat(data.mass[x].mass);
 							$("#dialog-mass #massTable tbody").append("<tr><td>"+data.mass[x].characterName+"</td><td>"+(data.mass[x].toID == systemID ? "In" : "Out")+"</td><td>"+data.mass[x].shipType+"</td><td>"+numFormat(data.mass[x].mass)+"Kg</td><td>"+data.mass[x].time+"</td></tr>");
 						}
-                        $("#dialog-mass #massTable tbody").append("<tr><td></td><td></td><td></td><th>"+ totalMass +"Kg</th><td></td></tr>");
+                        $("#dialog-mass #massTable tbody").append("<tr><td></td><td></td><td></td><th>"+ numFormat(totalMass) +"Kg</th><td></td></tr>");
 					}
 				});
 			}
