@@ -1629,7 +1629,7 @@ var chain = new function() {
 
 			this.data.rawMap = $.extend(true, {}, data.map);
 
-			if (options.chain.active && options.chain.tabs[options.chain.active].evescout == false) {
+			if (options.chain.active && options.chain.tabs[options.chain.active] && options.chain.tabs[options.chain.active].evescout == false) {
 				for (var i in data.map) {
 					if (data.map[i].mask == "273.0") {
 						delete data.map[i];
