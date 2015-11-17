@@ -81,4 +81,9 @@
 "M164": {"life": "24 Hours", "leadsTo": "Thera", "mass": 2000000000, "jump": 300000000},
 "Q063": {"life": "16 Hours", "leadsTo": "High-Sec", "mass": 2000000000, "jump": 300000000},
 "V898": {"life": "16 Hours", "leadsTo": "Low-Sec", "mass": 2000000000, "jump": 300000000},
-"E587": {"life": "16 Hours", "leadsTo": "Null-Sec", "mass": 2000000000, "jump": 300000000}}
+"E587": {"life": "16 Hours", "leadsTo": "Null-Sec", "mass": 2000000000, "jump": 300000000},
+"B734": {"life": "16 Hours", "leadsTo": "Class 15", "mass": 750000000, "jump": 300000000},
+"C414": {"life": "16 Hours", "leadsTo": "Class 17", "mass": 750000000, "jump": 300000000},
+"R259": {"life": "16 Hours", "leadsTo": "Class 18", "mass": 750000000, "jump": 300000000},
+"S877": {"life": "16 Hours", "leadsTo": "Class 14", "mass": 750000000, "jump": 300000000},
+"V928": {"life": "16 Hours", "leadsTo": "Class 16", "mass": 750000000, "jump": 300000000}}

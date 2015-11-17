@@ -230,7 +230,7 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 							<p>Use any old or new API key to log into an existing Tripwire account with that character.</p>
 							<p><em style="color: burlywood;">API needs to be character type and only needs Account Status enabled.</em></p>
 							<p><a href="https://community.eveonline.com/support/api-key/CreatePredefined?accessMask=33554432" target="_blank" tabindex="-1">Create EVE API key</a></p>
-							<p><a href="https://support.eveonline.com/api" target="_blank" tabindex="-1">View your EVE API keys</a></p>
+							<p><a href="https://community.eveonline.com/support/api-key/" target="_blank" tabindex="-1">View your EVE API keys</a></p>
 							<br/>
 							<div class="row">
 								<p class="left">
@@ -293,7 +293,7 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 							<input class="hidden" type="text" name="fakeusernameremembered" />
 							<input class="hidden" type="password" name="fakepasswordremembered" autocomplete="off" />
 							<p>
-								A Tripwire account requires an EVE character to be associated with it. This character is used to determine who's signature data you can see. <a href="https://support.eveonline.com/api" target="_blank" tabindex="-1">View your EVE API keys</a>
+								A Tripwire account requires an EVE character to be associated with it. This character is used to determine who's signature data you can see. <a href="https://community.eveonline.com/support/api-key/" target="_blank" tabindex="-1">View your EVE API keys</a>
 							</p>
 							<br/>
 							<p><em style="color: burlywood;">API needs to be character type and only needs Account Status enabled.</em></p>
