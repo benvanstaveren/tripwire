@@ -101,9 +101,11 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 				</a>
 			</div>
 
-			<div class="price left_align"> <!-- Alignments options: right_align, left_align, centered -->
+		<!--
+			<div class="price left_align">
 				<p>FREE for a limited time!</p>
 			</div>
+		-->
 
 <?php if (!isset($_SESSION['userID'])) { ?>
 			<h1>Have an account?<br/><a href="#login#reg">Log into Tripwire now!</a></h1>
