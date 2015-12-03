@@ -2,19 +2,38 @@
 
 class API {
 	private static $baseUrl = 'https://api.eveonline.com';
+	public $cachedUntil = null;
 
 	private function getAPI($url, $params) {
 		$url = self::$baseUrl . $url;
 
 		$curl = curl_init();
 		curl_setopt($curl, CURLOPT_URL, $url);
-		curl_setopt($curl, CURLOPT_POST, 1);
+		curl_setopt($curl, CURLOPT_POST, true);
 		curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($params));
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($curl, CURLOPT_USERAGENT, 'Tripwire 0.6.x daimian.mercer@gmail.com');
 
-		return curl_exec($curl);
+		$result = curl_exec($curl);
+
+		$this->getCachedUntil($result);
+		return $result;
+	}
+
+	private function getCachedUntil($curl) {
+		$xpath = "//cachedUntil";
+
+		if ($xmlFile = @simplexml_load_string($curl)) {
+			$xmls = $xmlFile->xpath($xpath);
+			$cachedUntil = $xmls[0]->__toString();
+
+			$cachedUntil = date('h:i:s', strtotime($cachedUntil));
+
+			$this->cachedUntil = $cachedUntil;
+		} else {
+			$this->cachedUntil = null;
+		}
 	}
 
 	public function getEveIds($ids) {
@@ -24,10 +43,10 @@ class API {
 		$xpath = "//rowset[@name='characters']/row";
 
 		$results = array();
-		
+
 		if ($xmlFile = @simplexml_load_string($this->getAPI($url, $params))) {
 			$xmls = $xmlFile->xpath($xpath);
-			
+
 			foreach ($xmls as $xml) {
 				$result = new eveData();
 
@@ -115,7 +134,7 @@ class API {
 	public function checkDirectorRole($keyID, $vCode, $characterID) {
 		$url = '/char/CharacterSheet.xml.aspx';
 		$params = array('keyId' => $keyID, 'vCode' => $vCode, 'characterID' => $characterID);
-		
+
 		$xpath = "//rowset[@name='corporationRoles']/row[@roleName='roleDirector']";
 
 		if ($xmlFile = @simplexml_load_string($this->getAPI($url, $params))) {
