@@ -41,17 +41,17 @@ if ($mode == 'login' || !$mode) {
 	if (!$username || !$password || !$ip) {
 		if (!$username) {
 			$output['field'] = 'username';
-			$output['error'] = 'Username required';
+			$output['error'] = 'Username required.';
 		} else if (!$password) {
 			$output['field'] = 'password';
-			$output['error'] = 'Password required';
+			$output['error'] = 'Password required.';
 		} else if (!$ip) {
 			$output['field'] = 'password';
-			$output['error'] = 'IP not detected';
+			$output['error'] = 'IP not detected.';
 		}
 	} else if (strlen($password) > 72) {
 		$output['field'] = 'password';
-		$output['error'] = 'Password too long';
+		$output['error'] = 'Password too long.';
 	} else {
 		// Check login attempts
 		$query = 'SELECT COUNT(ip) FROM _history_login WHERE ip = :ip AND DATE_ADD(time, INTERVAL 30 SECOND) > NOW()';
@@ -60,7 +60,7 @@ if ($mode == 'login' || !$mode) {
 		$stmt->execute();
 		if ($stmt->fetchColumn(0) > 3) {
 			$output['field'] = 'username';
-			$output['error'] = 'Login attempts exceeded, please wait 30 seconds';
+			$output['error'] = 'Login attempts exceeded, please wait 30 seconds.';
 
 			// Log the attempt
 			login_history($ip, $username, $method, 'fail');
@@ -75,13 +75,13 @@ if ($mode == 'login' || !$mode) {
 
 				if ($account->ban == 1) {
 					$output['field'] = 'username';
-					$output['error'] = 'You have been banned';
+					$output['error'] = 'You have been banned.';
 
 					// Log the attempt
 					login_history($ip, $username, $method, 'fail');
 				} else if ($hasher->CheckPassword($password, $account->password) == false) {
 					$output['field'] = 'password';
-					$output['error'] = 'Password incorrect';
+					$output['error'] = 'Password incorrect.';
 
 					// Log the attempt
 					login_history($ip, $username, $method, 'fail');
@@ -120,7 +120,7 @@ if ($mode == 'login' || !$mode) {
 				}
 			} else {
 				$output['field'] = 'username';
-				$output['error'] = "Username doesn't exist";
+				$output['error'] = "Username doesn't exist.";
 
 				// Log the attempt
 				login_history($ip, $username, $method, 'fail');
@@ -137,26 +137,26 @@ if ($mode == 'login' || !$mode) {
 	// Check input
 	if (!$keyID || !$vCode) {
 		$output['field'] = 'api';
-		$output['error'] = 'API Key & vCode required';
+		$output['error'] = 'API Key & vCode required.';
 	} else {
 		require('api.class.php');
 		$API = new API();
 
 		if ($API->checkAccount($keyID, $vCode) == 0) {
 			$output['field'] = 'api';
-			$output['error'] = "API requires 'Account Status' permission";
+			$output['error'] = "API requires 'Account Status' permission.";
 		} else if ($API->checkMask($keyID, $vCode, $mask) == 0) {
 			$output['field'] = 'api';
-			$output['error'] = "API requires ONLY 'Account Status' permission";
+			$output['error'] = "API requires ONLY 'Account Status' permission.";
 		} else {
 			$characters = $API->getCharacters($keyID, $vCode);
 
 			if (count($characters) == 0) {
 				$output['field'] = 'api';
-				$output['error'] = 'API has no characters';
+				$output['error'] = 'API has no characters.';
 			} else if ($characters === 0) {
 				$output['field'] = 'api';
-				$output['error'] = "API expired or doesn't exist";
+				$output['error'] = "API expired or doesn't exist.";
 			} else if (!$selected && count($characters) > 1) {
 				$output['characters'] = $characters;
 			} else if (count($characters) == 1 || array_key_exists($selected, $characters)) {
@@ -195,7 +195,7 @@ if ($mode == 'login' || !$mode) {
 					$stmt->execute();
 				} else {
 					$output['field'] = count($characters) > 1 ? 'select' : 'api';
-					$output['error'] = 'No registered accounts with that character found';
+					$output['error'] = 'No registered accounts with that character found.';
 
 					// Log the attempt
 					login_history($ip, NULL, $method, 'fail');
@@ -203,6 +203,10 @@ if ($mode == 'login' || !$mode) {
 			}
 		}
 	}
+}
+
+if ($output['field'] == 'api') {
+	$output['error'] .= ' Cached Until: ' . $API->cachedUntil .' EVE';
 }
 
 $output['proccessTime'] = sprintf('%.4f', microtime(true) - $startTime);
