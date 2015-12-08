@@ -148,7 +148,7 @@ if ($mode == 'user') {
 		} else if ($characters === 0) {
 			$output['field'] = 'api';
 			$output['error'] = "API expired or doesn't exist.";
-		} else if ($API->checkMask($keyID, $vCode, 8) != 8) {
+		} else if (!$API->checkMask($keyID, $vCode, 8)) {
 			$output['field'] = 'api';
 			$output['error'] = "API 'Character Sheet' permission required.";
 		} else if (!$selected && count($characters) > 1) {
