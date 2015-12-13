@@ -48,10 +48,10 @@ if ($row = $stmt->fetchObject()) {
 	<meta name="systemID" content="<?= $systemID ?>">
 	<meta name="server" content="<?= $server ?>">
 	<link rel="shortcut icon" href="//<?= $server ?>/images/favicon.png" />
-	
+
 	<link rel="stylesheet" type="text/css" href="//<?= $server ?>/css/combine.css">
 	<link rel="stylesheet" type="text/css" href="//<?= $server ?>/css/style.css">
-	
+
 	<title><?=$system?> - <?= $server == 'static.eve-apps.com' ? 'Tripwire' : 'Galileo' ?></title>
 </head>
 <?php flush(); ?>
@@ -69,7 +69,7 @@ if ($row = $stmt->fetchObject()) {
 				 | <span data-tooltip="System activity update countdown"><input id="APIclock" class="hidden" /></span>
 			</h1>
 			<h3 id="serverStatus" class="pointer" data-tooltip="EVE server status and player count"></h3>
-			<h3 id="systemSearch">| <i id="search" data-icon="search" data-tooltip="Toggle system search"></i> 
+			<h3 id="systemSearch">| <i id="search" data-icon="search" data-tooltip="Toggle system search"></i>
 				<span id="currentSpan" class="hidden"><span class="pointer">Current System: </span><a id="EVEsystem" href=""></a><i id="follow" data-icon="follow" data-tooltip="Follow my in-game system" style="padding-left: 10px;"></i></span>
 				<span id="searchSpan"><form method="GET" action=".?"><input type="text" size="18" class="systemsAutocomplete" name="system" /></form></span>
 				<span id="APItimer" class="hidden"></span>
@@ -142,89 +142,6 @@ if ($row = $stmt->fetchObject()) {
 				<div class="content">
 					<i id="system-favorite" data-icon="star-empty" style="float: right; padding-top: 10px; font-size: 2em;"></i>
 					<h1 id="infoSystem" class="pointer" style="color: #CCC;"><?=$system?></h1>
-					<?php
-						/*
-						if ($regionID >= 11000000) {
-							$query = 'SELECT effect, class FROM systems WHERE systemID = :systemID';
-							$stmt = $mysql->prepare($query);
-							$stmt->bindValue(':systemID', $systemID, PDO::PARAM_INT);
-							$stmt->execute();
-							$row = $stmt->fetchObject();
-
-							$class = $row->class;
-							echo '<h4 class="wh">Class: ',$class,'</h4>';
-							echo "<h4>Region: $region</h4>";
-							if ($row->effect) {
-								$effect = $row->effect;
-
-								$query = "SELECT effects.effect, valueFloat AS value, multiplier, bad FROM systems LEFT JOIN $eve_dump.dgmTypeAttributes dgm ON systems.typeID = dgm.typeID LEFT JOIN effects ON systems.effect = anomaly AND attributeID = effects.id WHERE systemID = :systemID";
-								$stmt = $mysql->prepare($query);
-								$stmt->bindValue(':systemID', $systemID, PDO::PARAM_INT);
-								$stmt->execute();
-
-								$title = '<table cellpadding="0" cellspacing="1">';
-								while ($row = $stmt->fetchObject()) {
-									$title .= '<tr><td>'.$row->effect.'</td><td style="padding-left: 25px" class="'.($row->bad == 1 ? 'critical' : 'stable').'">';
-
-									if ($row->multiplier)
-										$title .= number_format(abs($row->value + $row->multiplier) * 100);
-									else
-										$title .= number_format($row->value);
-
-									$title .= '%</td></tr>';
-								}
-								$title .= '</table>';
-
-								echo "<h4><a href='' OnClick='return false;' data-tooltip='$title'>$effect</a></h4>";
-							} else {
-								echo '<h4>&nbsp;</h4>';
-							}
-						} else {
-							$query = "SELECT security, faction FROM $eve_dump.mapSolarSystems LEFT JOIN localPirates ON localPirates.regionID = $eve_dump.mapSolarSystems.regionID WHERE solarSystemID = :systemID";
-							$stmt = $mysql->prepare($query);
-							$stmt->bindValue(':systemID', $systemID, PDO::PARAM_INT);
-							$stmt->execute();
-							$row = $stmt->fetchObject();
-
-							if ($row->security >= 0.45) {
-								echo '<h4 class="hisec">High-Sec ',number_format($row->security, 2),'</h4>';
-							} else if ($row->security > 0.0) {
-								echo '<h4 class="lowsec">Low-Sec ',number_format($row->security, 2),'</h4>';
-							} else {
-								echo '<h4 class="nullsec">Null-Sec ',number_format($row->security, 2),'</h4>';
-							}
-
-							$faction = $row->faction;
-
-							$query = 'SELECT dmgType, strength FROM factionDmgTypes WHERE faction = :faction ORDER BY class';
-							$stmt = $mysql->prepare($query);
-							$stmt->bindValue(':faction', $faction, PDO::PARAM_STR);
-							$stmt->execute();
-
-							$title = '<table cellpadding="0" cellspacing="1">';
-							while ($row = $stmt->fetchObject()) {
-								switch ($row->dmgType) {
-									case 'Kinetic':
-										$title .= '<tr><td><img class="kinetic-icon"></td><td>Kinetic</td><td style="text-align: right; padding-left: 10px;">'.$row->strength.'%</td></tr>';
-										break;
-									case 'Thermal':
-										$title .= '<tr><td><img class="thermal-icon"></td><td>Thermal</td><td style="text-align: right; padding-left: 10px;">'.$row->strength.'%</td></tr>';
-										break;
-									case 'Explosive':
-										$title .= '<tr><td><img class="explosive-icon"></td><td>Explosive</td><td style="text-align: right; padding-left: 10px;">'.$row->strength.'%</td></tr>';
-										break;
-									case 'EM':
-										$title .= '<tr><td><img class="em-icon"></td><td>EM</td><td style="text-align: right; padding-left: 10px;">'.$row->strength.'%</td></tr>';
-										break;
-								}
-							}
-
-							$title .= '</table>';
-							echo "<h4>Region: $region</h4>";
-							echo "<h4>Pirates: <a href='' OnClick='return false;' data-tooltip='$title' id='pirates'>",$faction,'</a></h4>';
-						}
-						*/
-					?>
 					<h4 id="infoSecurity" class="pointer">&nbsp;</h4>
 					<h4 id="infoRegion" class="pointer">&nbsp;</h4>
 					<h4 id="infoFaction" class="pointer">&nbsp;</h4>
@@ -393,7 +310,7 @@ if ($row = $stmt->fetchObject()) {
 				<tr>
 					<th>ID:</th>
 					<td colspan="3">
-						<input type="text" name="id" id="sigID" maxlength="3" size="3" /> 
+						<input type="text" name="id" id="sigID" maxlength="3" size="3" />
 						<strong>- ###</strong>
 						<span style="float: right;">
 							<select id="sigType" name="type">
@@ -485,7 +402,7 @@ if ($row = $stmt->fetchObject()) {
 				<tr>
 					<th>ID:</th>
 					<td colspan="2">
-						<input type="text" id="sigID" name="sigID" maxlength="3" size="3" /> 
+						<input type="text" id="sigID" name="sigID" maxlength="3" size="3" />
 						<strong>- ###</strong>
 					</td>
 					<td style="float: right;">
@@ -736,7 +653,7 @@ if ($row = $stmt->fetchObject()) {
 				<tr>
 					<th colspan="2">
 						<div id="loading" style="text-align: center; padding-top: 10px; margin-left: -50px;">
-							Getting API data... 
+							Getting API data...
 							<span style="position: absolute; margin-top: -10px; padding-left: 25px;" class="" id="searchSpinner">
 								<!-- Loading animation container -->
 								<div class="loading">
@@ -997,7 +914,7 @@ if ($row = $stmt->fetchObject()) {
 	<script type="text/javascript">
 
 		var init = null;
-		
+
 		initAJAX = new XMLHttpRequest();
 		initAJAX.onreadystatechange = function() {
 			if (initAJAX.readyState == 4 && initAJAX.status == 200) {
@@ -1005,7 +922,7 @@ if ($row = $stmt->fetchObject()) {
 
 				if (init && init.trustCheck)
 					CCPEVE.requestTrust("https://*.eve-apps.com/*");
-				
+
 				if (init && init.session.username) {
 					document.getElementById("user").innerHTML = init.session.characterName;
 					document.getElementById("characterName").innerHTML = init.session.characterName;
@@ -1015,7 +932,7 @@ if ($row = $stmt->fetchObject()) {
 		}
 		initAJAX.open("GET", "init.php?_=" + new Date().getTime(), false);
 		initAJAX.send();
-		
+
 		// Google Analytics
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -1033,7 +950,7 @@ if ($row = $stmt->fetchObject()) {
 		}
 
 		setTimeout("passiveHit()", 240000);
-		
+
 	</script>
 
 	<!-- JS Includes -->
