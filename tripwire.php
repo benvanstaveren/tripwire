@@ -525,6 +525,7 @@ if ($row = $stmt->fetchObject()) {
 					</tr>
 				</table>
 				<div style="border-top: 1px solid black; text-align: right; margin: 0 -5px; padding: 5px 5px 0 5px;">
+					<input type="button" id="usernameChange" value="Change Username" />
 					<input type="button" id="pwChange" value="Change Password" />
 				</div>
 			</div>
@@ -588,6 +589,22 @@ if ($row = $stmt->fetchObject()) {
 				</table>
 			</div>
 		</div>
+	</div>
+
+	<div id="dialog-usernameChange" title="Change Username" class="hidden">
+		<form id="usernameForm">
+			<table class="optionsTable" width="100%" cellpadding="1" cellspacing="0">
+				<tr>
+					<th>Current Username:</th>
+					<td id="username"></td>
+				</tr>
+				<tr>
+					<th>New Username:</th>
+					<td><input type="text" name="username" size="16" maxlength="25" /></td>
+				</tr>
+			</table>
+			<p id="usernameError" class="critical hidden"></p>
+		</form>
 	</div>
 
 	<div id="dialog-pwChange" title="Change Password" class="hidden">
