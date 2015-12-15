@@ -4576,7 +4576,7 @@ $("body").on("click", ".commentDelete", function(e) {
 		$("#dialog-deleteComment").data("comment", $comment).dialog({
 			resizable: false,
 			minHeight: 0,
-			position: {my: "center", at: "center", of: $comment},
+			position: {my: "center", at: "center", of: $("#notesWidget")},
 			dialogClass: "dialog-noeffect ui-dialog-shadow",
 			buttons: {
 				Delete: function() {
