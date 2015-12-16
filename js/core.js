@@ -4651,17 +4651,13 @@ $("body").on("click", ".commentSticky", function(e) {
 
 CKEDITOR.on("instanceLoaded", function(cke) {
 	cke.editor.on("contentDom", function() {
-		// ensure focus on init
-		cke.editor.focus();
-
 		cke.editor.on("key", function(e) {
 			if (e.data.keyCode == 27) {
 				// escape key cancels
-				$(cke.editor.element.$.closest(".comment")).find(".commentCancel").click();
+				$(cke.editor.element.$).closest(".comment").find(".commentCancel").click();
 			} else if (e.data.keyCode == 13) {
 				// enter key saves
-				$(cke.editor.element.$.closest(".comment")).find(".commentSave").click();
-				return false;
+				$(cke.editor.element.$).closest(".comment").find(".commentSave").click();
 			}
 		});
 	});
@@ -4675,6 +4671,31 @@ CKEDITOR.on("instanceLoaded", function(cke) {
 		.removeClass("cke_combo_button")
 		.addClass("cke_button cke_button_off")
 		.html('<span class="cke_button_icon">&nbsp;</span>')
+});
+
+CKEDITOR.on("instanceReady", function(cke) {
+	// ensure focus on init
+	cke.editor.focus();
+
+	var s = cke.editor.getSelection(); // getting selection
+	var selected_ranges = s.getRanges(); // getting ranges
+	var node = selected_ranges[0].startContainer; // selecting the starting node
+	var parents = node.getParents(true);
+
+	node = parents[parents.length - 2].getFirst();
+
+	while (true) {
+		var x = node.getNext();
+		if (x == null) {
+			break;
+		}
+		node = x;
+	}
+
+	s.selectElement(node);
+	selected_ranges = s.getRanges();
+	selected_ranges[0].collapse(false);  //  false collapses the range to the end of the selected node, true before the node.
+	s.selectRanges(selected_ranges);  // putting the current selection there
 });
 
 CKEDITOR.on("dialogDefinition", function(ev) {
