@@ -735,7 +735,7 @@ $("#search").click(function(e) {
 
 	if ($(this).hasClass("active")) {
 		$(this).removeClass("active");
-		if (tripwire.client.EVE.systemName)
+		if (tripwire.client.EVE && tripwire.client.EVE.systemName)
 			$("#currentSpan").show();
 	} else {
 		$(this).addClass("active");
