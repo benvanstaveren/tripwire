@@ -3104,6 +3104,35 @@ $("#sigEditForm").submit(function(e) {
 	tripwire.refresh('refresh', data, success, always);
 });
 
+$("#admin").click(function(e) {
+	e.preventDefault();
+
+	if (!$("#dialog-admin").hasClass("ui-dialog-content")) {
+		$("#dialog-admin").dialog({
+			autoOpen: true,
+			modal: true,
+			buttons: {
+				Close: function() {
+					$(this).dialog("close");
+				}
+			},
+			create: function() {
+				$("#dialog-admin").on("click", ".menu li", function(e) {
+					e.preventDefault();
+
+					$("#dialog-admin .menu .active").removeClass("active");
+					$(this).addClass("active");
+
+					$("#dialog-admin .window [data-window]").hide();
+					$("#dialog-admin .window [data-window='"+ $(this).data("window") +"']").show();
+				});
+			}
+		});
+	} else if (!$("#dialog-admin").dialog("isOpen")) {
+		$("#dialog-admin").dialog("open");
+	}
+});
+
 $(".options").click(function(e) {
 	e.preventDefault();
 

@@ -132,6 +132,7 @@ if ($row = $stmt->fetchObject()) {
 			<h3> | </h3>
 
 			<i id="settings" style="font-size: 1.7em;" data-icon="settings" class="options" data-tooltip="Settings"></i>
+			<?= $_SESSION['admin'] ? '<i id="admin" style="font-size: 1.7em;" data-icon="user" data-tooltip="Corp Admin"></i>' : '' ?>
 			<i id="layout" style="font-size: 1.7em;" data-icon="layout" data-tooltip="Customize layout"></i>
 		</span>
 	</div>
@@ -480,6 +481,28 @@ if ($row = $stmt->fetchObject()) {
 			</table>
 			<input type="submit" style="position: absolute; left: -99999px;" tabindex="-1" />
 		</form>
+	</div>
+
+	<div id="dialog-admin" title="Corp Admin" class="hidden">
+		<table width="100%" height="100%" cellpadding="0" cellspacing="0">
+			<tr>
+				<td class="menu" style="width: 100px;">
+					<!-- menu -->
+					<ul>
+						<li data-window="active-users"><a href="#">Active Users</a></li>
+					</ul>
+				</td>
+				<td class="window">
+					<!-- window -->
+					<div data-window="default">
+						Hello!
+					</div>
+					<div data-window="active-users" class="hidden">
+						adlkfjalksdjf
+					</div>
+				</td>
+			</tr>
+		</table>
 	</div>
 
 	<div id="dialog-options" title="Settings" class="hidden">
