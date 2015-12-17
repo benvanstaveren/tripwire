@@ -484,25 +484,46 @@ if ($row = $stmt->fetchObject()) {
 	</div>
 
 	<div id="dialog-admin" title="Corp Admin" class="hidden">
-		<table width="100%" height="100%" cellpadding="0" cellspacing="0">
-			<tr>
-				<td class="menu" style="width: 100px;">
-					<!-- menu -->
-					<ul>
-						<li data-window="active-users"><a href="#">Active Users</a></li>
-					</ul>
-				</td>
-				<td class="window">
-					<!-- window -->
-					<div data-window="default">
-						Hello!
-					</div>
-					<div data-window="active-users" class="hidden">
-						adlkfjalksdjf
-					</div>
-				</td>
-			</tr>
-		</table>
+		<div style="height: 100%;">
+			<div class="menu" style="width: 100px; height: 100%; float: left;">
+				<!-- menu -->
+				<ul>
+					<li data-window="active-users"><a href="#">Active Users</a></li>
+				</ul>
+			</div>
+			<div class="window" style="height: 100%; margin-left: 100px; overflow: auto;">
+				<!-- window -->
+				<div data-window="default">
+					Hello!
+				</div>
+				<div data-window="active-users" class="hidden">
+					<table id="userTable" width="100%" cellpadding="0" cellspacing="0">
+						<thead>
+							<tr>
+								<th class="sortable">Account<i data-icon=""></i></th>
+								<th class="sortable">Character</th>
+								<th class="sortable">System</th>
+								<th class="sortable">Ship Name</th>
+								<th class="sortable">Ship Type</th>
+								<th class="sortable">Station</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+					<table>
+						<tr data-id="" class="hidden">
+							<td class="account"></td>
+							<td class="character"></td>
+							<td class="system"></td>
+							<td class="shipName"></td>
+							<td class="shipType"></td>
+							<td class="station"></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<div id="dialog-options" title="Settings" class="hidden">

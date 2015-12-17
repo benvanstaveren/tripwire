@@ -3111,20 +3111,77 @@ $("#admin").click(function(e) {
 		$("#dialog-admin").dialog({
 			autoOpen: true,
 			modal: true,
+			height: 350,
+			width: 800,
 			buttons: {
 				Close: function() {
 					$(this).dialog("close");
 				}
 			},
 			create: function() {
+				// menu toggle
 				$("#dialog-admin").on("click", ".menu li", function(e) {
 					e.preventDefault();
+					$menuItem = $(this);
 
 					$("#dialog-admin .menu .active").removeClass("active");
-					$(this).addClass("active");
+					$menuItem.addClass("active");
 
 					$("#dialog-admin .window [data-window]").hide();
-					$("#dialog-admin .window [data-window='"+ $(this).data("window") +"']").show();
+					$("#dialog-admin .window [data-window='"+ $menuItem.data("window") +"']").show();
+
+					function refreshActiveUsers() {
+						$.ajax({
+							url: "admin.php",
+							type: "POST",
+							data: {mode: "active-users"},
+							dataType: "JSON"
+						}).success(function(data) {
+							if (data.results) {
+								var rows = data.results;
+								for (var i = 0, l = rows.length; i < l; i++) {
+									var $row = $("#dialog-admin [data-window='active-users'] #userTable tbody tr[data-id='"+ rows[i].userID +"']");
+									if ($row.length) {
+										$row.find(".account").html(rows[i].accountCharacterName);
+										$row.find(".character").html(rows[i].characterName);
+										$row.find(".system").html(rows[i].systemName);
+										$row.find(".shipName").html(rows[i].shipName);
+										$row.find(".shipType").html(rows[i].shipTypeName);
+										$row.find(".station").html(rows[i].stationName);
+									} else {
+										$row = $("#dialog-admin [data-window='active-users'] tr.hidden").clone();
+										$row.attr("data-id", rows[i].userID);
+										$row.find(".account").html(rows[i].accountCharacterName);
+										$row.find(".character").html(rows[i].characterName);
+										$row.find(".system").html(rows[i].systemName);
+										$row.find(".shipName").html(rows[i].shipName);
+										$row.find(".shipType").html(rows[i].shipTypeName);
+										$row.find(".station").html(rows[i].stationName);
+										$row.removeClass("hidden");
+										$("#dialog-admin [data-window='active-users'] #userTable tbody").append($row);
+									}
+								}
+
+								$("#dialog-admin [data-window='active-users'] #userTable").trigger("update", [true]);
+							}
+						});
+
+						if ($("#dialog-admin").dialog("isOpen") && $("#dialog-admin .menu .active").attr("data-window") == "active-users") {
+							setTimeout(refreshActiveUsers, 3000);
+						}
+					}
+
+					switch ($menuItem.data("window")) {
+						case "active-users":
+							refreshActiveUsers();
+							break;
+					}
+				});
+
+				$("#dialog-admin [data-window='active-users'] #userTable").tablesorter({
+					sortReset: true,
+					widgets: ['saveSort'],
+					sortList: [[0,0]]
 				});
 			}
 		});
