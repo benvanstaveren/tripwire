@@ -175,7 +175,6 @@ var guidance = (function (undefined) {
 	}
 
 	Guidance.prototype.findShortestPath = function (start, end) {
-		//var time = window.performance.now();
 		var result;
 
 		if (Object.prototype.toString.call(start) === '[object Array]') {
@@ -186,7 +185,6 @@ var guidance = (function (undefined) {
 			result = findShortestPath(this.map, toArray(arguments));
 		}
 
-		//console.log(window.performance.now() - time);
 		return result;
 	}
 
@@ -3104,6 +3102,132 @@ $("#sigEditForm").submit(function(e) {
 	tripwire.refresh('refresh', data, success, always);
 });
 
+$("#admin").click(function(e) {
+	e.preventDefault();
+
+	if ($(this).hasClass("disabled")) {
+		return false;
+	}
+
+	if (!$("#dialog-admin").hasClass("ui-dialog-content")) {
+		var refreshTimer = null;
+
+		function refreshActiveUsers() {
+			$("div.ui-dialog[aria-describedby='dialog-admin'] .ui-dialog-traypane").html("Total: " + $("#dialog-admin [data-window='active-users'] #userTable tr[data-id]").length);
+
+			$.ajax({
+				url: "admin.php",
+				type: "POST",
+				data: {mode: "active-users"},
+				dataType: "JSON"
+			}).success(function(data) {
+				if (data && data.results) {
+					var rows = data.results;
+					for (var i = 0, l = rows.length; i < l; i++) {
+						var $row = $("#dialog-admin [data-window='active-users'] #userTable tbody tr[data-id='"+ rows[i].id +"']");
+						if ($row.length) {
+							$row.find(".account").html(rows[i].accountCharacterName);
+							$row.find(".character").html(rows[i].characterName || "&nbsp;");
+							$row.find(".system").html(rows[i].systemName || "&nbsp;");
+							$row.find(".shipName").html(rows[i].shipName || "&nbsp;");
+							$row.find(".shipType").html(rows[i].shipTypeName || "&nbsp;");
+							$row.find(".station").html(rows[i].stationName || "&nbsp;");
+							$row.find(".login").html(rows[i].lastLogin);
+						} else {
+							$row = $("#dialog-admin [data-window='active-users'] tr.hidden").clone();
+							$row.attr("data-id", rows[i].id);
+							$row.find(".account").html(rows[i].accountCharacterName);
+							$row.find(".character").html(rows[i].characterName || "&nbsp;");
+							$row.find(".system").html(rows[i].systemName || "&nbsp;");
+							$row.find(".shipName").html(rows[i].shipName || "&nbsp;");
+							$row.find(".shipType").html(rows[i].shipTypeName || "&nbsp;");
+							$row.find(".station").html(rows[i].stationName || "&nbsp;");
+							$row.find(".login").html(rows[i].lastLogin);
+							$row.removeClass("hidden");
+							$("#dialog-admin [data-window='active-users'] #userTable tbody").append($row);
+						}
+					}
+
+					var ids = $.map(data.results, function(user) { return user.id; });
+					$("#dialog-admin [data-window='active-users'] #userTable tr[data-id]").each(function() {
+						if ($.inArray($(this).data("id").toString(), ids) == -1) {
+							$(this).remove();
+						}
+					});
+
+					$("#dialog-admin [data-window='active-users'] #userTable").trigger("update", [true]);
+				} else {
+					$("#dialog-admin [data-window='active-users'] #userTable tr[data-id]").remove();
+				}
+
+				//var time = window.performance.now();
+				//console.log(window.performance.now() - time);
+				$("div.ui-dialog[aria-describedby='dialog-admin'] .ui-dialog-traypane").html("Total: " + $("#dialog-admin [data-window='active-users'] #userTable tr[data-id]").length);
+			});
+
+			if ($("#dialog-admin").dialog("isOpen") && $("#dialog-admin .menu .active").attr("data-window") == "active-users") {
+				refreshTimer = setTimeout(refreshActiveUsers, 3000);
+			}
+		}
+
+		$("#dialog-admin").dialog({
+			autoOpen: true,
+			modal: true,
+			height: 350,
+			width: 800,
+			buttons: {
+				Close: function() {
+					$(this).dialog("close");
+				}
+			},
+			create: function() {
+				// menu toggle
+				$("#dialog-admin").on("click", ".menu li", function(e) {
+					e.preventDefault();
+					$menuItem = $(this);
+					clearTimeout(refreshTimer);
+
+					$("#dialog-admin .menu .active").removeClass("active");
+					$menuItem.addClass("active");
+					$("div.ui-dialog[aria-describedby='dialog-admin'] .ui-dialog-traypane").html("");
+
+					$("#dialog-admin .window [data-window]").hide();
+					$("#dialog-admin .window [data-window='"+ $menuItem.data("window") +"']").show();
+
+					switch ($menuItem.data("window")) {
+						case "active-users":
+							refreshActiveUsers();
+							break;
+					}
+				});
+
+				$("#dialog-admin [data-window='active-users'] #userTable").tablesorter({
+					sortReset: true,
+					widgets: ['saveSort'],
+					sortList: [[0,0]]
+				});
+
+				// dialog bottom tray
+				$($(this)[0].parentElement).find(".ui-dialog-buttonpane").append("<div class='ui-dialog-traypane'></div>");
+			},
+			open: function() {
+				$menuItem = $("#dialog-admin .menu li.active");
+
+				switch ($menuItem.data("window")) {
+					case "active-users":
+						refreshActiveUsers();
+						break;
+				}
+			},
+			close: function() {
+				clearTimeout(refreshTimer);
+			}
+		});
+	} else if (!$("#dialog-admin").dialog("isOpen")) {
+		$("#dialog-admin").dialog("open");
+	}
+});
+
 $(".options").click(function(e) {
 	e.preventDefault();
 
@@ -3137,6 +3261,9 @@ $(".options").click(function(e) {
 
 				$("#dialog-options").dialog("close");
 				$("#dialog-options").parent().find(".ui-dialog-buttonpane button:contains('Save')").attr("disabled", false).removeClass("ui-state-disabled");
+
+				// toggle mask admin icon
+				$("#dialog-options input[name='mask']:checked").data("admin") ? $("#admin").removeClass("disabled") : $("#admin").addClass("disabled");
 			},
 			Reset: function() {
 				$("#dialog-confirm #msg").html("Settings will be reset to defaults temporarily.<br/><br/><p><em>Save settings to make changes permanent.</em></p>");
@@ -3185,7 +3312,7 @@ $(".options").click(function(e) {
 					for (var x in response.masks) {
 						var mask = response.masks[x];
 						var node = $(''
-							+ '<input type="radio" name="mask" id="mask'+x+'" value="'+mask.mask+'" class="selector" data-owner="'+mask.owner+'" />'
+							+ '<input type="radio" name="mask" id="mask'+x+'" value="'+mask.mask+'" class="selector" data-owner="'+mask.owner+'" data-admin="'+mask.admin+'" />'
 							+ '<label for="mask'+x+'"><img src="'+mask.img+'" />'
 							+  (mask.optional ? '<i class="closeIcon" onclick="return false;" data-icon="red-giant"><i data-icon="times"></i></i>' : '')
 							+ '<span class="selector_label">'+mask.label+'</span></label>');
@@ -3205,7 +3332,10 @@ $(".options").click(function(e) {
 						$("#dialog-options #masks #corporate").append(node);
 					}
 
-					$("#dialog-options input[name='mask']").filter("[value='"+response.active+"']").attr("checked", true).trigger("change");
+					$("#dialog-options input[name='mask']").filter("[value='"+response.masks[response.active].mask+"']").attr("checked", true).trigger("change");
+
+					// toggle mask admin icon
+					response.masks[response.active].admin ? $("#admin").removeClass("disabled") : $("#admin").addClass("disabled");
 				}
 			});
 
@@ -3383,7 +3513,7 @@ $(".options").click(function(e) {
 								for (var x in response.results) {
 									var mask = response.results[x];
 									var node = $(''
-										+ '<input type="radio" name="mask" id="mask'+mask.mask+'" value="'+mask.mask+'" class="selector" data-owner="false" />'
+										+ '<input type="radio" name="mask" id="mask'+mask.mask+'" value="'+mask.mask+'" class="selector" data-owner="false" data-admin="'+mask.admin+'" />'
 										+ '<label for="mask'+mask.mask+'" style="width: 100%; margin-left: -5px;">'
 										+ '	<img src="'+mask.img+'" />'
 										+ '	<span class="selector_label">'+mask.label+'</span>'
@@ -3534,7 +3664,7 @@ $(".options").click(function(e) {
 										for (var x in response.masks) {
 											var mask = response.masks[x];
 											var node = $(''
-												+ '<input type="radio" name="mask" id="mask'+x+'" value="'+mask.mask+'" class="selector" data-owner="'+mask.owner+'" />'
+												+ '<input type="radio" name="mask" id="mask'+x+'" value="'+mask.mask+'" class="selector" data-owner="'+mask.owner+'" data-admin="'+mask.admin+'" />'
 												+ '<label for="mask'+x+'"><img src="'+mask.img+'" />'
 												+  (mask.optional ? '<i class="closeIcon" onclick="return false;" data-icon="red-giant"><i data-icon="times"></i></i>' : '')
 												+ '<span class="selector_label">'+mask.label+'</span></label>');
@@ -3554,7 +3684,10 @@ $(".options").click(function(e) {
 											$("#dialog-options #masks #corporate").append(node);
 										}
 
-										$("#dialog-options input[name='mask']").filter("[value='"+response.active+"']").attr("checked", true).trigger("change");
+										$("#dialog-options input[name='mask']").filter("[value='"+response.masks[response.active].mask+"']").attr("checked", true).trigger("change");
+
+										// toggle mask admin icon
+										response.masks[response.active].admin ? $("#admin").removeClass("disabled") : $("#admin").addClass("disabled");
 									}
 								});
 

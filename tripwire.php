@@ -21,6 +21,7 @@ header('Content-Type: text/html; charset=UTF-8');
 setcookie('loadedFromBrowserCache','false');
 
 require('db.inc.php');
+require('lib.inc.php');
 
 //Verify correct system otherwise goto default...
 $query = "SELECT solarSystemName, systems.solarSystemID, regionName, regions.regionID FROM $eve_dump.mapSolarSystems systems LEFT JOIN $eve_dump.mapRegions regions ON regions.regionID = systems.regionID WHERE solarSystemName = :system";
@@ -132,6 +133,7 @@ if ($row = $stmt->fetchObject()) {
 			<h3> | </h3>
 
 			<i id="settings" style="font-size: 1.7em;" data-icon="settings" class="options" data-tooltip="Settings"></i>
+			<i id="admin" style="font-size: 1.7em;" data-icon="user" data-tooltip="Mask Admin" class="<?= checkAdmin($_SESSION['mask']) || checkOwner($_SESSION['mask']) ? '' : 'disabled' ?>"></i>
 			<i id="layout" style="font-size: 1.7em;" data-icon="layout" data-tooltip="Customize layout"></i>
 		</span>
 	</div>
@@ -480,6 +482,64 @@ if ($row = $stmt->fetchObject()) {
 			</table>
 			<input type="submit" style="position: absolute; left: -99999px;" tabindex="-1" />
 		</form>
+	</div>
+
+	<div id="dialog-admin" title="Mask Admin" class="hidden">
+		<div style="height: 100%;">
+			<div class="menu">
+				<!-- menu -->
+				<ul>
+					<li data-window="default" class="active"><a href="#">Home</a></li>
+					<li data-window="active-users"><a href="#">Active Users</a></li>
+				</ul>
+			</div>
+			<div class="window">
+				<!-- window -->
+				<div data-window="default">
+					<h1>Welcome to the new Mask Admin feature!</h1>
+					<br/>
+					<p>This has been a long overdue feature, but thanks to the continued requests over the months I was finally able to make enough progress to have a first release.</p>
+					<br/>
+					<p>There may be a few minor bugs with the interface yet, I spent most of the time making sure the back-end security was solid so nobody saw users they shouldn't be. Also I was the only one testing this feature for opsec sake</p>
+					<br/>
+					<p>Please feel free to suggest additions, I plan to add many more menu items over the next few weeks but telling me what you all want will help me prioritize and make sure I don't overlook something useful</p>
+					<br/>
+					<ul>
+						<li>Mask creators/owners get access to mask admin</li>
+						<li>Custom corp masks the creating corp admins get access</li>
+						<li>Works for the default private and corporate masks</li>
+					</ul>
+					<br/>
+					<p>Thanks for using Tripwire, enjoy! :)</p>
+				</div>
+				<div data-window="active-users" class="hidden">
+					<table id="userTable" width="100%" cellpadding="0" cellspacing="0">
+						<thead>
+							<tr>
+								<th class="sortable">Account<i data-icon=""></i></th>
+								<th class="sortable">Character<i data-icon=""></i></th>
+								<th class="sortable">System<i data-icon=""></i></th>
+								<th class="sortable">Ship Name<i data-icon=""></i></th>
+								<th class="sortable">Ship Type<i data-icon=""></i></th>
+								<th class="sortable">Station<i data-icon=""></i></th>
+								<th class="sortable">Login<i data-icon=""></i></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="hidden">
+								<td class="account"></td>
+								<td class="character"></td>
+								<td class="system"></td>
+								<td class="shipName"></td>
+								<td class="shipType"></td>
+								<td class="station"></td>
+								<td class="login"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<div id="dialog-options" title="Settings" class="hidden">

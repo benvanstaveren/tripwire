@@ -19,7 +19,9 @@ if(!isset($_SESSION['userID'])){
 
 require('db.inc.php');
 require('api.class.php');
+require('lib.inc.php');
 
+$startTime = microtime(true);
 $mode = isset($_REQUEST['mode'])?$_REQUEST['mode']:null;
 $mask = isset($_REQUEST['mask'])?$_REQUEST['mask']:null;
 $type = isset($_REQUEST['type'])?$_REQUEST['type']:null;
@@ -29,30 +31,6 @@ $deletes = isset($_REQUEST['deletes'])?$_REQUEST['deletes']:array();
 $output = null;
 
 header('Content-Type: application/json');
-
-function checkOwner($mask) {
-	global $mysql;
-
-	$query = 'SELECT maskID FROM masks WHERE ownerID = :ownerID AND ownerType = 1373 AND maskID = :mask';
-	$stmt = $mysql->prepare($query);
-	$stmt->bindValue(':ownerID', $_SESSION['characterID'], PDO::PARAM_INT);
-	$stmt->bindValue(':mask', $mask, PDO::PARAM_INT);
-	$stmt->execute();
-
-	return $stmt->rowCount() == 0 ? false : true;
-}
-
-function checkAdmin($mask) {
-	global $mysql;
-
-	$query = 'SELECT corporationID FROM characters INNER JOIN masks ON ownerID = corporationID AND ownerType = 2 WHERE characterID = :characterID AND admin = 1 AND maskID = :mask';
-	$stmt = $mysql->prepare($query);
-	$stmt->bindValue(':characterID', $_SESSION['characterID'], PDO::PARAM_INT);
-	$stmt->bindValue(':mask', $mask, PDO::PARAM_INT);
-	$stmt->execute();
-
-	return $stmt->rowCount() == 0 ? false : $stmt->fetchColumn(0);
-}
 
 if ($mode == 'search') {
 	$API = new API();
@@ -202,11 +180,11 @@ if ($mode == 'search') {
 	$masks = array();
 
 	// Public mask
-	$output['masks'][] = array('mask' => '0.0', 'label' => 'Public', 'owner' => false, 'type' => 'default', 'img' => '//static.eve-apps.com/images/9_64_2.png');
+	$output['masks'][] = array('mask' => '0.0', 'label' => 'Public', 'owner' => false, 'admin' => false, 'type' => 'default', 'img' => '//static.eve-apps.com/images/9_64_2.png');
 	// Character mask
-	$output['masks'][] = array('mask' => $_SESSION['characterID'].'.1', 'label' => 'Private', 'owner' => false, 'type' => 'default', 'img' => '//image.eveonline.com/Character/'.$_SESSION['characterID'].'_64.jpg');
+	$output['masks'][] = array('mask' => $_SESSION['characterID'].'.1', 'label' => 'Private', 'owner' => false, 'admin' => true, 'type' => 'default', 'img' => '//image.eveonline.com/Character/'.$_SESSION['characterID'].'_64.jpg');
 	// Corporation mask
-	$output['masks'][] = array('mask' => $_SESSION['corporationID'].'.2', 'label' => 'Corp', 'owner' => false, 'type' => 'default', 'img' => '//image.eveonline.com/Corporation/'.$_SESSION['corporationID'].'_64.png');
+	$output['masks'][] = array('mask' => $_SESSION['corporationID'].'.2', 'label' => 'Corp', 'owner' => false, 'admin' => checkAdmin($_SESSION['corporationID'].'.2'), 'type' => 'default', 'img' => '//image.eveonline.com/Corporation/'.$_SESSION['corporationID'].'_64.png');
 
 	// Custom masks
 	$query = 'SELECT DISTINCT masks.maskID, name, ownerID, ownerType, eveID, eveType, admin, joined FROM masks INNER JOIN groups ON groups.maskID = masks.maskID INNER JOIN characters ON characterID = :characterID WHERE (ownerID = :characterID AND ownerType = 1373) OR (ownerID = :corporationID AND ownerType = 2) OR (eveID = :characterID AND eveType = 1373 AND joined = 1) OR (eveID = :corporationID AND eveType = 2 AND joined = 1) GROUP BY masks.maskID';
@@ -221,14 +199,19 @@ if ($mode == 'search') {
 			'label' => $row->name,
 			'optional' => ($row->admin && $row->eveID == $_SESSION['corporationID']) || $row->eveID == $_SESSION['characterID'] ? true : false,
 			'owner' => $row->admin && $row->ownerID == $_SESSION['corporationID'] || $row->ownerID == $_SESSION['characterID'] ? true : false,
+			'admin' => checkOwner($row->maskID) || checkAdmin($row->maskID) ? true : false,
 			'type' => ($row->ownerID == $_SESSION['characterID'] && $row->ownerType == 1373) || ($row->eveID == $_SESSION['characterID'] && $row->eveType == 1373) ? 'personal' : 'corporate',
 			'img' => $row->ownerType == 2?'https://image.eveonline.com/Corporation/'.$row->ownerID.'_64.png':'https://image.eveonline.com/Character/'.$row->ownerID.'_64.jpg'
 		);
 	}
 
-	$output['active'] = $_SESSION['mask'];
+	foreach ($output['masks'] AS $i => $mask) {
+		if ($_SESSION['mask'] == $mask['mask']) {
+			$output['active'] = $i;
+		}
+	}
 }
 
-echo json_encode($output);
+$output['proccessTime'] = sprintf('%.4f', microtime(true) - $startTime);
 
-?>
+echo json_encode($output);
