@@ -3105,6 +3105,10 @@ $("#sigEditForm").submit(function(e) {
 $("#admin").click(function(e) {
 	e.preventDefault();
 
+	if ($(this).hasClass("disabled")) {
+		return false;
+	}
+
 	if (!$("#dialog-admin").hasClass("ui-dialog-content")) {
 		var refreshTimer = null;
 
@@ -3257,6 +3261,9 @@ $(".options").click(function(e) {
 
 				$("#dialog-options").dialog("close");
 				$("#dialog-options").parent().find(".ui-dialog-buttonpane button:contains('Save')").attr("disabled", false).removeClass("ui-state-disabled");
+
+				// toggle mask admin icon
+				$("#dialog-options input[name='mask']:checked").data("admin") ? $("#admin").removeClass("disabled") : $("#admin").addClass("disabled");
 			},
 			Reset: function() {
 				$("#dialog-confirm #msg").html("Settings will be reset to defaults temporarily.<br/><br/><p><em>Save settings to make changes permanent.</em></p>");
@@ -3305,7 +3312,7 @@ $(".options").click(function(e) {
 					for (var x in response.masks) {
 						var mask = response.masks[x];
 						var node = $(''
-							+ '<input type="radio" name="mask" id="mask'+x+'" value="'+mask.mask+'" class="selector" data-owner="'+mask.owner+'" />'
+							+ '<input type="radio" name="mask" id="mask'+x+'" value="'+mask.mask+'" class="selector" data-owner="'+mask.owner+'" data-admin="'+mask.admin+'" />'
 							+ '<label for="mask'+x+'"><img src="'+mask.img+'" />'
 							+  (mask.optional ? '<i class="closeIcon" onclick="return false;" data-icon="red-giant"><i data-icon="times"></i></i>' : '')
 							+ '<span class="selector_label">'+mask.label+'</span></label>');
@@ -3325,7 +3332,10 @@ $(".options").click(function(e) {
 						$("#dialog-options #masks #corporate").append(node);
 					}
 
-					$("#dialog-options input[name='mask']").filter("[value='"+response.active+"']").attr("checked", true).trigger("change");
+					$("#dialog-options input[name='mask']").filter("[value='"+response.masks[response.active].mask+"']").attr("checked", true).trigger("change");
+
+					// toggle mask admin icon
+					response.masks[response.active].admin ? $("#admin").removeClass("disabled") : $("#admin").addClass("disabled");
 				}
 			});
 
@@ -3503,7 +3513,7 @@ $(".options").click(function(e) {
 								for (var x in response.results) {
 									var mask = response.results[x];
 									var node = $(''
-										+ '<input type="radio" name="mask" id="mask'+mask.mask+'" value="'+mask.mask+'" class="selector" data-owner="false" />'
+										+ '<input type="radio" name="mask" id="mask'+mask.mask+'" value="'+mask.mask+'" class="selector" data-owner="false" data-admin="'+mask.admin+'" />'
 										+ '<label for="mask'+mask.mask+'" style="width: 100%; margin-left: -5px;">'
 										+ '	<img src="'+mask.img+'" />'
 										+ '	<span class="selector_label">'+mask.label+'</span>'
@@ -3654,7 +3664,7 @@ $(".options").click(function(e) {
 										for (var x in response.masks) {
 											var mask = response.masks[x];
 											var node = $(''
-												+ '<input type="radio" name="mask" id="mask'+x+'" value="'+mask.mask+'" class="selector" data-owner="'+mask.owner+'" />'
+												+ '<input type="radio" name="mask" id="mask'+x+'" value="'+mask.mask+'" class="selector" data-owner="'+mask.owner+'" data-admin="'+mask.admin+'" />'
 												+ '<label for="mask'+x+'"><img src="'+mask.img+'" />'
 												+  (mask.optional ? '<i class="closeIcon" onclick="return false;" data-icon="red-giant"><i data-icon="times"></i></i>' : '')
 												+ '<span class="selector_label">'+mask.label+'</span></label>');
@@ -3674,7 +3684,10 @@ $(".options").click(function(e) {
 											$("#dialog-options #masks #corporate").append(node);
 										}
 
-										$("#dialog-options input[name='mask']").filter("[value='"+response.active+"']").attr("checked", true).trigger("change");
+										$("#dialog-options input[name='mask']").filter("[value='"+response.masks[response.active].mask+"']").attr("checked", true).trigger("change");
+
+										// toggle mask admin icon
+										response.masks[response.active].admin ? $("#admin").removeClass("disabled") : $("#admin").addClass("disabled");
 									}
 								});
 

@@ -21,6 +21,7 @@ header('Content-Type: text/html; charset=UTF-8');
 setcookie('loadedFromBrowserCache','false');
 
 require('db.inc.php');
+require('lib.inc.php');
 
 //Verify correct system otherwise goto default...
 $query = "SELECT solarSystemName, systems.solarSystemID, regionName, regions.regionID FROM $eve_dump.mapSolarSystems systems LEFT JOIN $eve_dump.mapRegions regions ON regions.regionID = systems.regionID WHERE solarSystemName = :system";
@@ -132,7 +133,7 @@ if ($row = $stmt->fetchObject()) {
 			<h3> | </h3>
 
 			<i id="settings" style="font-size: 1.7em;" data-icon="settings" class="options" data-tooltip="Settings"></i>
-			<?= $_SESSION['admin'] ? '<i id="admin" style="font-size: 1.7em;" data-icon="user" data-tooltip="Mask Admin"></i>' : '' ?>
+			<i id="admin" style="font-size: 1.7em;" data-icon="user" data-tooltip="Mask Admin" class="<?= checkAdmin($_SESSION['mask']) || checkOwner($_SESSION['mask']) ? '' : 'disabled' ?>"></i>
 			<i id="layout" style="font-size: 1.7em;" data-icon="layout" data-tooltip="Customize layout"></i>
 		</span>
 	</div>
@@ -485,14 +486,14 @@ if ($row = $stmt->fetchObject()) {
 
 	<div id="dialog-admin" title="Mask Admin" class="hidden">
 		<div style="height: 100%;">
-			<div class="menu" style="width: 100px; height: 100%; float: left;">
+			<div class="menu">
 				<!-- menu -->
 				<ul>
 					<li data-window="default" class="active"><a href="#">Home</a></li>
 					<li data-window="active-users"><a href="#">Active Users</a></li>
 				</ul>
 			</div>
-			<div class="window" style="height: 100%; margin-left: 100px; overflow: auto;">
+			<div class="window">
 				<!-- window -->
 				<div data-window="default">
 					<h1>Welcome to the new Mask Admin feature!</h1>
@@ -525,18 +526,16 @@ if ($row = $stmt->fetchObject()) {
 							</tr>
 						</thead>
 						<tbody>
+							<tr class="hidden">
+								<td class="account"></td>
+								<td class="character"></td>
+								<td class="system"></td>
+								<td class="shipName"></td>
+								<td class="shipType"></td>
+								<td class="station"></td>
+								<td class="login"></td>
+							</tr>
 						</tbody>
-					</table>
-					<table>
-						<tr data-id="" class="hidden">
-							<td class="account"></td>
-							<td class="character"></td>
-							<td class="system"></td>
-							<td class="shipName"></td>
-							<td class="shipType"></td>
-							<td class="station"></td>
-							<td class="login"></td>
-						</tr>
 					</table>
 				</div>
 			</div>
