@@ -175,7 +175,6 @@ var guidance = (function (undefined) {
 	}
 
 	Guidance.prototype.findShortestPath = function (start, end) {
-		//var time = window.performance.now();
 		var result;
 
 		if (Object.prototype.toString.call(start) === '[object Array]') {
@@ -186,7 +185,6 @@ var guidance = (function (undefined) {
 			result = findShortestPath(this.map, toArray(arguments));
 		}
 
-		//console.log(window.performance.now() - time);
 		return result;
 	}
 
@@ -3108,6 +3106,66 @@ $("#admin").click(function(e) {
 	e.preventDefault();
 
 	if (!$("#dialog-admin").hasClass("ui-dialog-content")) {
+		var refreshTimer = null;
+
+		function refreshActiveUsers() {
+			$("div.ui-dialog[aria-describedby='dialog-admin'] .ui-dialog-traypane").html("Total: " + $("#dialog-admin [data-window='active-users'] #userTable tr[data-id]").length);
+
+			$.ajax({
+				url: "admin.php",
+				type: "POST",
+				data: {mode: "active-users"},
+				dataType: "JSON"
+			}).success(function(data) {
+				if (data && data.results) {
+					var rows = data.results;
+					for (var i = 0, l = rows.length; i < l; i++) {
+						var $row = $("#dialog-admin [data-window='active-users'] #userTable tbody tr[data-id='"+ rows[i].id +"']");
+						if ($row.length) {
+							$row.find(".account").html(rows[i].accountCharacterName);
+							$row.find(".character").html(rows[i].characterName || "&nbsp;");
+							$row.find(".system").html(rows[i].systemName || "&nbsp;");
+							$row.find(".shipName").html(rows[i].shipName || "&nbsp;");
+							$row.find(".shipType").html(rows[i].shipTypeName || "&nbsp;");
+							$row.find(".station").html(rows[i].stationName || "&nbsp;");
+							$row.find(".login").html(rows[i].lastLogin);
+						} else {
+							$row = $("#dialog-admin [data-window='active-users'] tr.hidden").clone();
+							$row.attr("data-id", rows[i].id);
+							$row.find(".account").html(rows[i].accountCharacterName);
+							$row.find(".character").html(rows[i].characterName || "&nbsp;");
+							$row.find(".system").html(rows[i].systemName || "&nbsp;");
+							$row.find(".shipName").html(rows[i].shipName || "&nbsp;");
+							$row.find(".shipType").html(rows[i].shipTypeName || "&nbsp;");
+							$row.find(".station").html(rows[i].stationName || "&nbsp;");
+							$row.find(".login").html(rows[i].lastLogin);
+							$row.removeClass("hidden");
+							$("#dialog-admin [data-window='active-users'] #userTable tbody").append($row);
+						}
+					}
+
+					var ids = $.map(data.results, function(user) { return user.id; });
+					$("#dialog-admin [data-window='active-users'] #userTable tr[data-id]").each(function() {
+						if ($.inArray($(this).data("id").toString(), ids) == -1) {
+							$(this).remove();
+						}
+					});
+
+					$("#dialog-admin [data-window='active-users'] #userTable").trigger("update", [true]);
+				} else {
+					$("#dialog-admin [data-window='active-users'] #userTable tr[data-id]").remove();
+				}
+
+				//var time = window.performance.now();
+				//console.log(window.performance.now() - time);
+				$("div.ui-dialog[aria-describedby='dialog-admin'] .ui-dialog-traypane").html("Total: " + $("#dialog-admin [data-window='active-users'] #userTable tr[data-id]").length);
+			});
+
+			if ($("#dialog-admin").dialog("isOpen") && $("#dialog-admin .menu .active").attr("data-window") == "active-users") {
+				refreshTimer = setTimeout(refreshActiveUsers, 3000);
+			}
+		}
+
 		$("#dialog-admin").dialog({
 			autoOpen: true,
 			modal: true,
@@ -3123,53 +3181,14 @@ $("#admin").click(function(e) {
 				$("#dialog-admin").on("click", ".menu li", function(e) {
 					e.preventDefault();
 					$menuItem = $(this);
+					clearTimeout(refreshTimer);
 
 					$("#dialog-admin .menu .active").removeClass("active");
 					$menuItem.addClass("active");
+					$("div.ui-dialog[aria-describedby='dialog-admin'] .ui-dialog-traypane").html("");
 
 					$("#dialog-admin .window [data-window]").hide();
 					$("#dialog-admin .window [data-window='"+ $menuItem.data("window") +"']").show();
-
-					function refreshActiveUsers() {
-						$.ajax({
-							url: "admin.php",
-							type: "POST",
-							data: {mode: "active-users"},
-							dataType: "JSON"
-						}).success(function(data) {
-							if (data.results) {
-								var rows = data.results;
-								for (var i = 0, l = rows.length; i < l; i++) {
-									var $row = $("#dialog-admin [data-window='active-users'] #userTable tbody tr[data-id='"+ rows[i].userID +"']");
-									if ($row.length) {
-										$row.find(".account").html(rows[i].accountCharacterName);
-										$row.find(".character").html(rows[i].characterName);
-										$row.find(".system").html(rows[i].systemName);
-										$row.find(".shipName").html(rows[i].shipName);
-										$row.find(".shipType").html(rows[i].shipTypeName);
-										$row.find(".station").html(rows[i].stationName);
-									} else {
-										$row = $("#dialog-admin [data-window='active-users'] tr.hidden").clone();
-										$row.attr("data-id", rows[i].userID);
-										$row.find(".account").html(rows[i].accountCharacterName);
-										$row.find(".character").html(rows[i].characterName);
-										$row.find(".system").html(rows[i].systemName);
-										$row.find(".shipName").html(rows[i].shipName);
-										$row.find(".shipType").html(rows[i].shipTypeName);
-										$row.find(".station").html(rows[i].stationName);
-										$row.removeClass("hidden");
-										$("#dialog-admin [data-window='active-users'] #userTable tbody").append($row);
-									}
-								}
-
-								$("#dialog-admin [data-window='active-users'] #userTable").trigger("update", [true]);
-							}
-						});
-
-						if ($("#dialog-admin").dialog("isOpen") && $("#dialog-admin .menu .active").attr("data-window") == "active-users") {
-							setTimeout(refreshActiveUsers, 3000);
-						}
-					}
 
 					switch ($menuItem.data("window")) {
 						case "active-users":
@@ -3183,6 +3202,21 @@ $("#admin").click(function(e) {
 					widgets: ['saveSort'],
 					sortList: [[0,0]]
 				});
+
+				// dialog bottom tray
+				$($(this)[0].parentElement).find(".ui-dialog-buttonpane").append("<div class='ui-dialog-traypane'></div>");
+			},
+			open: function() {
+				$menuItem = $("#dialog-admin .menu li.active");
+
+				switch ($menuItem.data("window")) {
+					case "active-users":
+						refreshActiveUsers();
+						break;
+				}
+			},
+			close: function() {
+				clearTimeout(refreshTimer);
 			}
 		});
 	} else if (!$("#dialog-admin").dialog("isOpen")) {
