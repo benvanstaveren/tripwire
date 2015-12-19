@@ -19,7 +19,7 @@ var FluidNav = {
 			}
 		});
 
-		this.goTo(window.location.hash.substring(1) != "" ? window.location.hash.substring(1) : "home");
+		FluidNav.goTo(window.location.hash.substring() != "" ? window.location.hash.split("#")[1] : "home", window.location.hash.substring() != "" ? window.location.hash.split("#")[2] : "");
 	},
 	goTo: function(page, section) {
 		if (page != $(".page.current").attr("id")) {
@@ -45,8 +45,15 @@ var FluidNav = {
 			$(".page.current .focus").focus().select();
 		}
 
-		if (section)
-			$(".tabs ul.nav li a."+section).click();
+		if (section) {
+            var tab_container = $(".tabs ul.nav li a."+section).parent().parent().parent();
+    		$(".tabs ul.nav li a."+section).parent().parent().find("li").removeClass("current");
+    		$(".tabs ul.nav li a."+section).parent().addClass("current");
+    		$(".pane", tab_container).hide();
+    		$("#"+$(".tabs ul.nav li a."+section).attr("class")+".pane", tab_container).show();
+    		tab_container.find(".focus").focus().select();
+        }
+			//$(".tabs ul.nav li a."+section).click();
 	},
 	centerArrow: function(nav_item, animate) {
 		var left_margin = (nav_item.parent().position().left + nav_item.parent().width()) + 24 - (nav_item.parent().width() / 2);
@@ -78,7 +85,7 @@ $(window).resize(function() {
 $(document).ready(function() {
 
 	// Initialize navigation
-	FluidNav.init();
+	setTimeout(FluidNav.init, 10);
 
 	// Home slider
 	$("#slider").echoSlider({
