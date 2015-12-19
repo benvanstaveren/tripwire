@@ -529,50 +529,48 @@ to { -o-transform: rotate(360deg); }
 	letter-spacing: 1px;
 }
 
-#sigTable .tablesorter-header {
+.tablesorter .tablesorter-header {
 	cursor: pointer;
 	vertical-align: middle;
 	font-size: 10px;
 }
 
-#sigTable .tablesorter-header i:before, #sigTable .sortable i:before {
+.tablesorter .tablesorter-header:focus {
+	outline: none;
+}
+
+.tablesorter .tablesorter-header i:before, .tablesorter .sortable i:before {
 	content: "\f0dc";
 	vertical-align: bottom;
 	padding: 1px 2px;
 	float: right;
 }
 
-#sigTable .headerSortUp,
-#sigTable .tablesorter-headerSortUp,
-#sigTable .tablesorter-headerAsc {
+.tablesorter .headerSortUp,
+.tablesorter .tablesorter-headerSortUp,
+.tablesorter .tablesorter-headerAsc {
 	color: #eee;
 }
 
-#sigTable .headerSortUp i:before,
-#sigTable .tablesorter-headerSortUp i:before,
-#sigTable .tablesorter-headerAsc i:before {
+.tablesorter .headerSortUp i:before,
+.tablesorter .tablesorter-headerSortUp i:before,
+.tablesorter .tablesorter-headerAsc i:before {
 	content: "\f0de";
-	color: #eee;
-	padding: 1px 2px;
-	float: right;
 }
 
-#sigTable .headerSortDown,
-#sigTable .tablesorter-headerSortDown,
-#sigTable .tablesorter-headerDesc {
+.tablesorter .headerSortDown,
+.tablesorter .tablesorter-headerSortDown,
+.tablesorter .tablesorter-headerDesc {
 	color: #eee;
 }
 
-#sigTable .headerSortDown i:before,
-#sigTable .tablesorter-headerSortDown i:before,
-#sigTable .tablesorter-headerDesc i:before {
+.tablesorter .headerSortDown i:before,
+.tablesorter .tablesorter-headerSortDown i:before,
+.tablesorter .tablesorter-headerDesc i:before {
 	content: "\f0dd";
-	color: #eee;
-	padding: 1px 2px;
-	float: right;
 }
 
-#sigTable thead .sorter-false {
+.tablesorter thead .sorter-false {
 	cursor: default;
 }
 
@@ -1253,6 +1251,10 @@ div.overlay {
 .ui-accordion .ui-accordion-content {
 	padding: 0.5em;
 	background: none;
+}
+
+.ui-accordion .ui-accordion-header:focus {
+	outline: none;
 }
 
 .optionsTable {
@@ -2087,4 +2089,64 @@ td.google-visualization-orgchart-linenode[data-signatureid] {
 	box-shadow: 0px 0px 25px 5px black;
 	-webkit-box-shadow: 0px 0px 25px 5px black;
 	cursor: pointer;
+}
+
+#dialog-admin .menu {
+	width: 100px;
+	height: 100%;
+	float: left;
+}
+
+#dialog-admin .window {
+	height: 100%;
+	margin-left: 100px;
+	overflow: auto;
+}
+
+#dialog-admin .menu li {
+	list-style-type: none;
+}
+
+#dialog-admin .menu li a {
+	color: #666;
+}
+
+#dialog-admin .menu li a:focus {
+	outline: none;
+}
+
+#dialog-admin .menu li.active a {
+	color: orange;
+}
+
+#dialog-admin #userTable th {
+	text-align: left;
+	border-bottom: 1px solid #333;
+}
+
+#dialog-admin #userTable tr:nth-child(even) td {
+	border-bottom: 1px solid #aaa;
+}
+
+#dialog-admin .tablesorter .tablesorter-header i:before, #dialog-admin .tablesorter .sortable i:before {
+	float: none;
+}
+
+#dialog-admin .tablesorter .headerSortUp,
+#dialog-admin .tablesorter .tablesorter-headerSortUp,
+#dialog-admin .tablesorter .tablesorter-headerAsc {
+	color: orange;
+}
+
+#dialog-admin .tablesorter .headerSortDown,
+#dialog-admin .tablesorter .tablesorter-headerSortDown,
+#dialog-admin .tablesorter .tablesorter-headerDesc {
+	color: orange;
+}
+
+div.ui-dialog[aria-describedby='dialog-admin'] .ui-dialog-traypane {
+	margin-left: 110px;
+	margin-top: 8px;
+	font-size: 16px;
+	color: #333;
 }
