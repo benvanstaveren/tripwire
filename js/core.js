@@ -4659,7 +4659,7 @@ CKEDITOR.on("instanceLoaded", function(cke) {
 				$(cke.editor.element.$).closest(".comment").find(".commentCancel").click();
 				return false;
 			} else if (e.data.domEvent.$.altKey && e.data.domEvent.$.keyCode == 83) {
-				// ctrl+s saves
+				// alt+s saves
 				$(cke.editor.element.$).closest(".comment").find(".commentSave").click();
 				return false;
 			}
