@@ -4531,11 +4531,13 @@ $("body").on("click", ".commentEdit", function(e) {
 
 $("body").on("click", ".commentSave, .commentCancel", function(e) {
 	e.preventDefault();
-	var $comment = $(this).closest(".comment");
+	var $this = $(this);
+	if ($this.attr("disabled")) return false;
 
-	$comment.find(".commentCancel").unbind("click");
+	var $comment = $this.closest(".comment");
+	$this.attr("disabled", "true");
 
-	if ($(this).hasClass("commentSave")) {
+	if ($this.hasClass("commentSave")) {
 		var data = {"mode": "save", "commentID": $comment.data("id"), "systemID": viewingSystemID, "comment": CKEDITOR.instances[$comment.find(".commentBody").attr("id")].getData()};
 
 		$.ajax({
@@ -4553,12 +4555,14 @@ $("body").on("click", ".commentSave, .commentCancel", function(e) {
 				$comment.attr("data-id", data.comment.id);
 				$comment.find(".commentToolbar").show();
 				$comment.find(".commentFooter").hide();
+				$this.removeAttr("disabled");
 			}
 		});
 	} else {
 		CKEDITOR.instances[$comment.find(".commentBody").attr("id")].destroy(true);
 		$comment.find(".commentToolbar").show();
 		$comment.find(".commentFooter").hide();
+		$this.removeAttr("disabled");
 	}
 
 	$comment.find(".commentStatus").html("");
@@ -4683,6 +4687,8 @@ CKEDITOR.on("instanceReady", function(cke) {
 	var parents = node.getParents(true);
 
 	node = parents[parents.length - 2].getFirst();
+
+	if (!node) return false;
 
 	while (true) {
 		var x = node.getNext();
