@@ -185,7 +185,7 @@ if ($mode == 'user') {
 	}
 }
 
-if ($output['field'] == 'api') {
+if (isset($output['field']) && isset($API) && $output['field'] == 'api') {
 	$output['error'] .= ' Cached Until: ' . $API->cachedUntil .' EVE';
 }
 
