@@ -4560,9 +4560,14 @@ $("body").on("click", ".commentSave, .commentCancel", function(e) {
 		});
 	} else {
 		CKEDITOR.instances[$comment.find(".commentBody").attr("id")].destroy(true);
-		$comment.find(".commentToolbar").show();
-		$comment.find(".commentFooter").hide();
-		$this.removeAttr("disabled");
+
+		if (!$comment.attr("data-id")) {
+			$comment.remove();
+		} else {
+			$comment.find(".commentToolbar").show();
+			$comment.find(".commentFooter").hide();
+			$this.removeAttr("disabled");
+		}
 	}
 
 	$comment.find(".commentStatus").html("");
@@ -4626,13 +4631,6 @@ $("body").on("click", "#add-comment", function(e) {
 
 	$comment.find(".commentBody").attr("id", "comment" + commentID);
 	$comment.removeClass("hidden").find(".commentEdit").click();
-
-	$comment.find(".commentCancel").on("click", function(e) {
-		e.preventDefault();
-
-		CKEDITOR.instances[$comment.find(".commentBody").attr("id")].destroy(true);
-		$comment.remove();
-	});
 });
 
 $("body").on("click", ".commentSticky", function(e) {
@@ -4659,9 +4657,11 @@ CKEDITOR.on("instanceLoaded", function(cke) {
 			if (e.data.keyCode == 27) {
 				// escape key cancels
 				$(cke.editor.element.$).closest(".comment").find(".commentCancel").click();
-			} else if (e.data.keyCode == 13) {
-				// enter key saves
+				return false;
+			} else if (e.data.domEvent.$.altKey && e.data.domEvent.$.keyCode == 83) {
+				// ctrl+s saves
 				$(cke.editor.element.$).closest(".comment").find(".commentSave").click();
+				return false;
 			}
 		});
 	});
