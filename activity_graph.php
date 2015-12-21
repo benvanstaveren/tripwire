@@ -43,14 +43,15 @@ $output['cols'][] = Array('type' => 'number');
 $output['cols'][] = Array('type' => 'number');
 $output['cols'][] = Array('type' => 'number');
 $output['cols'][] = Array('type' => 'number');
-$output['cols'][] = Array('type' => 'string');
-$output['cols'][] = Array('type' => 'string');
+#$output['cols'][] = Array('type' => 'string');
+#$output['cols'][] = Array('type' => 'string');
 
 $now = time();
 $row = $stmt->fetchObject();
 for ($x = 0; $x <= $length; $x++) {
 	$data = null;
 
+/*
 	if ($row && isset($annotations[$row->time])) {
 		$data[5] = Array('v' => $annotations[$row->time]['label']);
 		$data[6] = Array('v' => $annotations[$row->time]['text']);
@@ -58,6 +59,7 @@ for ($x = 0; $x <= $length; $x++) {
 		$data[5] = Array('v' => null);
 		$data[6] = Array('v' => null);
 	}
+*/
 
 	if ($row && date('m/d/Y H', strtotime($row->time)) == date('m/d/Y H', $now - (3600 * $x))) {
 		$data[0] = Array('v' => $x);
