@@ -608,6 +608,18 @@ if ($row = $stmt->fetchObject()) {
 						</td>
 					</tr>
 					<tr>
+						<th>Signature paste default life:</th>
+						<td>
+							<select id="pasteLife">
+								<option value="24">24 Hours</option>
+								<option value="48">48 Hours</option>
+								<option value="72">72 Hours</option>
+								<option value="168">7 Days</option>
+								<option value="672">28 Days</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
 						<th>Background Image:</th>
 						<td>
 							<input type="text" id="background-image" maxlength="200" />

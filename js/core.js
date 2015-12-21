@@ -426,6 +426,7 @@ var options = new function() {
 	this.grid = {igb: {}, oog: {}};
 	this.masks = {active: init.session.corporationID + ".2"};
 	this.chain = {typeFormat: null, classFormat: null, gridlines: true, active: 0, tabs: []};
+	this.signatures = {pasteLife: 72};
 	this.buttons = {follow: false, chainWidget: {viewing: false, favorites: false}, signaturesWidget: {autoMapper: false}};
 
 	// Saves options in both cookie and database
@@ -2179,7 +2180,7 @@ var tripwire = new function() {
 							connectionName: "",
 							type: type || "???",
 							name: sigName,
-							life: 72
+							life: options.signatures.pasteLife
 						});
 					}
 				}
@@ -3251,6 +3252,8 @@ $(".options").click(function(e) {
 
 				options.chain.gridlines = JSON.parse($("#dialog-options input[name=gridlines]:checked").val());
 
+				options.signatures.pasteLife = $("#dialog-options #pasteLife").val();
+
 				options.background = $("#dialog-options #background-image").val();
 
 				options.masks.active = $("#dialog-options input[name='mask']:checked").val();
@@ -3339,8 +3342,7 @@ $(".options").click(function(e) {
 				}
 			});
 
-			$("#dialog-options #home").val(options.chain.home);
-			$("#dialog-options #homeName").val(options.chain.homeName);
+			$("#dialog-options #pasteLife").val(options.signatures.pasteLife);
 			$("#dialog-options #typeFormat").val(options.chain.typeFormat);
 			$("#dialog-options #classFormat").val(options.chain.classFormat);
 			$("#dialog-options input[name='gridlines'][value='"+options.chain.gridlines+"']").prop("checked", true);
