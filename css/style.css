@@ -463,10 +463,6 @@ to { -o-transform: rotate(360deg); }
 	cursor: default;
 }
 
-#activityGraph {
-	padding-top: 15px;
-}
-
 #sigAddForm th, #sigEditForm th {
 	text-align: right;
 }

@@ -787,6 +787,8 @@ $("#logout").click(function() {
 });
 
 //console.log("stint: "+ (window.performance.now() - startTime));
+//google.load('visualization', "1", {packages: ['corechart']});
+
 var activity = new function() {
 	this.graph;
 	this.options;
@@ -798,11 +800,9 @@ var activity = new function() {
 		{id: "podkills", label: "Pod Kills", role: "data", type: "number", sourceColumn: 2, column: 2, title: "Pod Kills"},
 		{id: "shipkills", label: "Ship Kills", role: "data", type: "number", sourceColumn: 3, column: 3, title: "Ship Kills"},
 		{id: "npckills", label: "NPC Kills", role: "data", type: "number", sourceColumn: 4, column: 4, title: "NPC Kills"},
+		{id: "annotationLabel", label: "Test", role: "annotation", type: "string", sourceColumn: 5, title: "Test"},
+		{id: "annotationText", label: "Test", role: "annotationText", type: "string", sourceColumn: 6, title: "Test"}
 	];
-
-	function tooltip(d, r) {
-		return "hi\njumps";
-	};
 
 	this.getData = function(span, cache) {
 		var span = typeof(span) !== "undefined" ? span : this.span;
@@ -831,17 +831,19 @@ var activity = new function() {
 			var c = selections[0].column;
 
 			if (activity.columns[c].sourceColumn) {
-				activity.columns[c].calc = function() { return null };
+				//activity.columns[c].calc = function() { return null };
 				activity.columns[c].label = activity.columns[c].title + " (off)";
 				delete activity.columns[c].sourceColumn;
 			} else {
 				activity.columns[c].sourceColumn = activity.columns[c].column;
 				activity.columns[c].label = activity.columns[c].title;
-				delete activity.columns[c].calc;
+				//delete activity.columns[c].calc;
 			}
 
 			activity.view.setColumns(activity.columns);
+			activity.options.animation.duration = 0;
 			activity.graph.draw(activity.view, activity.options);
+			activity.options.animation.duration = 500;
 		}
 	}
 
@@ -859,8 +861,7 @@ var activity = new function() {
 			legend: {position: "in", textStyle: {color: "#CCC", fontName: "Verdana", fontSize: 8.5}},
 			animation: {duration: 500, easing: "inAndout"},
 			tooltip: {showColorCode: true},
-			annotation: {"downtime": {style: "line"}},
-			annotations: {textStyle: {fontSize: 12, color: "red"}},
+			annotations: {style: "line", textStyle: {fontSize: 12, color: "#ccc"}, domain: 0},
 			focusTarget: "category"
 		}
 
@@ -894,8 +895,8 @@ var activity = new function() {
 		this.graph.draw(this.getData(this.span, cache), this.options);
 	}
 
-	//google.setOnLoadCallback(this.init());
-	this.init();
+	google.setOnLoadCallback(this.init());
+	//this.init();
 }
 
 var chain = new function() {
