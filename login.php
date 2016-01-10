@@ -29,6 +29,7 @@ function login_history($ip, $username, $method, $result) {
 
 $mode = 		isset($_REQUEST['mode'])?$_REQUEST['mode']:null;
 $selected = 	isset($_REQUEST['selected'])?$_REQUEST['selected']:null;
+$code = 		isset($_REQUEST['code'])?$_REQUEST['code']:null;
 
 if ($mode == 'login' || !$mode) {
 	$username 	= isset($_REQUEST['username'])?$_REQUEST['username']:(isset($_COOKIE['username'])?$_COOKIE['username']:null);
@@ -202,6 +203,58 @@ if ($mode == 'login' || !$mode) {
 				}
 			}
 		}
+	}
+} else if ($mode == 'sso') {
+	$method		= 'sso';
+	$ip 		= $_SERVER['REMOTE_ADDR'];
+
+	require('crest.class.php');
+	$CREST = new CREST();
+
+	if ($code) {
+		$characterID = $CREST->authenticate($code);
+		if ($characterID) {
+			$query = 'SELECT id, username, password, accounts.ban, characterID, characterName, corporationID, corporationName, admin, super, options FROM accounts LEFT JOIN preferences ON id = preferences.userID LEFT JOIN characters ON id = characters.userID WHERE characterID = :characterID';
+			$stmt = $mysql->prepare($query);
+			$stmt->bindValue(':characterID', $characterID, PDO::PARAM_INT);
+			$stmt->execute();
+
+			if ($account = $stmt->fetchObject()) {
+				require('options.class.php');
+				$options = options::getOptions($mysql, $account->id);
+
+				$_SESSION['userID'] = $account->id;
+				$_SESSION['username'] = $account->username;
+				$_SESSION['ip'] = $ip;
+				$_SESSION['mask'] = @$options->masks->active ? $options->masks->active : $account->corporationID . '.2';
+				$_SESSION['characterID'] = $account->characterID;
+				$_SESSION['characterName'] = $account->characterName;
+				$_SESSION['corporationID'] = $account->corporationID;
+				$_SESSION['corporationName'] = $account->corporationName;
+				$_SESSION['admin'] = $account->admin;
+				$_SESSION['super'] = $account->super;
+				$_SESSION['options'] = $options;
+
+				// Log the attempt
+				login_history($ip, NULL, $method, 'success');
+
+				$query = 'INSERT INTO userStats (userID, loginCount) VALUES (:userID, 1) ON DUPLICATE KEY UPDATE lastLogin = NOW(), loginCount = loginCount + 1';
+				$stmt = $mysql->prepare($query);
+				$stmt->bindValue(':userID', $account->id, PDO::PARAM_INT);
+				$stmt->execute();
+
+				header('Location: .?system=');
+				exit();
+			}
+
+			header('Location: ./?error=account#login#sso');
+			exit();
+		}
+
+		header('Location: ./?error=unknown#login#sso');
+		exit();
+	} else {
+		$CREST->login();
 	}
 }
 

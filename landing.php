@@ -269,7 +269,13 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 						</form>
 					</div>
 					<div id="sso" class="pane">
-						<center><h1>Coming soon...</h1></center>
+						<center>
+							<p>This login method requires that you first create a Tripwire account via <a href="#register#user">User Registration</a>.</p>
+							<br/>
+							<?= isset($_REQUEST['error']) && $_REQUEST['error'] == 'account' ? '<p class="error">No Tripwire account for that character</p><br/>' : '' ?>
+							<?= isset($_REQUEST['error']) && $_REQUEST['error'] == 'unknown' ? '<p class="error">Unknown error processing EVE SSO login</p><br/>' : '' ?>
+							<a href="login.php?mode=sso"><img src="//<?= $server ?>/images/landing/eve_sso.png"/></a>
+						</center>
 					</div>
 				</div>
 <?php } ?>
