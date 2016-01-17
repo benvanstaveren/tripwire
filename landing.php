@@ -7,7 +7,7 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 <html lang="en">
 <head>
 	<title><?= $server == 'static.eve-apps.com' ? 'Tripwire' : 'Galileo' ?></title>
-	
+
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	<meta name="description" content="Tripwire is a wormhole mapping tool built for use with EVE Online. It fully supports the EVE in-game browser and the latest Chrome, Firefox and Internet Exporer. Using the latest in internet security standards it is the most secure tool in New Eden." />
@@ -37,7 +37,7 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 <body>
 	<!-- Start Wrapper -->
 	<div id="page_wrapper">
-		
+
 	<!-- Start Header -->
 	<header>
 		<div class="container">
@@ -57,7 +57,7 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 				</ul>
 			</aside>
 			<!-- End Social Icons -->
-			
+
 			<!-- Start Navigation -->
 			<nav>
 				<ul>
@@ -76,20 +76,20 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 		</div>
 	</header>
 	<!-- End Header -->
-	
+
 	<section class="container">
-		
+
 		<!-- Start App Info -->
 		<div id="app_info">
 			<!-- Start Logo -->
-			
+
 			<h1 style="font-size: 4.3em;"><img src="//<?= $server ?>/images/landing/tripwire-logo.png" alt="Tripwire" style="vertical-align: text-top;" /> Tripwire</h1>
 			<!-- End Logo -->
 			<span class="tagline">The greatest wormhole mapper ever.</span>
 			<p>
 				Tripwire is a wormhole mapping tool built for use with <a href="https://www.eveonline.com" target="_blank">EVE Online</a>. It fully supports the EVE in-game browser and the latest Chrome, Firefox and Internet Exporer. Using the latest in internet security standards it is the most secure tool in New Eden.
 			</p>
-			
+
 			<div class="buttons">
 				<a href="#register#corp" class="large_button" id="corp">
 					<span class="icon-corp"></span>
@@ -100,10 +100,12 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 					<em>Register now as</em> User
 				</a>
 			</div>
-			
-			<div class="price left_align"> <!-- Alignments options: right_align, left_align, centered -->
+
+		<!--
+			<div class="price left_align">
 				<p>FREE for a limited time!</p>
 			</div>
+		-->
 
 <?php if (!isset($_SESSION['userID'])) { ?>
 			<h1>Have an account?<br/><a href="#login#reg">Log into Tripwire now!</a></h1>
@@ -111,12 +113,12 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 			<h1>You're logged in...<br/><a href="?system=">Go to Tripwire now!</a></h1>
 <?php } ?>
 		</div>
-		<!-- End App Info -->		
-		
+		<!-- End App Info -->
+
 		<!-- Start Pages -->
 		<div id="pages">
 			<div class="top_shadow"></div>
-			
+
 			<!-- Start Home -->
 			<div id="home" class="page">
 				<div id="slider">
@@ -267,7 +269,13 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 						</form>
 					</div>
 					<div id="sso" class="pane">
-						<center><h1>Coming soon...</h1></center>
+						<center>
+							<p>This login method requires that you first create a Tripwire account via <a href="#register#user">User Registration</a>.</p>
+							<br/>
+							<?= isset($_REQUEST['error']) && $_REQUEST['error'] == 'account' ? '<p class="error">No Tripwire account for that character</p><br/>' : '' ?>
+							<?= isset($_REQUEST['error']) && $_REQUEST['error'] == 'unknown' ? '<p class="error">Unknown error processing EVE SSO login</p><br/>' : '' ?>
+							<a href="login.php?mode=sso"><img src="//<?= $server ?>/images/landing/eve_sso.png"/></a>
+						</center>
 					</div>
 				</div>
 <?php } ?>
@@ -419,12 +427,12 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 				</div>
 			</div>
 			<!-- End Register -->
-			
+
 			<!-- Start Team -->
 			<div id="team" class="page">
-				
+
 				<h1>Team</h1>
-				
+
 				<div class="about_us content_box">
 					<div class="one_half">
 						<h2>About Us</h2>
@@ -435,7 +443,7 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 						<img src="//<?= $server ?>/images/landing/about-main.png" alt="" />
 					</div>
 				</div>
-				
+
 				<div class="team_members">
 					<div class="person one_half">
 						<img src="//<?= $server ?>/images/landing/daimian.jpg" alt="" />
@@ -465,15 +473,15 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 						</ul>
 					</div>
 				</div>
-				
+
 			</div>
 			<!-- End Team -->
-				
+
 			<!-- Start Features -->
 			<div id="features" class="page">
-				
+
 				<h1>Features</h1>
-				
+
 				<div class="feature_list content_box">
 					<div class="one_half">
 						<h2 class="icon chart">Clean Fast Pretty</h2>
@@ -505,10 +513,10 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 						<p>Help is just around the corner via the "Tripwire Public" EVE channel. Tutorials and FAQ are located on the <a href="http://forums.eve-apps.com" target="_blank">Tripwire Forums</a> including a way to instantly send a notice to a developer via the help section</p>
 					</div>
 				</div>
-				
+
 			</div>
-			<!-- End Features -->		
-			
+			<!-- End Features -->
+
 			<!-- Start Screenshots -->
 			<div id="screenshots" class="page">
 				<h1>Screenshots</h1>
@@ -522,7 +530,7 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 					<div class="one_third column_last">
 						<a href="//<?= $server ?>/images/landing/screenshots/ss3.jpg" class="fancybox" rel="group" title="Screenshot 3"><img src="//<?= $server ?>/images/landing/screenshots/ss3thumb.jpg" alt="" /></a>
 					</div>
-					
+
 					<div class="one_third">
 						<a href="//<?= $server ?>/images/landing/screenshots/ss4.jpg" class="fancybox" rel="group" title="Screenshot 4"><img src="//<?= $server ?>/images/landing/screenshots/ss4thumb.jpg" alt="" /></a>
 					</div>
@@ -532,7 +540,7 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 					<div class="one_third column_last">
 						<a href="" class="fancybox" rel="group" title="Screenshot 6"><img src="" alt="" /></a>
 					</div>
-					
+
 					<div class="one_third">
 						<a href="" class="fancybox" rel="group" title="Screenshot 7"><img src="" alt="" /></a>
 					</div>
@@ -545,7 +553,7 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 				</div>
 			</div>
 			<!-- End Screenshots -->
-						
+
 			<!-- Start Updates -->
 			<div id="updates" class="page">
 				<h1>Updates</h1>
@@ -710,14 +718,14 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 					This document was last updated on December 15, 2014
 				</p>
 			</div>
-			
+
 			<div class="bottom_shadow"></div>
 		</div>
 		<!-- End Pages -->
-		
+
 		<div class="clear"></div>
 	</section>
-	
+
 	<!-- Start Footer -->
 	<footer class="container">
 		<!--<p>Eon Studios &copy; 2014. All Rights Reserved.</p>-->
@@ -729,9 +737,20 @@ $server = $_SERVER['SERVER_NAME'] == 'tripwire.eve-apps.com' ? 'static.eve-apps.
 		</form>
 	</footer>
 	<!-- End Footer -->
-	
+
 	</div>
 	<!-- End Wrapper -->
+
+	<!-- Google Analytics -->
+	<script type="text/javascript">
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-48258312-1', 'auto');
+		ga('send', 'pageview');
+	</script>
 
 	<!-- Javascripts -->
 	<script type="text/javascript" src="//<?= $server ?>/js/landing/jquery-1.7.1.min.js"></script>

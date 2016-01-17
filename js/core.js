@@ -45,7 +45,7 @@ Object.time = function(obj) {
 	for (key in obj) {
 		dates.push(new Date(obj[key].time));
 	}
-	
+
 	return dates.length ? dates.sort()[dates.length -1].getTime() /1000 : 0;
 };
 
@@ -175,7 +175,6 @@ var guidance = (function (undefined) {
 	}
 
 	Guidance.prototype.findShortestPath = function (start, end) {
-		//var time = window.performance.now();
 		var result;
 
 		if (Object.prototype.toString.call(start) === '[object Array]') {
@@ -186,7 +185,6 @@ var guidance = (function (undefined) {
 			result = findShortestPath(this.map, toArray(arguments));
 		}
 
-		//console.log(window.performance.now() - time);
 		return result;
 	}
 
@@ -321,9 +319,9 @@ var sigFormat = function(input, type) {
 var sigClass = function(name, type) {
 	var id = $.map(tripwire.systems, function(system, id) { return system.name == name ? id : null })[0];
 	var system = {
-		"name": name, 
-		"class": id ? tripwire.systems[id].class : null, 
-		"security":  id ? tripwire.systems[id].security : null, 
+		"name": name,
+		"class": id ? tripwire.systems[id].class : null,
+		"security":  id ? tripwire.systems[id].security : null,
 		"type": type};
 	var systemType = null;
 
@@ -385,7 +383,7 @@ var setCookie = function(c_name, value, exdays) {
 	var exdate = new Date();
 	exdate.setDate(exdate.getDate() + exdays);
 	var c_value = escape(value) + ((exdays == null) ? "" : "; expires="+exdate.toUTCString());
-	
+
 	document.cookie = c_name + "=" + c_value + ";" + (document.location.protocol == "https:" ? "secure;" : "");
 }
 
@@ -415,7 +413,7 @@ $(document).on("dialogclose", ".ui-dialog", function (event, ui) {
 		$("#overlay").remove();
 	else if ($("#overlay"))
 		$("#overlay").css("z-index", $(this).css("z-index") - 2);
-	
+
 	//if ($(".ui-dialog:visible").length == 0 && options.buttons.follow && viewingSystemID != tripwire.client.EVE.systemID)
 	//	window.location = "?system="+tripwire.client.EVE.systemName;
 });
@@ -428,6 +426,7 @@ var options = new function() {
 	this.grid = {igb: {}, oog: {}};
 	this.masks = {active: init.session.corporationID + ".2"};
 	this.chain = {typeFormat: null, classFormat: null, gridlines: true, active: 0, tabs: []};
+	this.signatures = {pasteLife: 72};
 	this.buttons = {follow: false, chainWidget: {viewing: false, favorites: false}, signaturesWidget: {autoMapper: false}};
 
 	// Saves options in both cookie and database
@@ -525,7 +524,7 @@ var options = new function() {
 		for (var x in this.chain.tabs) {
 			if (this.chain.tabs[x]) {
 				var $tab = $("#chainTab .tab").clone();
-				
+
 				$tab.attr("id", x).find(".name").data("tab", this.chain.tabs[x].systemID).html(this.chain.tabs[x].name);
 				if (x == this.chain.active) { $tab.addClass("current"); }
 
@@ -735,7 +734,7 @@ $("#search").click(function(e) {
 
 	if ($(this).hasClass("active")) {
 		$(this).removeClass("active");
-		if (tripwire.client.EVE.systemName)
+		if (tripwire.client.EVE && tripwire.client.EVE.systemName)
 			$("#currentSpan").show();
 	} else {
 		$(this).addClass("active");
@@ -789,6 +788,7 @@ $("#logout").click(function() {
 });
 
 //console.log("stint: "+ (window.performance.now() - startTime));
+
 var activity = new function() {
 	this.graph;
 	this.options;
@@ -800,12 +800,10 @@ var activity = new function() {
 		{id: "podkills", label: "Pod Kills", role: "data", type: "number", sourceColumn: 2, column: 2, title: "Pod Kills"},
 		{id: "shipkills", label: "Ship Kills", role: "data", type: "number", sourceColumn: 3, column: 3, title: "Ship Kills"},
 		{id: "npckills", label: "NPC Kills", role: "data", type: "number", sourceColumn: 4, column: 4, title: "NPC Kills"},
+		//{id: "annotationLabel", label: "Test", role: "annotation", type: "string", sourceColumn: 5, title: "Test"},
+		//{id: "annotationText", label: "Test", role: "annotationText", type: "string", sourceColumn: 6, title: "Test"}
 	];
 
-	function tooltip(d, r) {
-		return "hi\njumps";
-	};
-	
 	this.getData = function(span, cache) {
 		var span = typeof(span) !== "undefined" ? span : this.span;
 		var cache = typeof(cache) !== "undefined" ? cache : true;
@@ -818,32 +816,34 @@ var activity = new function() {
 					async: false,
 					cache: cache
 				}).responseJSON;
-		
+
 		json.rows.reverse();
 
 		this.view = new google.visualization.DataView(new google.visualization.DataTable(json));
 		this.view.setColumns(this.columns);
 		return this.view;
 	};
-	
+
 	this.selectHandler = function() {
 		var selections = activity.graph.getSelection();
-		
+
 		if (selections[0] && selections[0].row == null) {
 			var c = selections[0].column;
 
 			if (activity.columns[c].sourceColumn) {
-				activity.columns[c].calc = function() { return null };
+				//activity.columns[c].calc = function() { return null };
 				activity.columns[c].label = activity.columns[c].title + " (off)";
 				delete activity.columns[c].sourceColumn;
 			} else {
 				activity.columns[c].sourceColumn = activity.columns[c].column;
 				activity.columns[c].label = activity.columns[c].title;
-				delete activity.columns[c].calc;
+				//delete activity.columns[c].calc;
 			}
 
 			activity.view.setColumns(activity.columns);
+			activity.options.animation.duration = 0;
 			activity.graph.draw(activity.view, activity.options);
+			activity.options.animation.duration = 500;
 		}
 	}
 
@@ -861,16 +861,15 @@ var activity = new function() {
 			legend: {position: "in", textStyle: {color: "#CCC", fontName: "Verdana", fontSize: 8.5}},
 			animation: {duration: 500, easing: "inAndout"},
 			tooltip: {showColorCode: true},
-			annotation: {"downtime": {style: "line"}},
-			annotations: {textStyle: {fontSize: 12, color: "red"}},
+			annotations: {style: "line", textStyle: {fontSize: 12, color: "#ccc"}, domain: 0},
 			focusTarget: "category"
 		}
-		
+
 		google.visualization.events.addListener(this.graph, "select", this.selectHandler);
-		
+
 		this.graph.draw(this.getData(this.span), this.options);
 	}
-	
+
 	this.time = function(span) {
 		switch(span) {
 			case 24:
@@ -883,26 +882,26 @@ var activity = new function() {
 				this.options.hAxis.showTextEvery = 24;
 				break;
 		}
-		
+
 		this.span = span;
 		this.graph.draw(this.getData(span), this.options);
 	}
-	
+
 	this.redraw = function() {
 		this.graph.draw(this.view, this.options);
 	}
-	
+
 	this.refresh = function(cache) {
 		this.graph.draw(this.getData(this.span, cache), this.options);
 	}
-	
-	//google.setOnLoadCallback(this.init());
-	this.init();
+
+	google.setOnLoadCallback(this.init());
+	//this.init();
 }
 
 var chain = new function() {
 	this.map, this.view, this.options, this.drawing, this.data = {};
-	
+
 	this.newView = function(json) {
 		this.view = new google.visualization.DataView(new google.visualization.DataTable(json));
 		return this.view;
@@ -966,13 +965,13 @@ var chain = new function() {
 	this.flares = function(data) {
 		/*	function for coloring chain map nodes via flares  */
 		//var data = typeof(data) !== "undefined" ? data : this.data.flares;
-		
+
 		// Remove all current node coloring instead of checking each one
 		$("#chainMap td.node").removeClass("redNode yellowNode greenNode");
 
 		// Remove all coloring from chain grid
 		$("#chainGrid tr").removeClass("red yellow green");
-		
+
 		// Loop through passed data and add classes by system
 		if (data) {
 			for (var x in data.flares) {
@@ -1019,11 +1018,11 @@ var chain = new function() {
 			// Get node # in this line
 			var nodeIndex = Math.ceil(($node[0].cellIndex + 1) / 2 - 1);
 			//console.log(nodeIndex)
-			
+
 			// applly to my top line
 			var $connector = $($node.parent().prev().children("td.google-visualization-orgchart-lineleft, td.google-visualization-orgchart-lineright")[nodeIndex]).addClass("left-"+mode+" right-"+mode);
 			//var $connector = $($node.parent().prev().find("td:not([colspan])")[nodeIndex]).addClass("left-"+mode+" right-"+mode).attr("data-signatureid", signatureID);
-			
+
 			// Find parent node
 			//var $parent = $("#chainMap [data-nodeid='"+parent+"']").parent();
 			var $parent = $("#chainMap #node"+parent).parent();
@@ -1043,7 +1042,7 @@ var chain = new function() {
 
 			// Get node # in this line
 			var parentIndex = Math.ceil(($parent[0].cellIndex + 1) / 2 - 1);
-			
+
 			// Compensate for non-parent nodes (slight performance hit ~10ms)
 			var newparentIndex = parentIndex;
 			for (var i = 0; i <= parentIndex; i++) {
@@ -1055,13 +1054,13 @@ var chain = new function() {
 						return false;
 					}
 				});
-				
+
 				if ($.map(data.map.rows, function(node) { return node.c[1].v == checkSystem ? node : null; }).length <= 0) {
 					newparentIndex--;
 				}
 			}
 			parentIndex = newparentIndex;
-			
+
 			// Apply to parent bottom line
 			var $connecte = $($node.parent().prev().prev().children("td.google-visualization-orgchart-lineleft, td.google-visualization-orgchart-lineright")[parentIndex]).addClass("left-"+mode+" right-"+mode);
 			//var $connecte = $($node.parent().prev().prev().find("td:not([colspan])")[parentIndex]).addClass("left-"+mode+" right-"+mode).attr("data-signatureid", signatureID);
@@ -1094,7 +1093,7 @@ var chain = new function() {
 					$(this).addClass("bottom-"+mode);
 				} else if (me || parent) {
 					var tempCol = 0, breaker = false, skip = false;
-					
+
 					$node.parent().prev().find("td").each(function(index) {
 						tempCol += this.colSpan;
 
@@ -1215,7 +1214,7 @@ var chain = new function() {
 
 			for (var x in chainData) {
 				var link = chainData[x];
-				
+
 				if ($.inArray(link.id, usedLinks) == -1) {
 					if (link.systemID == system[0]) {
 						var node = {};
@@ -1246,7 +1245,7 @@ var chain = new function() {
 						chainList.push([node.child.systemID, node.child.id, system[2]]);
 						usedLinks.push(node.id);
 						//usedLinks[system[2]].push(node.id);
-						
+
 						if ($("#show-viewing").hasClass("active") && tripwire.systems[node.child.systemID] && !tripwire.systems[viewingSystemID].class && !tripwire.systems[node.child.systemID].class) {
 							var jumps = guidance.findShortestPath(tripwire.map.shortest, [viewingSystemID - 30000000, node.child.systemID - 30000000]).length - 1;
 
@@ -1269,7 +1268,7 @@ var chain = new function() {
 							chainLinks.push(calcNode);
 							chainList.push([0, childID]);
 						}
-						
+
 						if ($("#show-favorite").hasClass("active") && tripwire.systems[node.child.systemID]) {
 							for (x in options.favorites) {
 								if (tripwire.systems[options.favorites[x]].regionID >= 11000000 || tripwire.systems[node.child.systemID].regionID >= 11000000)
@@ -1326,7 +1325,7 @@ var chain = new function() {
 						chainList.push([node.child.systemID, node.child.id, system[2]]);
 						usedLinks.push(node.id);
 						//usedLinks[system[2]].push(node.id);
-						
+
 						if ($("#show-viewing").hasClass("active") && tripwire.systems[node.child.systemID] && !tripwire.systems[viewingSystemID].class && !tripwire.systems[node.child.systemID].class) {
 							var jumps = guidance.findShortestPath(tripwire.map.shortest, [viewingSystemID - 30000000, node.child.systemID - 30000000]).length - 1;
 
@@ -1449,7 +1448,7 @@ var chain = new function() {
 			var chainData = map;
 			var chainLinks = [];
 			var usedLinks = [];
-			
+
 			if (systems == 0) {
 				var i = 0;
 				for (var x in map) {
@@ -1604,7 +1603,7 @@ var chain = new function() {
 			//else
 			//	connections.push(Array(child.v, parent.v, "", node.id));
 		}
-		
+
 		// Apply critical/destab line colors
 		connections.reverse(); // so we apply to outer systems first
 
@@ -1640,7 +1639,7 @@ var chain = new function() {
 			$.extend(data, this.nodes(data.map)); // 250ms -> <100ms
 			$.extend(this.data, data);
 			this.map.draw(this.newView(data.map), this.options); // 150ms
-		
+
 			if (options.chain.tabs[options.chain.active]) {
 				for (var x in options.chain.tabs[options.chain.active].collapsed) {
 					var node = $("#chainMap [data-nodeid='"+options.chain.tabs[options.chain.active].collapsed[x]+"']").attr("id");
@@ -1661,7 +1660,7 @@ var chain = new function() {
 			Tooltips.attach($("#chainMap .whEffect")); // 30ms
 			this.drawing = false;
 		}
-		
+
 		if (data.activity) // 100ms
 			this.data.activity = this.activity(data.activity);
 
@@ -1686,7 +1685,7 @@ var chain = new function() {
 			var systemID = $("#chainMap #node"+(collapsed[x] +1)).data("nodeid");
 			options.chain.tabs[options.chain.active].collapsed.push(systemID);
 		}
-		
+
 		chain.lines(chain.data);
 
 		// Apply current system style
@@ -1704,16 +1703,16 @@ var chain = new function() {
 
 		options.save();
 	}
-	
+
 	this.init = function() {
 		this.map = new google.visualization.OrgChart(document.getElementById("chainMap"));
 		this.options = {allowHtml: true, allowCollapse: true, size: "medium", nodeClass: "node"};
-		
+
 		google.visualization.events.addListener(this.map, "collapse", this.collapse);
 
 		this.map.draw(new google.visualization.DataView(new google.visualization.DataTable({cols:[{label: "System", type: "string"}, {label: "Parent", type: "string"}]})), this.options);
 	}
-	
+
 	//google.setOnLoadCallback(this.init());
 	this.init();
 }
@@ -1755,7 +1754,7 @@ var tripwire = new function() {
 
 	this.serverTime = function() {
 		this.time;
-		
+
 		this.serverTime.getTime = function() {
 			return tripwire.serverTime.time;
 		}
@@ -1778,7 +1777,7 @@ var tripwire = new function() {
 					$("#serverStatus").effect('pulsate', {times: 5});
 				}
 			}
-			
+
 			tripwire.serverStatus.data = data;
 		}).always(function(data) {
 			if (data && data.time > 15) {
@@ -1786,7 +1785,7 @@ var tripwire = new function() {
 			} else {
 				tripwire.serverStatus.time = 15000;
 			}
-			
+
 			setTimeout("tripwire.serverStatus();", tripwire.serverStatus.time);
 		});
 	}
@@ -1890,7 +1889,7 @@ var tripwire = new function() {
 		data.mode = mode != "init" ? "refresh" : "init";
 		data.systemID = viewingSystemID;
 		data.instance = tripwire.instance;
-		
+
 		this.xhr = $.ajax({
 			url: "refresh.php",
 			data: data,
@@ -1900,15 +1899,15 @@ var tripwire = new function() {
 		}).done(function(data) {
 			if (data) {
 				tripwire.server = data;
-				
+
 				if (data.sync) {
-					tripwire.serverTime.time = new Date(data.sync); 
+					tripwire.serverTime.time = new Date(data.sync);
 					tripwire.API();
 				}
 
 				if (data.signatures)
 					tripwire.parse(data, mode);
-				
+
 				if (data.chain)
 					tripwire.chainMap.parse(data.chain);
 
@@ -2003,7 +2002,7 @@ var tripwire = new function() {
 					//data[id].sticky ? $(".comment:first").before($comment) : $(".comment:last").before($comment);
 					$(".comment:last").before($comment);
 					$comment.attr("data-id", id);
-					
+
 					try {
 						$comment.find(".commentBody").html(data[x].comment);
 					} catch (err) {
@@ -2011,7 +2010,7 @@ var tripwire = new function() {
 						$comment.find(".commentStatus").html("<span class='critical'>" + err.constructor.name + ": " + err.message + "</span>");
 						$comment.find(".commentFooter .commentControls").hide();
 					}
-					
+
 					$comment.find(".commentModified").html("Edited by " + data[x].modifiedBy + " at " + data[x].modified);
 					$comment.find(".commentCreated").html("Posted by " + data[x].createdBy + " at " + data[x].created);
 					$comment.find(".commentBody").attr("id", "comment" + commentID);
@@ -2066,7 +2065,7 @@ var tripwire = new function() {
 		var rowParse = function(row) {
 			var scanner = {group: "", type: ""};
 			var columns = row.split("	"); // Split by tab
-			
+
 			for (var x in columns) {
 				if (columns[x].match(/([A-Z]{3}[-]\d{3})/)) {
 					scanner.id = columns[x].split("-");
@@ -2103,7 +2102,7 @@ var tripwire = new function() {
 			var rows = data.split("\n");
 			var data = {"request": {"signatures": {"add": [], "update": []}}};
 			var ids = $.map(tripwire.client.signatures, function(sig) {return viewingSystemID == sig.systemID ? sig.signatureID : sig.sig2ID});
-			
+
 			for (var row in rows) {
 				var scanner = rowParse(rows[row]);
 
@@ -2122,11 +2121,11 @@ var tripwire = new function() {
 						type = null;
 						sigName = null;
 					}
-					
+
 					if (ids.indexOf(scanner.id[0]) !== -1) {
 						// Update signature
 						sig = $.map(tripwire.client.signatures, function(sig) {return viewingSystemID == sig.systemID ? (sig.signatureID == scanner.id[0]?sig:null):(sig.sig2ID == scanner.id[0]?sig:null)})[0];
-						
+
 						if (sig && viewingSystemID == sig.systemID) {
 							// Parent side
 							if ((type && sig.type != type) || (sigName && sig.name != sigName)) {
@@ -2181,7 +2180,7 @@ var tripwire = new function() {
 							connectionName: "",
 							type: type || "???",
 							name: sigName,
-							life: 72
+							life: options.signatures.pasteLife
 						});
 					}
 				}
@@ -2199,13 +2198,13 @@ var tripwire = new function() {
 				processing = false;
 			}
 		}
-		
+
 		this.pasteSignatures.init = function() {
 			$(document).keydown(function(e)	{
 				if ((e.metaKey || e.ctrlKey) && (e.keyCode == 86 || e.keyCode == 91) && !processing) {
 					//Abort - user is in input or textarea
 					if ($(document.activeElement).is("textarea, input")) return;
-					
+
 					$("#clipboard").focus();
 				}
 			});
@@ -2243,9 +2242,9 @@ var tripwire = new function() {
 			$("#clipboard").on("paste", function(e) {
 				e.preventDefault();
 				var data = window.clipboardData ? window.clipboardData.getData("Text") : (e.originalEvent || e).clipboardData.getData('text/plain');
-				
+
 				$("#clipboard").blur();
-				
+
 				processing = true;
 				paste = data;
 				Notify.trigger("Paste detected<br/>(<a id='fullPaste' href=''>Click to delete missing sigs</a>)");
@@ -2257,7 +2256,7 @@ var tripwire = new function() {
 	}
 
 	this.autoMapper = function(from, to) {
-		// Testing 
+		// Testing
 		//from = $.map(tripwire.systems, function(system, id) { return system.name == from ? id : null; })[0];
 		//to = $.map(tripwire.systems, function(system, id) { return system.name == to ? id : null; })[0];
 		var pods = [33328, 670];
@@ -2273,7 +2272,7 @@ var tripwire = new function() {
 		// Is this a gate?
 		if (typeof(tripwire.map.shortest[from - 30000000]) != "undefined" && typeof(tripwire.map.shortest[from - 30000000][to - 30000000]) != "undefined")
 			return false;
-		
+
 		// Is this an existing connection?
 		if ($.map(chain.data.rawMap, function(sig) { return (sig.systemID == from && sig.connectionID == to) || (sig.connectionID == from && sig.systemID == to) ? sig : null })[0])
 			return false;
@@ -2302,7 +2301,7 @@ var tripwire = new function() {
 						},
 						Ok: function() {
 							var x = $("#dialog-msg #msg [name=sig]:checked").val();
-							
+
 							data.request.signatures.update.push({
 								id: sig[x].id,
 								side: "parent",
@@ -2321,13 +2320,13 @@ var tripwire = new function() {
 							});
 
 							data.systemID = viewingSystemID;
-							
+
 							var success = function(data) {
 								if (data && data.result == true) {
 									$("#dialog-msg").dialog("close");
 								}
 							}
-							
+
 							tripwire.refresh('refresh', data, success);
 						}
 					},
@@ -2369,7 +2368,7 @@ var tripwire = new function() {
 						},
 						Ok: function() {
 							var x = $("#dialog-msg #msg [name=sig]:checked").val();
-							
+
 							data.request.signatures.update.push({
 								id: sig[x].id,
 								side: "parent",
@@ -2394,7 +2393,7 @@ var tripwire = new function() {
 									$("#dialog-msg").dialog("close");
 								}
 							}
-							
+
 							tripwire.refresh('refresh', data, success);
 						}
 					},
@@ -2441,10 +2440,10 @@ var tripwire = new function() {
 				connectionID: to
 			});
 		}
-		
+
 		if (data.request.signatures.add.length || data.request.signatures.update.length) {
 			data.systemID = viewingSystemID;
-			
+
 			tripwire.refresh('refresh', data);
 		}
 	}
@@ -2520,7 +2519,7 @@ var tripwire = new function() {
 			//client and server should now match
 			this.client = server;
 		} else if (mode == 'init' || mode == 'change') {
-			
+
 			for (var key in server.signatures) {
 				this.addSig(server.signatures[key], {animate: false});
 
@@ -2528,7 +2527,7 @@ var tripwire = new function() {
 					this.sigEditing(server.signatures[key]);
 				}
 			}
-			
+
 			// Update current system
 			if (server.EVE) {
 				$("#EVEsystem").html(server.EVE.systemName).attr("href", ".?system="+server.EVE.systemName);
@@ -2608,12 +2607,12 @@ var tripwire = new function() {
 
 			var tr = $(row);
 		}
-		
+
 		Tooltips.attach($(tr).find("[data-tooltip]"));
 		//Tooltips.attach($(tr))
-		
+
 		$("#sigTable").append(tr);
-		
+
 		$("#sigTable").trigger("update");
 
 		// Add counter
@@ -2627,7 +2626,7 @@ var tripwire = new function() {
 				.countdown('pause')
 				.countdown('resume');
 		}
-		
+
 		if (animate) {
 			$(tr)
 				.find('td')
@@ -2638,11 +2637,11 @@ var tripwire = new function() {
 					$set = $(this);
 					$set.replaceWith($set.contents());
 				});
-			
+
 			$(tr).find("td").animate({backgroundColor: "#004D16"}, 1000).delay(1000).animate({backgroundColor: "#111"}, 1000, null, function() {$(this).css({backgroundColor: ""});});
 		}
 	}
-	
+
 	// Handles changing Signatures section
 	// ToDo: Use native JS
 	this.editSig = function(edit) {
@@ -2705,7 +2704,7 @@ var tripwire = new function() {
 
 			var tr = $(row);
 		}
-		
+
 		Tooltips.attach($(tr).find("[data-tooltip]"));
 
 		$("#sigTable tr[data-id='"+edit.id+"']").replaceWith(tr);
@@ -2718,18 +2717,18 @@ var tripwire = new function() {
 				.addClass('critical');
 		} else {
 			$(tr).find('span[data-age]').countdown({since: new Date(edit.lifeTime), compact: true, format: this.ageFormat, serverSync: this.serverTime.getTime});
-		}			
-		
+		}
+
 		$(tr).effect("pulsate");
 	}
-	
+
 	// Handles removing from Signatures section
 	this.deleteSig = function(key) {
 		var tr = $("#sigTable tr[data-id='"+key+"']");
 
 		//Append empty space to prevent non-coloring
 		$(tr).find('td:empty, a:empty').append("&nbsp;");
-		
+
 		$(tr)
 			.find('td')
 			.wrapInner('<div />')
@@ -2792,7 +2791,7 @@ var tripwire = new function() {
 		}
 
 		tooltip += "<b>Max Mass</b>: "+(whType?numFormat(tripwire.wormholes[type].mass):"Unknown")+" Kg<br/>";
-		
+
 		tooltip += "<b>Max Jumpable</b>: "+(whType?numFormat(tripwire.wormholes[type].jump):"Unknown")+" Kg<br/>";
 
 		return tooltip;
@@ -2806,12 +2805,12 @@ var tripwire = new function() {
 		date = new Date(date.getTime() + localOffset);
 
 		var tooltip = "<table class=\"age-tooltip-table\"><tr><th>Created:</th><td>"+(date.getMonth()+1)+"/"+date.getDate()+" "+(date.getHours() < 10?'0':'')+date.getHours()+":"+(date.getMinutes() < 10?'0':'')+date.getMinutes()+"</td></tr>";
-		
+
 		if (sig.lifeTime != sig.time) {
 			date = new Date(sig.time);
 			localOffset = date.getTimezoneOffset() * 60000;
 			date = new Date(date.getTime() + localOffset);
-			
+
 			tooltip += "<tr><th>Last Modified:</th><td>"+(date.getMonth()+1)+"/"+date.getDate()+" "+(date.getHours() < 10?'0':'')+date.getHours()+":"+(date.getMinutes() < 10?'0':'')+date.getMinutes()+"</td></tr>";
 		}
 
@@ -2830,7 +2829,7 @@ var tripwire = new function() {
 
 		this.sync(mode, data, successCallback, alwaysCallback);
 	}
-	
+
 	this.init = function() {
 		this.chainMap(); // Required to call .parse() during init()
 		this.comments();
@@ -2842,7 +2841,7 @@ var tripwire = new function() {
 		postLoad();
 		systemChange(viewingSystemID, "init");
 	}
-	
+
 	// Use delayed init to speed up rendering
 	setTimeout("tripwire.init();", 50);
 }
@@ -2937,7 +2936,7 @@ $("#sigAddForm").submit(function(e) {
 
 	$("th.critical").removeClass("critical");
 	ValidationTooltips.close();
-	
+
 	// Check for !empty and length == 3
 	if ($("#sigAddForm #sigID").val() == '' || $("#sigAddForm #sigID").val().length !== 3) {
 		$("#sigAddForm #sigID").focus().parent().prev("th").addClass("critical");
@@ -3020,7 +3019,7 @@ $("#sigEditForm").submit(function(e) {
 
 	$("th.critical").removeClass("critical");
 	ValidationTooltips.close();
-	
+
 	// Check for !empty and length == 3
 	if ($("#sigEditForm #sigID").val() == '' || $("#sigEditForm #sigID").val().length !== 3) {
 		$("#sigEditForm #sigID").focus().parent().prev("th").addClass("critical");
@@ -3047,7 +3046,7 @@ $("#sigEditForm").submit(function(e) {
 			return;
 		}
 	}
-	
+
 	// Check for empty WH type
 	if ($("#sigEditForm #sigType").val() == "Wormhole" && $("#sigEditForm #whType").val() == '') {
 		$("#sigEditForm #whType").focus().parent().prev("th").addClass("critical");
@@ -3068,13 +3067,13 @@ $("#sigEditForm").submit(function(e) {
 		ValidationTooltips.open({target: $("#sigEditForm #connection")}).setContent("Not a valid leads to system!");
 		return;
 	}
-	
-	
+
+
 	var form = $(this).serializeObject();
 	form.id = $(this).data("id");
 	form.systemID = viewingSystemID; // needed??
 	form.lifeLength = tripwire.wormholes[form.whType] ? tripwire.wormholes[form.whType].life.split(" ")[0] : 24;
-	
+
 	form.connectionID = form.connectionName ? Object.index(tripwire.systems, "name", form.connectionName) || null : null;
 	form.connectionName = form.connectionID ? (form.side == "parent" ? (tripwire.client.signatures[form.id].connectionID > 0 ? tripwire.client.signatures[form.id].connection : null) : (tripwire.client.signatures[form.id].systemID > 0 ? tripwire.client.signatures[form.id].system : null)) : form.connectionName;
 	//form.connectionName = tripwire.systems[form.connectionID] ? (form.side == "parent" ? tripwire.client.signatures[form.id].connection : tripwire.client.signatures[form.id].system) || null : form.connectionName;
@@ -3104,6 +3103,132 @@ $("#sigEditForm").submit(function(e) {
 	tripwire.refresh('refresh', data, success, always);
 });
 
+$("#admin").click(function(e) {
+	e.preventDefault();
+
+	if ($(this).hasClass("disabled")) {
+		return false;
+	}
+
+	if (!$("#dialog-admin").hasClass("ui-dialog-content")) {
+		var refreshTimer = null;
+
+		function refreshActiveUsers() {
+			$("div.ui-dialog[aria-describedby='dialog-admin'] .ui-dialog-traypane").html("Total: " + $("#dialog-admin [data-window='active-users'] #userTable tr[data-id]").length);
+
+			$.ajax({
+				url: "admin.php",
+				type: "POST",
+				data: {mode: "active-users"},
+				dataType: "JSON"
+			}).success(function(data) {
+				if (data && data.results) {
+					var rows = data.results;
+					for (var i = 0, l = rows.length; i < l; i++) {
+						var $row = $("#dialog-admin [data-window='active-users'] #userTable tbody tr[data-id='"+ rows[i].id +"']");
+						if ($row.length) {
+							$row.find(".account").html(rows[i].accountCharacterName);
+							$row.find(".character").html(rows[i].characterName || "&nbsp;");
+							$row.find(".system").html(rows[i].systemName || "&nbsp;");
+							$row.find(".shipName").html(rows[i].shipName || "&nbsp;");
+							$row.find(".shipType").html(rows[i].shipTypeName || "&nbsp;");
+							$row.find(".station").html(rows[i].stationName || "&nbsp;");
+							$row.find(".login").html(rows[i].lastLogin);
+						} else {
+							$row = $("#dialog-admin [data-window='active-users'] tr.hidden").clone();
+							$row.attr("data-id", rows[i].id);
+							$row.find(".account").html(rows[i].accountCharacterName);
+							$row.find(".character").html(rows[i].characterName || "&nbsp;");
+							$row.find(".system").html(rows[i].systemName || "&nbsp;");
+							$row.find(".shipName").html(rows[i].shipName || "&nbsp;");
+							$row.find(".shipType").html(rows[i].shipTypeName || "&nbsp;");
+							$row.find(".station").html(rows[i].stationName || "&nbsp;");
+							$row.find(".login").html(rows[i].lastLogin);
+							$row.removeClass("hidden");
+							$("#dialog-admin [data-window='active-users'] #userTable tbody").append($row);
+						}
+					}
+
+					var ids = $.map(data.results, function(user) { return user.id; });
+					$("#dialog-admin [data-window='active-users'] #userTable tr[data-id]").each(function() {
+						if ($.inArray($(this).data("id").toString(), ids) == -1) {
+							$(this).remove();
+						}
+					});
+
+					$("#dialog-admin [data-window='active-users'] #userTable").trigger("update", [true]);
+				} else {
+					$("#dialog-admin [data-window='active-users'] #userTable tr[data-id]").remove();
+				}
+
+				//var time = window.performance.now();
+				//console.log(window.performance.now() - time);
+				$("div.ui-dialog[aria-describedby='dialog-admin'] .ui-dialog-traypane").html("Total: " + $("#dialog-admin [data-window='active-users'] #userTable tr[data-id]").length);
+			});
+
+			if ($("#dialog-admin").dialog("isOpen") && $("#dialog-admin .menu .active").attr("data-window") == "active-users") {
+				refreshTimer = setTimeout(refreshActiveUsers, 3000);
+			}
+		}
+
+		$("#dialog-admin").dialog({
+			autoOpen: true,
+			modal: true,
+			height: 350,
+			width: 800,
+			buttons: {
+				Close: function() {
+					$(this).dialog("close");
+				}
+			},
+			create: function() {
+				// menu toggle
+				$("#dialog-admin").on("click", ".menu li", function(e) {
+					e.preventDefault();
+					$menuItem = $(this);
+					clearTimeout(refreshTimer);
+
+					$("#dialog-admin .menu .active").removeClass("active");
+					$menuItem.addClass("active");
+					$("div.ui-dialog[aria-describedby='dialog-admin'] .ui-dialog-traypane").html("");
+
+					$("#dialog-admin .window [data-window]").hide();
+					$("#dialog-admin .window [data-window='"+ $menuItem.data("window") +"']").show();
+
+					switch ($menuItem.data("window")) {
+						case "active-users":
+							refreshActiveUsers();
+							break;
+					}
+				});
+
+				$("#dialog-admin [data-window='active-users'] #userTable").tablesorter({
+					sortReset: true,
+					widgets: ['saveSort'],
+					sortList: [[0,0]]
+				});
+
+				// dialog bottom tray
+				$($(this)[0].parentElement).find(".ui-dialog-buttonpane").append("<div class='ui-dialog-traypane'></div>");
+			},
+			open: function() {
+				$menuItem = $("#dialog-admin .menu li.active");
+
+				switch ($menuItem.data("window")) {
+					case "active-users":
+						refreshActiveUsers();
+						break;
+				}
+			},
+			close: function() {
+				clearTimeout(refreshTimer);
+			}
+		});
+	} else if (!$("#dialog-admin").dialog("isOpen")) {
+		$("#dialog-admin").dialog("open");
+	}
+});
+
 $(".options").click(function(e) {
 	e.preventDefault();
 
@@ -3121,11 +3246,13 @@ $(".options").click(function(e) {
 				var data = {mode: "set", options: JSON.stringify(options)};
 
 				$("#dialog-options").parent().find(".ui-dialog-buttonpane button:contains('Save')").attr("disabled", true).addClass("ui-state-disabled");
-				
+
 				options.chain.typeFormat = $("#dialog-options #typeFormat").val();
 				options.chain.classFormat = $("#dialog-options #classFormat").val();
 
 				options.chain.gridlines = JSON.parse($("#dialog-options input[name=gridlines]:checked").val());
+
+				options.signatures.pasteLife = $("#dialog-options #pasteLife").val();
 
 				options.background = $("#dialog-options #background-image").val();
 
@@ -3137,6 +3264,9 @@ $(".options").click(function(e) {
 
 				$("#dialog-options").dialog("close");
 				$("#dialog-options").parent().find(".ui-dialog-buttonpane button:contains('Save')").attr("disabled", false).removeClass("ui-state-disabled");
+
+				// toggle mask admin icon
+				$("#dialog-options input[name='mask']:checked").data("admin") ? $("#admin").removeClass("disabled") : $("#admin").addClass("disabled");
 			},
 			Reset: function() {
 				$("#dialog-confirm #msg").html("Settings will be reset to defaults temporarily.<br/><br/><p><em>Save settings to make changes permanent.</em></p>");
@@ -3150,7 +3280,7 @@ $(".options").click(function(e) {
 							$(this).dialog("close");
 						},
 						Cancel: function() {
-							$(this).dialog("close");	
+							$(this).dialog("close");
 						}
 					}
 				}).dialog("open");
@@ -3185,7 +3315,7 @@ $(".options").click(function(e) {
 					for (var x in response.masks) {
 						var mask = response.masks[x];
 						var node = $(''
-							+ '<input type="radio" name="mask" id="mask'+x+'" value="'+mask.mask+'" class="selector" data-owner="'+mask.owner+'" />'
+							+ '<input type="radio" name="mask" id="mask'+x+'" value="'+mask.mask+'" class="selector" data-owner="'+mask.owner+'" data-admin="'+mask.admin+'" />'
 							+ '<label for="mask'+x+'"><img src="'+mask.img+'" />'
 							+  (mask.optional ? '<i class="closeIcon" onclick="return false;" data-icon="red-giant"><i data-icon="times"></i></i>' : '')
 							+ '<span class="selector_label">'+mask.label+'</span></label>');
@@ -3205,12 +3335,14 @@ $(".options").click(function(e) {
 						$("#dialog-options #masks #corporate").append(node);
 					}
 
-					$("#dialog-options input[name='mask']").filter("[value='"+response.active+"']").attr("checked", true).trigger("change");
+					$("#dialog-options input[name='mask']").filter("[value='"+response.masks[response.active].mask+"']").attr("checked", true).trigger("change");
+
+					// toggle mask admin icon
+					response.masks[response.active].admin ? $("#admin").removeClass("disabled") : $("#admin").addClass("disabled");
 				}
 			});
 
-			$("#dialog-options #home").val(options.chain.home);
-			$("#dialog-options #homeName").val(options.chain.homeName);
+			$("#dialog-options #pasteLife").val(options.signatures.pasteLife);
 			$("#dialog-options #typeFormat").val(options.chain.typeFormat);
 			$("#dialog-options #classFormat").val(options.chain.classFormat);
 			$("#dialog-options input[name='gridlines'][value='"+options.chain.gridlines+"']").prop("checked", true);
@@ -3262,6 +3394,58 @@ $(".options").click(function(e) {
 						$("#pwError").text(response.error).show("slide", {direction: "up"});
 					} else {
 						$("#pwError").text("Unknown error").show("slide", {direction: "up"});
+					}
+				});
+			});
+
+			$("#dialog-usernameChange").dialog({
+				autoOpen: false,
+				resizable: false,
+				minHeight: 0,
+				dialogClass: "ui-dialog-shadow dialog-noeffect dialog-modal",
+				buttons: {
+					Save: function() {
+						$("#usernameForm").submit();
+					},
+					Cancel: function() {
+						$(this).dialog("close");
+					}
+				},
+				open: function() {
+					$("#usernameForm #username").html($("#dialog-options #username").html());
+				},
+				close: function() {
+					$("#usernameForm [name='username']").val("");
+					$("#usernameError").text("").hide();
+				}
+			});
+
+			$("#usernameChange").click(function() {
+				$("#dialog-usernameChange").dialog("open");
+			});
+
+			$("#usernameForm").submit(function(e) {
+				e.preventDefault();
+
+				$("#usernameError").text("").hide();
+
+				$.ajax({
+					url: "options.php",
+					type: "POST",
+					data: $(this).serialize(),
+					dataType: "JSON"
+				}).done(function(response) {
+					if (response && response.result) {
+						$("#dialog-msg #msg").text("Username changed");
+						$("#dialog-msg").dialog("open");
+
+						$("#dialog-options #username").html(response.result);
+
+						$("#dialog-usernameChange").dialog("close");
+					} else if (response && response.error) {
+						$("#usernameError").text(response.error).show("slide", {direction: "up"});
+					} else {
+						$("#usernameError").text("Unknown error").show("slide", {direction: "up"});
 					}
 				});
 			});
@@ -3331,7 +3515,7 @@ $(".options").click(function(e) {
 								for (var x in response.results) {
 									var mask = response.results[x];
 									var node = $(''
-										+ '<input type="radio" name="mask" id="mask'+mask.mask+'" value="'+mask.mask+'" class="selector" data-owner="false" />'
+										+ '<input type="radio" name="mask" id="mask'+mask.mask+'" value="'+mask.mask+'" class="selector" data-owner="false" data-admin="'+mask.admin+'" />'
 										+ '<label for="mask'+mask.mask+'" style="width: 100%; margin-left: -5px;">'
 										+ '	<img src="'+mask.img+'" />'
 										+ '	<span class="selector_label">'+mask.label+'</span>'
@@ -3341,7 +3525,7 @@ $(".options").click(function(e) {
 										+ '		'+mask.allianceName
 										+ '	</div>'
 										+ '</label>');
-									
+
 									$("#dialog-joinMask #results").append(node);
 								}
 							} else if (response && response.error) {
@@ -3371,7 +3555,7 @@ $(".options").click(function(e) {
 			// Mask leave
 			$("#dialog-options #masks").on("click", ".closeIcon", function() {
 				var mask = $(this).closest("input.selector+label").prev();
-				
+
 				$("#dialog-confirm #msg").text("Are you sure you want to remove this mask?");
 
 				$("#dialog-confirm").dialog("option", {
@@ -3482,7 +3666,7 @@ $(".options").click(function(e) {
 										for (var x in response.masks) {
 											var mask = response.masks[x];
 											var node = $(''
-												+ '<input type="radio" name="mask" id="mask'+x+'" value="'+mask.mask+'" class="selector" data-owner="'+mask.owner+'" />'
+												+ '<input type="radio" name="mask" id="mask'+x+'" value="'+mask.mask+'" class="selector" data-owner="'+mask.owner+'" data-admin="'+mask.admin+'" />'
 												+ '<label for="mask'+x+'"><img src="'+mask.img+'" />'
 												+  (mask.optional ? '<i class="closeIcon" onclick="return false;" data-icon="red-giant"><i data-icon="times"></i></i>' : '')
 												+ '<span class="selector_label">'+mask.label+'</span></label>');
@@ -3502,7 +3686,10 @@ $(".options").click(function(e) {
 											$("#dialog-options #masks #corporate").append(node);
 										}
 
-										$("#dialog-options input[name='mask']").filter("[value='"+response.active+"']").attr("checked", true).trigger("change");
+										$("#dialog-options input[name='mask']").filter("[value='"+response.masks[response.active].mask+"']").attr("checked", true).trigger("change");
+
+										// toggle mask admin icon
+										response.masks[response.active].admin ? $("#admin").removeClass("disabled") : $("#admin").addClass("disabled");
 									}
 								});
 
@@ -3604,7 +3791,7 @@ $(".options").click(function(e) {
 									+ '		<input type="button" class="maskRemove" value="Remove" style="position: absolute; bottom: 3px; right: 3px;" />'
 									+ '	</div>'
 									+ '</label>');
-								
+
 								$("#dialog-editMask #accessList .static:first").before(node);
 							}
 
@@ -3637,7 +3824,7 @@ $(".options").click(function(e) {
 
 						$("#EVESearchResults .info").append('<input type="button" class="maskRemove" value="Remove" style="position: absolute; bottom: 3px; right: 3px;" />');
 						var node = $("#EVESearchResults").html();
-						
+
 						if ($("#dialog-createMask").dialog("isOpen"))
 							$("#dialog-createMask #accessList .static:first").before(node);
 						else if ($("#dialog-editMask").dialog("isOpen"))
@@ -3649,7 +3836,7 @@ $(".options").click(function(e) {
 						$(this).dialog("close");
 					}
 				},
-				create: function() {	
+				create: function() {
 					$("#EVEsearch").submit(function(e) {
 						e.preventDefault();
 
@@ -3708,13 +3895,13 @@ function postLoad() {
 	whList.push("???", "GATE");
 
 	$("#sigTable").tablesorter({
-		sortReset: true, 
+		sortReset: true,
 		widgets: ['saveSort'],
 		textExtraction: {
 			2: function(node) { return $(node).find("span").data("age"); }
 		}
 	});
-	
+
 	$(".typesAutocomplete").inlineComplete({list: whList});
 	$(".sigSystemsAutocomplete").inlineComplete({list: tripwire.aSigSystems});
 	$(".systemsAutocomplete").inlineComplete({list: tripwire.aSystems});
@@ -3820,7 +4007,7 @@ var OccupiedToolTips = new jBox("Tooltip", {
 		var systemID = $(this.source).closest("[data-nodeid]").data("nodeid");
 
 		tooltip.setContent("");
-		
+
 		$.ajax({
 			url: "occupants.php",
 			dataType: "JSON",
@@ -3901,7 +4088,7 @@ $("#chainTabs").on("click", ".closeTab", function(e) {
 				$(this).dialog("close");
 			},
 			Cancel: function() {
-				$(this).dialog("close");	
+				$(this).dialog("close");
 			}
 		}
 	}).dialog("open");
@@ -4101,7 +4288,7 @@ $("#chainMap").contextmenu({
 
 			// Switch to IG menu
 			$(this).contextmenu("replaceMenu", "#igbChainMenu");
-			
+
 			// Add check for k-space (disable EVECCP functions)
 			if (tripwire.systems[id].regionID >= 11000000) {
 				$(this).contextmenu("enableEntry", "setDest", false);
@@ -4336,7 +4523,7 @@ function openSigEdit(e) {
 
 				$("#autoEdit")[0].checked = false;
 				$("#autoEdit").button("refresh");
-				
+
 				// First check if it is a WH
 				if (sig.life || sig.mass) {
 					// Check which side we are editing
@@ -4451,6 +4638,12 @@ var CKConfig = {
 	}
 }
 
+$("body").on("dblclick", ".comment", function(e) {
+	e.preventDefault();
+	document.getSelection().removeAllRanges();
+	$(this).find(".commentEdit").click();
+})
+
 $("body").on("click", ".commentEdit", function(e) {
 	e.preventDefault(); // <a href="javascript: CCPEVE.showInfo(5, 30003276)">Show Info</a>
 
@@ -4473,11 +4666,13 @@ $("body").on("click", ".commentEdit", function(e) {
 
 $("body").on("click", ".commentSave, .commentCancel", function(e) {
 	e.preventDefault();
-	var $comment = $(this).closest(".comment");
+	var $this = $(this);
+	if ($this.attr("disabled")) return false;
 
-	$comment.find(".commentCancel").unbind("click");
+	var $comment = $this.closest(".comment");
+	$this.attr("disabled", "true");
 
-	if ($(this).hasClass("commentSave")) {
+	if ($this.hasClass("commentSave")) {
 		var data = {"mode": "save", "commentID": $comment.data("id"), "systemID": viewingSystemID, "comment": CKEDITOR.instances[$comment.find(".commentBody").attr("id")].getData()};
 
 		$.ajax({
@@ -4495,12 +4690,19 @@ $("body").on("click", ".commentSave, .commentCancel", function(e) {
 				$comment.attr("data-id", data.comment.id);
 				$comment.find(".commentToolbar").show();
 				$comment.find(".commentFooter").hide();
+				$this.removeAttr("disabled");
 			}
 		});
 	} else {
 		CKEDITOR.instances[$comment.find(".commentBody").attr("id")].destroy(true);
-		$comment.find(".commentToolbar").show();
-		$comment.find(".commentFooter").hide();
+
+		if (!$comment.attr("data-id")) {
+			$comment.remove();
+		} else {
+			$comment.find(".commentToolbar").show();
+			$comment.find(".commentFooter").hide();
+			$this.removeAttr("disabled");
+		}
 	}
 
 	$comment.find(".commentStatus").html("");
@@ -4518,6 +4720,7 @@ $("body").on("click", ".commentDelete", function(e) {
 		$("#dialog-deleteComment").data("comment", $comment).dialog({
 			resizable: false,
 			minHeight: 0,
+			position: {my: "center", at: "center", of: $("#notesWidget")},
 			dialogClass: "dialog-noeffect ui-dialog-shadow",
 			buttons: {
 				Delete: function() {
@@ -4563,12 +4766,6 @@ $("body").on("click", "#add-comment", function(e) {
 
 	$comment.find(".commentBody").attr("id", "comment" + commentID);
 	$comment.removeClass("hidden").find(".commentEdit").click();
-
-	$comment.find(".commentCancel").on("click", function(e) {
-		e.preventDefault();
-
-		$comment.remove();
-	});
 });
 
 $("body").on("click", ".commentSticky", function(e) {
@@ -4589,7 +4786,21 @@ $("body").on("click", ".commentSticky", function(e) {
 	});
 });
 
-CKEDITOR.on("instanceLoaded", function() {
+CKEDITOR.on("instanceLoaded", function(cke) {
+	cke.editor.on("contentDom", function() {
+		cke.editor.on("key", function(e) {
+			if (e.data.keyCode == 27) {
+				// escape key cancels
+				$(cke.editor.element.$).closest(".comment").find(".commentCancel").click();
+				return false;
+			} else if (e.data.domEvent.$.altKey && e.data.domEvent.$.keyCode == 83) {
+				// alt+s saves
+				$(cke.editor.element.$).closest(".comment").find(".commentSave").click();
+				return false;
+			}
+		});
+	});
+
 	$(".cke_combo__font a")
 		.removeClass("cke_combo_button")
 		.addClass("cke_button cke_button_off")
@@ -4599,6 +4810,33 @@ CKEDITOR.on("instanceLoaded", function() {
 		.removeClass("cke_combo_button")
 		.addClass("cke_button cke_button_off")
 		.html('<span class="cke_button_icon">&nbsp;</span>')
+});
+
+CKEDITOR.on("instanceReady", function(cke) {
+	// ensure focus on init
+	cke.editor.focus();
+
+	var s = cke.editor.getSelection(); // getting selection
+	var selected_ranges = s.getRanges(); // getting ranges
+	var node = selected_ranges[0].startContainer; // selecting the starting node
+	var parents = node.getParents(true);
+
+	node = parents[parents.length - 2].getFirst();
+
+	if (!node) return false;
+
+	while (true) {
+		var x = node.getNext();
+		if (x == null) {
+			break;
+		}
+		node = x;
+	}
+
+	s.selectElement(node);
+	selected_ranges = s.getRanges();
+	selected_ranges[0].collapse(false);  //  false collapses the range to the end of the selected node, true before the node.
+	s.selectRanges(selected_ranges);  // putting the current selection there
 });
 
 CKEDITOR.on("dialogDefinition", function(ev) {
@@ -4748,7 +4986,7 @@ $(document).keydown(function(e)	{
 	if ((e.metaKey || e.ctrlKey) && (e.keyCode == 89 || e.keyCode == 90)) {
 		//Abort - user is in input or textarea
 		if ($(document.activeElement).is("textarea, input")) return;
-		
+
 		e.preventDefault();
 
 		if (e.keyCode == 89 && !$("#redo").hasClass("disabled")) {

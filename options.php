@@ -23,6 +23,8 @@ $mode = isset($_REQUEST['mode'])?$_REQUEST['mode']:null;
 $options = isset($_REQUEST['options'])?$_REQUEST['options']:null;
 $password = isset($_REQUEST['password'])?$_REQUEST['password']:null;
 $confirm = isset($_REQUEST['confirm'])?$_REQUEST['confirm']:null;
+$username = isset($_REQUEST['username'])?$_REQUEST['username']:null;
+$old_username = isset($_REQUEST['username'])?$_SESSION['username']:null;
 $mask = isset($_REQUEST['mask'])?$_REQUEST['mask']:null;
 $output = null;
 
@@ -37,7 +39,7 @@ if ($mode == 'get') {
 
 	if ($row)
 		$output['options'] = json_decode($row->options);
-	
+
 } else if ($mode == 'set') {
 	$query = 'INSERT INTO preferences (userID, options) VALUES (:userID, :options) ON DUPLICATE KEY UPDATE options = :options';
 	$stmt = $mysql->prepare($query);
@@ -65,6 +67,32 @@ if ($password) {
 		$stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
 		$stmt->bindValue(':password', $hasher->HashPassword($password), PDO::PARAM_STR);
 		$output['result'] = $stmt->execute();
+	}
+}
+
+if ($username && $old_username) {
+	if (strlen($username) < 5) {
+		$output['error'] = 'Username must be 5 characters or more';
+	} else {
+		$query = 'SELECT username FROM accounts WHERE username = :username';
+		$stmt = $mysql->prepare($query);
+		$stmt->bindValue(':username', $username, PDO::PARAM_STR);
+		$stmt->execute();
+		if ($stmt->rowCount()) {
+			$output['field'] = 'username';
+			$output['error'] = 'Already taken.';
+		} else {
+			$query = 'UPDATE accounts SET username = :username WHERE username = :old_username';
+			$stmt = $mysql->prepare($query);
+			$stmt->bindValue(':username', $username, PDO::PARAM_STR);
+			$stmt->bindValue(':old_username', $old_username, PDO::PARAM_STR);
+			$result = $stmt->execute();
+
+			if ($result) {
+				$output['result'] = $username;
+				$_SESSION['username'] = $username;
+			}
+		}
 	}
 }
 

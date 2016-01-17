@@ -21,6 +21,7 @@ header('Content-Type: text/html; charset=UTF-8');
 setcookie('loadedFromBrowserCache','false');
 
 require('db.inc.php');
+require('lib.inc.php');
 
 //Verify correct system otherwise goto default...
 $query = "SELECT solarSystemName, systems.solarSystemID, regionName, regions.regionID FROM $eve_dump.mapSolarSystems systems LEFT JOIN $eve_dump.mapRegions regions ON regions.regionID = systems.regionID WHERE solarSystemName = :system";
@@ -48,10 +49,10 @@ if ($row = $stmt->fetchObject()) {
 	<meta name="systemID" content="<?= $systemID ?>">
 	<meta name="server" content="<?= $server ?>">
 	<link rel="shortcut icon" href="//<?= $server ?>/images/favicon.png" />
-	
+
 	<link rel="stylesheet" type="text/css" href="//<?= $server ?>/css/combine.css">
 	<link rel="stylesheet" type="text/css" href="//<?= $server ?>/css/style.css">
-	
+
 	<title><?=$system?> - <?= $server == 'static.eve-apps.com' ? 'Tripwire' : 'Galileo' ?></title>
 </head>
 <?php flush(); ?>
@@ -69,7 +70,7 @@ if ($row = $stmt->fetchObject()) {
 				 | <span data-tooltip="System activity update countdown"><input id="APIclock" class="hidden" /></span>
 			</h1>
 			<h3 id="serverStatus" class="pointer" data-tooltip="EVE server status and player count"></h3>
-			<h3 id="systemSearch">| <i id="search" data-icon="search" data-tooltip="Toggle system search"></i> 
+			<h3 id="systemSearch">| <i id="search" data-icon="search" data-tooltip="Toggle system search"></i>
 				<span id="currentSpan" class="hidden"><span class="pointer">Current System: </span><a id="EVEsystem" href=""></a><i id="follow" data-icon="follow" data-tooltip="Follow my in-game system" style="padding-left: 10px;"></i></span>
 				<span id="searchSpan"><form method="GET" action=".?"><input type="text" size="18" class="systemsAutocomplete" name="system" /></form></span>
 				<span id="APItimer" class="hidden"></span>
@@ -132,6 +133,7 @@ if ($row = $stmt->fetchObject()) {
 			<h3> | </h3>
 
 			<i id="settings" style="font-size: 1.7em;" data-icon="settings" class="options" data-tooltip="Settings"></i>
+			<i id="admin" style="font-size: 1.7em;" data-icon="user" data-tooltip="Mask Admin" class="<?= checkAdmin($_SESSION['mask']) || checkOwner($_SESSION['mask']) ? '' : 'disabled' ?>"></i>
 			<i id="layout" style="font-size: 1.7em;" data-icon="layout" data-tooltip="Customize layout"></i>
 		</span>
 	</div>
@@ -142,89 +144,6 @@ if ($row = $stmt->fetchObject()) {
 				<div class="content">
 					<i id="system-favorite" data-icon="star-empty" style="float: right; padding-top: 10px; font-size: 2em;"></i>
 					<h1 id="infoSystem" class="pointer" style="color: #CCC;"><?=$system?></h1>
-					<?php
-						/*
-						if ($regionID >= 11000000) {
-							$query = 'SELECT effect, class FROM systems WHERE systemID = :systemID';
-							$stmt = $mysql->prepare($query);
-							$stmt->bindValue(':systemID', $systemID, PDO::PARAM_INT);
-							$stmt->execute();
-							$row = $stmt->fetchObject();
-
-							$class = $row->class;
-							echo '<h4 class="wh">Class: ',$class,'</h4>';
-							echo "<h4>Region: $region</h4>";
-							if ($row->effect) {
-								$effect = $row->effect;
-
-								$query = "SELECT effects.effect, valueFloat AS value, multiplier, bad FROM systems LEFT JOIN $eve_dump.dgmTypeAttributes dgm ON systems.typeID = dgm.typeID LEFT JOIN effects ON systems.effect = anomaly AND attributeID = effects.id WHERE systemID = :systemID";
-								$stmt = $mysql->prepare($query);
-								$stmt->bindValue(':systemID', $systemID, PDO::PARAM_INT);
-								$stmt->execute();
-
-								$title = '<table cellpadding="0" cellspacing="1">';
-								while ($row = $stmt->fetchObject()) {
-									$title .= '<tr><td>'.$row->effect.'</td><td style="padding-left: 25px" class="'.($row->bad == 1 ? 'critical' : 'stable').'">';
-
-									if ($row->multiplier)
-										$title .= number_format(abs($row->value + $row->multiplier) * 100);
-									else
-										$title .= number_format($row->value);
-
-									$title .= '%</td></tr>';
-								}
-								$title .= '</table>';
-
-								echo "<h4><a href='' OnClick='return false;' data-tooltip='$title'>$effect</a></h4>";
-							} else {
-								echo '<h4>&nbsp;</h4>';
-							}
-						} else {
-							$query = "SELECT security, faction FROM $eve_dump.mapSolarSystems LEFT JOIN localPirates ON localPirates.regionID = $eve_dump.mapSolarSystems.regionID WHERE solarSystemID = :systemID";
-							$stmt = $mysql->prepare($query);
-							$stmt->bindValue(':systemID', $systemID, PDO::PARAM_INT);
-							$stmt->execute();
-							$row = $stmt->fetchObject();
-
-							if ($row->security >= 0.45) {
-								echo '<h4 class="hisec">High-Sec ',number_format($row->security, 2),'</h4>';
-							} else if ($row->security > 0.0) {
-								echo '<h4 class="lowsec">Low-Sec ',number_format($row->security, 2),'</h4>';
-							} else {
-								echo '<h4 class="nullsec">Null-Sec ',number_format($row->security, 2),'</h4>';
-							}
-
-							$faction = $row->faction;
-
-							$query = 'SELECT dmgType, strength FROM factionDmgTypes WHERE faction = :faction ORDER BY class';
-							$stmt = $mysql->prepare($query);
-							$stmt->bindValue(':faction', $faction, PDO::PARAM_STR);
-							$stmt->execute();
-
-							$title = '<table cellpadding="0" cellspacing="1">';
-							while ($row = $stmt->fetchObject()) {
-								switch ($row->dmgType) {
-									case 'Kinetic':
-										$title .= '<tr><td><img class="kinetic-icon"></td><td>Kinetic</td><td style="text-align: right; padding-left: 10px;">'.$row->strength.'%</td></tr>';
-										break;
-									case 'Thermal':
-										$title .= '<tr><td><img class="thermal-icon"></td><td>Thermal</td><td style="text-align: right; padding-left: 10px;">'.$row->strength.'%</td></tr>';
-										break;
-									case 'Explosive':
-										$title .= '<tr><td><img class="explosive-icon"></td><td>Explosive</td><td style="text-align: right; padding-left: 10px;">'.$row->strength.'%</td></tr>';
-										break;
-									case 'EM':
-										$title .= '<tr><td><img class="em-icon"></td><td>EM</td><td style="text-align: right; padding-left: 10px;">'.$row->strength.'%</td></tr>';
-										break;
-								}
-							}
-
-							$title .= '</table>';
-							echo "<h4>Region: $region</h4>";
-							echo "<h4>Pirates: <a href='' OnClick='return false;' data-tooltip='$title' id='pirates'>",$faction,'</a></h4>';
-						}
-						*/
-					?>
 					<h4 id="infoSecurity" class="pointer">&nbsp;</h4>
 					<h4 id="infoRegion" class="pointer">&nbsp;</h4>
 					<h4 id="infoFaction" class="pointer">&nbsp;</h4>
@@ -393,7 +312,7 @@ if ($row = $stmt->fetchObject()) {
 				<tr>
 					<th>ID:</th>
 					<td colspan="3">
-						<input type="text" name="id" id="sigID" maxlength="3" size="3" /> 
+						<input type="text" name="id" id="sigID" maxlength="3" size="3" />
 						<strong>- ###</strong>
 						<span style="float: right;">
 							<select id="sigType" name="type">
@@ -485,7 +404,7 @@ if ($row = $stmt->fetchObject()) {
 				<tr>
 					<th>ID:</th>
 					<td colspan="2">
-						<input type="text" id="sigID" name="sigID" maxlength="3" size="3" /> 
+						<input type="text" id="sigID" name="sigID" maxlength="3" size="3" />
 						<strong>- ###</strong>
 					</td>
 					<td style="float: right;">
@@ -565,6 +484,64 @@ if ($row = $stmt->fetchObject()) {
 		</form>
 	</div>
 
+	<div id="dialog-admin" title="Mask Admin" class="hidden">
+		<div style="height: 100%;">
+			<div class="menu">
+				<!-- menu -->
+				<ul>
+					<li data-window="default" class="active"><a href="#">Home</a></li>
+					<li data-window="active-users"><a href="#">Active Users</a></li>
+				</ul>
+			</div>
+			<div class="window">
+				<!-- window -->
+				<div data-window="default">
+					<h1>Welcome to the new Mask Admin feature!</h1>
+					<br/>
+					<p>This has been a long overdue feature, but thanks to the continued requests over the months I was finally able to make enough progress to have a first release.</p>
+					<br/>
+					<p>There may be a few minor bugs with the interface yet, I spent most of the time making sure the back-end security was solid so nobody saw users they shouldn't be. Also I was the only one testing this feature for opsec sake</p>
+					<br/>
+					<p>Please feel free to suggest additions, I plan to add many more menu items over the next few weeks but telling me what you all want will help me prioritize and make sure I don't overlook something useful</p>
+					<br/>
+					<ul>
+						<li>Mask creators/owners get access to mask admin</li>
+						<li>Custom corp masks the creating corp admins get access</li>
+						<li>Works for the default private and corporate masks</li>
+					</ul>
+					<br/>
+					<p>Thanks for using Tripwire, enjoy! :)</p>
+				</div>
+				<div data-window="active-users" class="hidden">
+					<table id="userTable" width="100%" cellpadding="0" cellspacing="0">
+						<thead>
+							<tr>
+								<th class="sortable">Account<i data-icon=""></i></th>
+								<th class="sortable">Character<i data-icon=""></i></th>
+								<th class="sortable">System<i data-icon=""></i></th>
+								<th class="sortable">Ship Name<i data-icon=""></i></th>
+								<th class="sortable">Ship Type<i data-icon=""></i></th>
+								<th class="sortable">Station<i data-icon=""></i></th>
+								<th class="sortable">Login<i data-icon=""></i></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="hidden">
+								<td class="account"></td>
+								<td class="character"></td>
+								<td class="system"></td>
+								<td class="shipName"></td>
+								<td class="shipType"></td>
+								<td class="station"></td>
+								<td class="login"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div id="dialog-options" title="Settings" class="hidden">
 		<div id="optionsAccordion">
 			<h3><a href="#">Account Settings</a></h3>
@@ -608,6 +585,7 @@ if ($row = $stmt->fetchObject()) {
 					</tr>
 				</table>
 				<div style="border-top: 1px solid black; text-align: right; margin: 0 -5px; padding: 5px 5px 0 5px;">
+					<input type="button" id="usernameChange" value="Change Username" />
 					<input type="button" id="pwChange" value="Change Password" />
 				</div>
 			</div>
@@ -627,6 +605,18 @@ if ($row = $stmt->fetchObject()) {
 						<td>
 							<input type="radio" name="gridlines" id="gridlines-yes" value="true" /><label for="gridlines-yes"> Yes</label>
 							<input type="radio" name="gridlines" id="gridlines-no" value="false" /><label for="gridlines-no"> No</label>
+						</td>
+					</tr>
+					<tr>
+						<th>Signature paste default life:</th>
+						<td>
+							<select id="pasteLife">
+								<option value="24">24 Hours</option>
+								<option value="48">48 Hours</option>
+								<option value="72">72 Hours</option>
+								<option value="168">7 Days</option>
+								<option value="672">28 Days</option>
+							</select>
 						</td>
 					</tr>
 					<tr>
@@ -671,6 +661,22 @@ if ($row = $stmt->fetchObject()) {
 				</table>
 			</div>
 		</div>
+	</div>
+
+	<div id="dialog-usernameChange" title="Change Username" class="hidden">
+		<form id="usernameForm">
+			<table class="optionsTable" width="100%" cellpadding="1" cellspacing="0">
+				<tr>
+					<th>Current Username:</th>
+					<td id="username"></td>
+				</tr>
+				<tr>
+					<th>New Username:</th>
+					<td><input type="text" name="username" size="16" maxlength="25" /></td>
+				</tr>
+			</table>
+			<p id="usernameError" class="critical hidden"></p>
+		</form>
 	</div>
 
 	<div id="dialog-pwChange" title="Change Password" class="hidden">
@@ -736,7 +742,7 @@ if ($row = $stmt->fetchObject()) {
 				<tr>
 					<th colspan="2">
 						<div id="loading" style="text-align: center; padding-top: 10px; margin-left: -50px;">
-							Getting API data... 
+							Getting API data...
 							<span style="position: absolute; margin-top: -10px; padding-left: 25px;" class="" id="searchSpinner">
 								<!-- Loading animation container -->
 								<div class="loading">
@@ -997,7 +1003,7 @@ if ($row = $stmt->fetchObject()) {
 	<script type="text/javascript">
 
 		var init = null;
-		
+
 		initAJAX = new XMLHttpRequest();
 		initAJAX.onreadystatechange = function() {
 			if (initAJAX.readyState == 4 && initAJAX.status == 200) {
@@ -1005,7 +1011,7 @@ if ($row = $stmt->fetchObject()) {
 
 				if (init && init.trustCheck)
 					CCPEVE.requestTrust("https://*.eve-apps.com/*");
-				
+
 				if (init && init.session.username) {
 					document.getElementById("user").innerHTML = init.session.characterName;
 					document.getElementById("characterName").innerHTML = init.session.characterName;
@@ -1015,7 +1021,7 @@ if ($row = $stmt->fetchObject()) {
 		}
 		initAJAX.open("GET", "init.php?_=" + new Date().getTime(), false);
 		initAJAX.send();
-		
+
 		// Google Analytics
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -1033,13 +1039,14 @@ if ($row = $stmt->fetchObject()) {
 		}
 
 		setTimeout("passiveHit()", 240000);
-		
+
 	</script>
 
 	<!-- JS Includes -->
 	<script type="text/javascript" src="//<?= $server ?>/js/combine.js"></script>
 	<script type="text/javascript" src="//<?= $server ?>/ckeditor/ckeditor.js"></script>
 	<script type="text/javascript" src="//<?= $server ?>/js/dragscroll.js"></script>
+	<script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.1','packages':['corechart','orgchart']}]}"></script>
 	<script type="text/javascript" src="//<?= $server ?>/js/core.js"></script>
 	<!-- JS Includes -->
 

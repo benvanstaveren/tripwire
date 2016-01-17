@@ -109,15 +109,15 @@ a:hover {
 }
 
 :-moz-placeholder { /* Firefox 18- */
-   color: #888;  
+   color: #888;
 }
 
 ::-moz-placeholder {  /* Firefox 19+ */
-   color: #888;  
+   color: #888;
 }
 
-:-ms-input-placeholder {  
-   color: #888;  
+:-ms-input-placeholder {
+   color: #888;
 }
 
 @-webkit-keyframes spin {
@@ -463,10 +463,6 @@ to { -o-transform: rotate(360deg); }
 	cursor: default;
 }
 
-#activityGraph {
-	padding-top: 15px;
-}
-
 #sigAddForm th, #sigEditForm th {
 	text-align: right;
 }
@@ -529,50 +525,48 @@ to { -o-transform: rotate(360deg); }
 	letter-spacing: 1px;
 }
 
-#sigTable .tablesorter-header {
+.tablesorter .tablesorter-header {
 	cursor: pointer;
 	vertical-align: middle;
 	font-size: 10px;
 }
 
-#sigTable .tablesorter-header i:before, #sigTable .sortable i:before {
+.tablesorter .tablesorter-header:focus {
+	outline: none;
+}
+
+.tablesorter .tablesorter-header i:before, .tablesorter .sortable i:before {
 	content: "\f0dc";
 	vertical-align: bottom;
 	padding: 1px 2px;
 	float: right;
 }
 
-#sigTable .headerSortUp,
-#sigTable .tablesorter-headerSortUp,
-#sigTable .tablesorter-headerAsc {
+.tablesorter .headerSortUp,
+.tablesorter .tablesorter-headerSortUp,
+.tablesorter .tablesorter-headerAsc {
 	color: #eee;
 }
 
-#sigTable .headerSortUp i:before,
-#sigTable .tablesorter-headerSortUp i:before,
-#sigTable .tablesorter-headerAsc i:before {
+.tablesorter .headerSortUp i:before,
+.tablesorter .tablesorter-headerSortUp i:before,
+.tablesorter .tablesorter-headerAsc i:before {
 	content: "\f0de";
-	color: #eee;
-	padding: 1px 2px;
-	float: right;
 }
 
-#sigTable .headerSortDown,
-#sigTable .tablesorter-headerSortDown,
-#sigTable .tablesorter-headerDesc {
+.tablesorter .headerSortDown,
+.tablesorter .tablesorter-headerSortDown,
+.tablesorter .tablesorter-headerDesc {
 	color: #eee;
 }
 
-#sigTable .headerSortDown i:before,
-#sigTable .tablesorter-headerSortDown i:before,
-#sigTable .tablesorter-headerDesc i:before {
+.tablesorter .headerSortDown i:before,
+.tablesorter .tablesorter-headerSortDown i:before,
+.tablesorter .tablesorter-headerDesc i:before {
 	content: "\f0dd";
-	color: #eee;
-	padding: 1px 2px;
-	float: right;
 }
 
-#sigTable thead .sorter-false {
+.tablesorter thead .sorter-false {
 	cursor: default;
 }
 
@@ -601,7 +595,7 @@ to { -o-transform: rotate(360deg); }
 #chainMap td.node {
 	height: 30px;
 	min-width: 5em;
-	white-space: nowrap; 
+	white-space: nowrap;
 	text-align: center;
 	vertical-align: middle;
 	font-family: verdana;
@@ -616,7 +610,7 @@ to { -o-transform: rotate(360deg); }
     border-bottom-right-radius: 10px 50px;
 	-moz-border-radius: 15px 50px;
 	-webkit-border-radius: 15px 50px;
-	
+
 	background-color: #111;
 	background: -moz-linear-gradient(top, #222 0%, #111 100%);
 	background: -webkit-gradient(linear, left top, left bottom, from(#222), to(#111));
@@ -629,7 +623,7 @@ to { -o-transform: rotate(360deg); }
 #chainMap td.currentNode {
 	border-color: #00286E;
 	background: #001B47;
-	
+
 	background: -moz-linear-gradient(top, #001B47 0%, #00286E 100%);
 	background: -webkit-gradient(linear, left top, left bottom, from(#001B47), to(#00286E));
 }
@@ -637,7 +631,7 @@ to { -o-transform: rotate(360deg); }
 #chainMap td.redNode {
 	border-color: #810;
 	background: #610;
-	
+
 	background: -moz-linear-gradient(top, #610 0%, #810 100%);
 	background: -webkit-gradient(linear, left top, left bottom, from(#610), to(#810));
 }
@@ -645,7 +639,7 @@ to { -o-transform: rotate(360deg); }
 #chainMap td.yellowNode {
 	border-color: #8A4117;
 	background: #80370D;
-	
+
 	background: -moz-linear-gradient(top, #80370D 0%, #8A4117 100%);
 	background: -webkit-gradient(linear, left top, left bottom, from(#80370D), to(#8A4117));
 }
@@ -653,7 +647,7 @@ to { -o-transform: rotate(360deg); }
 #chainMap td.greenNode {
 	border-color: #040;
 	background: #030;
-	
+
 	background: -moz-linear-gradient(top, #030 0%, #040 100%);
 	background: -webkit-gradient(linear, left top, left bottom, from(#030), to(#040));
 }
@@ -852,7 +846,7 @@ input[type="text"], input[type="password"] {
     padding: 2px;
     padding-left: 5px;
     margin-left: 2px;
-    
+
     -webkit-box-shadow: 0px 1px 2px rgba(0,0,0,0.4) inset, 0 -1px 0 rgba(0,0,0,0.1) inset;
     box-shadow: 0 1px 2px rgba(0,0,0,0.4) inset, 0 -1px 0 rgba(0,0,0,0.1) inset;
 
@@ -860,15 +854,15 @@ input[type="text"], input[type="password"] {
     color: #444;
     font-weight: bold;
     position: relative;
-    
+
     &::-webkit-input-placeholder {
        color: #999999;
     }
-    
+
     &:-moz-placeholder {
        color: #999999;
     }
-        
+
     &:focus{
         box-shadow: 0 1px 0 #2392F3 inset, 0 -1px 0 #2392F3 inset, 1px 0 0 #2392F3 inset, -1px 0 0 #2392F3 inset, 0 0 4px rgba(35,146,243,0.5);
         outline: none;
@@ -879,7 +873,7 @@ input[type="button"], input[type="submit"], .ui-button.ui-state-default {
 	font-family: Verdana;
 
 	-webkit-appearance: none;
-	
+
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	-ms-border-radius: 4px;
@@ -942,7 +936,7 @@ input[type="button"]:not([disabled]):active, input[type="submit"]:not([disabled]
 	border-color: #999 #BBB #DDD;
 }
 
-input[disabled] {
+input[disabled], a[disabled] {
 	opacity: .4;
 	cursor: default;
 }
@@ -1045,7 +1039,7 @@ input.selector+label .selector_label {
 	color: #CCC;
 	font-size: 0.8em;
 	background: rgba(0,0,0,0.7);
-	
+
 	-webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     -ms-border-radius: 3px;
@@ -1097,7 +1091,7 @@ input.selector:checked+label .info {
 
 input[type=checkbox]:not(.selector) + label {
 	padding-left:21px;
-	height:16px; 
+	height:16px;
 	display:inline-block;
 	line-height:16px;
 	background-repeat:no-repeat;
@@ -1200,7 +1194,7 @@ input[type=checkbox]:not(.selector) + label {
 .loading .maskedCircle {
 	width: 2em;
 	height: 2em;
-	
+
 	-webkit-border-radius: 1em;
     -moz-border-radius: 1em;
     -ms-border-radius: 1em;
@@ -1255,6 +1249,10 @@ div.overlay {
 	background: none;
 }
 
+.ui-accordion .ui-accordion-header:focus {
+	outline: none;
+}
+
 .optionsTable {
 	color: #444;
 	border-collapse: collapse;
@@ -1297,7 +1295,7 @@ div.maskCategoryLabel {
 	-ms-transform: rotate(-90deg);
 	-webkit-transform: rotate(-90deg);
 	transform: rotate(-90deg);
-	
+
 	-ms-transform-origin: left top 0;
 	-webkit-transform-origin: left top 0;
 	transform-origin: left top 0;
@@ -1636,7 +1634,7 @@ i.closeIcon:hover {
 .jBox-pointer-right:after {
 	top: 5px;
 	right: 6px;
-	
+
 	-webkit-box-shadow: 1px -1px 4px rgba(0,0,0,.6);
 	-moz-box-shadow: 1px -1px 4px rgba(0,0,0,.6);
 	box-shadow: 1px -1px 4px rgba(0,0,0,.6);
@@ -1879,7 +1877,7 @@ td.google-visualization-orgchart-linenode[data-signatureid] {
 
 .commentToolbar .commentControls, .commentSticky {
 	opacity: 0;
-	
+
 	transition: opacity .25s ease-out;
 	-moz-transition: opacity .25s ease-out;
 	-webkit-transition: opacity .25s ease-out;
@@ -1893,10 +1891,10 @@ td.google-visualization-orgchart-linenode[data-signatureid] {
 .commentBody {
 	color: #ccc;
 	padding: 8px;
-	//white-space: pre-wrap;      /* CSS3 */   
-	//white-space: -moz-pre-wrap; /* Firefox */    
-	//white-space: -pre-wrap;     /* Opera <7 */   
-	//white-space: -o-pre-wrap;   /* Opera 7 */    
+	//white-space: pre-wrap;      /* CSS3 */
+	//white-space: -moz-pre-wrap; /* Firefox */
+	//white-space: -pre-wrap;     /* Opera <7 */
+	//white-space: -o-pre-wrap;   /* Opera 7 */
 	word-wrap: break-word;      /* IE */
 }
 
@@ -2089,3 +2087,62 @@ td.google-visualization-orgchart-linenode[data-signatureid] {
 	cursor: pointer;
 }
 
+#dialog-admin .menu {
+	width: 100px;
+	height: 100%;
+	float: left;
+}
+
+#dialog-admin .window {
+	height: 100%;
+	margin-left: 100px;
+	overflow: auto;
+}
+
+#dialog-admin .menu li {
+	list-style-type: none;
+}
+
+#dialog-admin .menu li a {
+	color: #666;
+}
+
+#dialog-admin .menu li a:focus {
+	outline: none;
+}
+
+#dialog-admin .menu li.active a {
+	color: orange;
+}
+
+#dialog-admin #userTable th {
+	text-align: left;
+	border-bottom: 1px solid #333;
+}
+
+#dialog-admin #userTable tr:nth-child(even) td {
+	border-bottom: 1px solid #aaa;
+}
+
+#dialog-admin .tablesorter .tablesorter-header i:before, #dialog-admin .tablesorter .sortable i:before {
+	float: none;
+}
+
+#dialog-admin .tablesorter .headerSortUp,
+#dialog-admin .tablesorter .tablesorter-headerSortUp,
+#dialog-admin .tablesorter .tablesorter-headerAsc {
+	color: orange;
+}
+
+#dialog-admin .tablesorter .headerSortDown,
+#dialog-admin .tablesorter .tablesorter-headerSortDown,
+#dialog-admin .tablesorter .tablesorter-headerDesc {
+	color: orange;
+}
+
+div.ui-dialog[aria-describedby='dialog-admin'] .ui-dialog-traypane {
+	margin-left: 110px;
+	margin-top: 8px;
+	font-size: 16px;
+	color: #333;
+}
